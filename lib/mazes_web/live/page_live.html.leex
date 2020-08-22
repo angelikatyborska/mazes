@@ -1,48 +1,44 @@
-<section class="phx-hero">
-  <h1>Welcome to Phoenix!</h1>
-  <p>Peace of mind from prototype to production</p>
+<% square_size = 50 %>
+<% padding = 10 %>
 
-  <form phx-change="suggest" phx-submit="search">
-    <input type="text" name="q" value="<%= @query %>" placeholder="Live dependency search" list="results" autocomplete="off"/>
-    <datalist id="results">
-      <%= for {app, _vsn} <- @results do %>
-        <option value="<%= app %>"><%= app %></option>
-      <% end %>
-    </datalist>
-    <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
-  </form>
-</section>
+<svg width="<%= 2 * padding + square_size * @maze.width %>" height="<%= 2 * padding + square_size * @maze.height %>">
+  <g transform="translate(<%= padding %>, <%= padding %>)">
+    <%= Enum.map(1..@maze.width, fn x -> %>
+      <%= Enum.map(1..@maze.height, fn y -> %>
+        <rect width="<%= square_size %>"
+              height="<%= square_size %>"
+              x="<%= square_size * (x - 1) %>"
+              y="<%= square_size * (y - 1) %>"
+        />
 
-<section class="row">
-  <article class="column">
-    <h2>Resources</h2>
-    <ul>
-      <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.5/CHANGELOG.md">v1.5 Changelog</a>
-      </li>
-    </ul>
-  </article>
-  <article class="column">
-    <h2>Help</h2>
-    <ul>
-      <li>
-        <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
-      </li>
-      <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
-      </li>
-      <li>
-        <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
-      </li>
-    </ul>
-  </article>
-</section>
+        <line x1="<%= square_size * (x - 1) %>"
+              y1="<%= square_size * (y - 1) %>"
+              x2="<%= square_size * (x) %>"
+              y2="<%= square_size * (y - 1) %>"
+        />
+
+        <line x1="<%= square_size * (x - 1) %>"
+              y1="<%= square_size * (y - 1) %>"
+              x2="<%= square_size * (x - 1) %>"
+              y2="<%= square_size * (y) %>"
+        />
+
+        <%= if x == @maze.width do %>
+          <line x1="<%= square_size * @maze.width %>"
+                y1="<%= square_size * (y - 1) %>"
+                x2="<%= square_size * @maze.width %>"
+                y2="<%= square_size * (y) %>"
+          />
+        <% end %>
+
+        <%= if y == @maze.height do %>
+          <line x1="<%= square_size * (x - 1) %>"
+                y1="<%= square_size * @maze.height %>"
+                x2="<%= square_size * (x) %>"
+                y2="<%= square_size * @maze.height %>"
+          />
+        <% end %>
+      <% end) %>
+    <% end )%>
+  </g>
+</svg>

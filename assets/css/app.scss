@@ -89,3 +89,16 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+
+svg {
+  line {
+    stroke: black;
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  rect {
+    fill: white;
+  }
+}
