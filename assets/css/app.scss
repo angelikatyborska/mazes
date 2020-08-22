@@ -101,4 +101,8 @@ svg {
   rect {
     fill: white;
   }
+
+  rect.active {
+    fill: yellow;
+  }
 }
