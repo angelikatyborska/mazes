@@ -1,22 +1,22 @@
 defmodule MazesWeb.PageLive do
   use MazesWeb, :live_view
-  alias Mazes.{RectangularMaze, BinaryTreeAlgorithm}
+  alias Mazes.{RectangularMaze, BinaryTreeAlgorithm, SidewinderAlgorithm}
 
   def animation_duration do
-    500
+    300
   end
 
   @impl true
   def mount(_params, _session, socket) do
     socket =
       if connected?(socket) do
-        algorithm_state = BinaryTreeAlgorithm.init(10, 10)
+        algorithm_state = SidewinderAlgorithm.init(8, 8)
 
         Process.send_after(self(), :next_step, animation_duration())
 
         assign(socket, algorithm_state: algorithm_state)
       else
-        algorithm_state = BinaryTreeAlgorithm.init(10, 10)
+        algorithm_state = SidewinderAlgorithm.init(8, 8)
         assign(socket, algorithm_state: algorithm_state)
       end
 
@@ -25,7 +25,7 @@ defmodule MazesWeb.PageLive do
 
   @impl true
   def handle_info(:next_step, socket) do
-    case BinaryTreeAlgorithm.next_step(socket.assigns.algorithm_state) do
+    case SidewinderAlgorithm.next_step(socket.assigns.algorithm_state) do
       {:cont, algorithm_state} ->
         Process.send_after(self(), :next_step, animation_duration())
         socket = assign(socket, algorithm_state: algorithm_state)

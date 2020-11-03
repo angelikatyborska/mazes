@@ -5,7 +5,17 @@ defmodule Mazes.BinaryTreeAlgorithm do
 
   def init(width, height) do
     maze = RectangularMaze.new(width, height)
-    vertices = RectangularMaze.vertices(maze)
+
+    vertices =
+      maze
+      |> RectangularMaze.vertices()
+      |> Enum.sort(fn {x1, y1}, {x2, y2} ->
+        if x1 == x2 do
+          y1 < y2
+        else
+          x1 < x2
+        end
+      end)
 
     %__MODULE__{
       maze: maze,

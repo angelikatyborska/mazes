@@ -39,15 +39,7 @@ defmodule Mazes.RectangularMaze do
   end
 
   def vertices(maze) do
-    maze.adjacency_matrix
-    |> Map.keys()
-    |> Enum.sort(fn {x1, y1}, {x2, y2} ->
-      if x1 == x2 do
-        y1 < y2
-      else
-        x1 < x2
-      end
-    end)
+    Map.keys(maze.adjacency_matrix)
   end
 
   def north({x, y}), do: {x, y - 1}

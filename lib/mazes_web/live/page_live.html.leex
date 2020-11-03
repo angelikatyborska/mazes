@@ -13,38 +13,40 @@
             x="<%= square_size * (x - 1) %>"
             y="<%= square_size * (y - 1) %>"
       />
+    <% end )%>
 
-      <%= if RectangularMaze.wall?(maze, vertex, RectangularMaze.north(vertex)) do %>
-        <line x1="<%= square_size * (x - 1) %>"
-              y1="<%= square_size * (y - 1) %>"
-              x2="<%= square_size * (x) %>"
-              y2="<%= square_size * (y - 1) %>"
-        />
-      <% end %>
+    <%= RectangularMaze.map(maze, fn {x, y} = vertex -> %>
+    <%= if RectangularMaze.wall?(maze, vertex, RectangularMaze.north(vertex)) do %>
+    <line x1="<%= square_size * (x - 1) %>"
+          y1="<%= square_size * (y - 1) %>"
+          x2="<%= square_size * (x) %>"
+          y2="<%= square_size * (y - 1) %>"
+    />
+    <% end %>
 
-      <%= if RectangularMaze.wall?(maze, vertex, RectangularMaze.west(vertex)) do %>
-        <line x1="<%= square_size * (x - 1) %>"
-              y1="<%= square_size * (y - 1) %>"
-              x2="<%= square_size * (x - 1) %>"
-              y2="<%= square_size * (y) %>"
-        />
-      <% end %>
+    <%= if RectangularMaze.wall?(maze, vertex, RectangularMaze.west(vertex)) do %>
+    <line x1="<%= square_size * (x - 1) %>"
+          y1="<%= square_size * (y - 1) %>"
+          x2="<%= square_size * (x - 1) %>"
+          y2="<%= square_size * (y) %>"
+    />
+    <% end %>
 
-      <%= if x == maze.width do %>
-        <line x1="<%= square_size * maze.width %>"
-              y1="<%= square_size * (y - 1) %>"
-              x2="<%= square_size * maze.width %>"
-              y2="<%= square_size * (y) %>"
-        />
-      <% end %>
+    <%= if x == maze.width do %>
+    <line x1="<%= square_size * maze.width %>"
+          y1="<%= square_size * (y - 1) %>"
+          x2="<%= square_size * maze.width %>"
+          y2="<%= square_size * (y) %>"
+    />
+    <% end %>
 
-      <%= if y == maze.height do %>
-        <line x1="<%= square_size * (x - 1) %>"
-              y1="<%= square_size * maze.height %>"
-              x2="<%= square_size * (x) %>"
-              y2="<%= square_size * maze.height %>"
-        />
-      <% end %>
+    <%= if y == maze.height do %>
+    <line x1="<%= square_size * (x - 1) %>"
+          y1="<%= square_size * maze.height %>"
+          x2="<%= square_size * (x) %>"
+          y2="<%= square_size * maze.height %>"
+    />
+    <% end %>
     <% end )%>
   </g>
 </svg>
