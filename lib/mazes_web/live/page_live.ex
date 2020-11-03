@@ -34,11 +34,17 @@ defmodule MazesWeb.PageLive do
       "height" => height
     } = form_data
 
+    width = String.to_integer(width)
+    width = if width > 50, do: 50, else: width
+    height = String.to_integer(height)
+    height = if height > 50, do: 50, else: height
+    algorithm = String.to_existing_atom(algorithm)
+
     socket =
       socket
-      |> assign(width: String.to_integer(width))
-      |> assign(height: String.to_integer(height))
-      |> assign(algorithm: String.to_existing_atom(algorithm))
+      |> assign(width: width)
+      |> assign(height: height)
+      |> assign(algorithm: algorithm)
 
     {:noreply, socket}
   end

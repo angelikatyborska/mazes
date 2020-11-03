@@ -4,7 +4,7 @@
     <% padding = 10 %>
     <% maze = @algorithm_state.maze %>
     <% square_size = Integer.floor_div(max_size, maze.width) %>
-    <svg width="<%= 2 * padding + square_size * maze.width %>" height="<%= 2 * padding + square_size * maze.height %>">
+    <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding + square_size * maze.width %> <%= 2 * padding + square_size * maze.height %>">
       <g transform="translate(<%= padding %>, <%= padding %>)">
         <%= RectangularMaze.map(maze, fn {x, y} -> %>
           <rect width="<%= square_size %>"
@@ -73,10 +73,10 @@
 
       <div>
         <label for="width">Width</label>
-        <input type="number" min="1" max="100" step="1" name="width" value="<%= @width %>" id="width" />
+        <input type="number" min="1" max="50" step="1" name="width" value="<%= @width %>" id="width" />
 
         <label for="height">Height</label>
-        <input type="number" min="1" max="100" step="1" name="height" value="<%= @height %>" id="height" />
+        <input type="number" min="1" max="50" step="1" name="height" value="<%= @height %>" id="height" />
       </div>
 
       <div>
