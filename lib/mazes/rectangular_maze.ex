@@ -47,11 +47,13 @@ defmodule Mazes.RectangularMaze do
   def east({x, y}), do: {x + 1, y}
   def west({x, y}), do: {x - 1, y}
 
-  def outer_wall?(%__MODULE__{} = _maze, _, {0, _}), do: true
-  def outer_wall?(%__MODULE__{} = _maze, _, {_, 0}), do: true
-  def outer_wall?(%__MODULE__{width: width} = _maze, {width, _}, {x2, _}), do: x2 == width + 1
-  def outer_wall?(%__MODULE__{height: height} = _maze, {_, height}, {_, y2}), do: y2 == height + 1
-  def outer_wall?(%__MODULE__{} = _maze, {_, _}, {_, _}), do: false
+  def outer_wall?(%__MODULE__{} = _maze, {1, _}, {0, _}), do: true
+  def outer_wall?(%__MODULE__{} = _maze, {_, 1}, {_, 0}), do: true
+
+  def outer_wall?(%__MODULE__{} = maze, {x1, y1}, {x2, y2}) do
+    (maze.width == x1 && x2 == x1 + 1) ||
+      (maze.height == y1 && y2 == y1 + 1)
+  end
 
   def wall?(%__MODULE__{} = maze, from, to), do: !maze.adjacency_matrix[from][to]
   def put_wall(%__MODULE__{} = maze, from, to), do: set_adjacency(maze, from, to, false)
