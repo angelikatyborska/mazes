@@ -1,0 +1,18 @@
+.maze {
+  svg {
+    line {
+      stroke: black;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    rect {
+      fill: white;
+    }
+
+    rect.active {
+      fill: yellow;
+    }
+  }
+
+}

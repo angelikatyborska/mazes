@@ -89,19 +89,10 @@
   margin: -1rem 0 2rem;
 }
 
-
-svg {
-  line {
-    stroke: black;
-    stroke-width: 3;
-    stroke-linecap: round;
-  }
-
-  rect {
-    fill: white;
-  }
-
-  rect.active {
-    fill: yellow;
-  }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
+
+@import './maze.scss';
+@import './maze_settings';
