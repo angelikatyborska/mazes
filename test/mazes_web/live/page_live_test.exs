@@ -4,8 +4,6 @@ defmodule MazesWeb.PageLiveTest do
   import Phoenix.LiveViewTest
 
   test "disconnected and connected render", %{conn: conn} do
-    {:ok, page_live, disconnected_html} = live(conn, "/")
-    #    assert disconnected_html =~ "Welcome to Phoenix!"
-    #    assert render(page_live) =~ "Welcome to Phoenix!"
+    {:ok, _page_live, _disconnected_html} = live(conn, "/")
   end
 end
