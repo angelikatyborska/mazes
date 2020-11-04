@@ -12,10 +12,17 @@ defmodule Mazes.RectangularMaze do
 
     adjacency_matrix =
       vertices
-      |> Enum.map(fn from ->
+      |> Enum.map(fn {from_x, from_y} = from ->
         value =
           vertices
-          |> Enum.filter(&(&1 != from))
+          |> Enum.filter(fn {x, y} ->
+            {x, y} in [
+              {from_x - 1, from_y},
+              {from_x + 1, from_y},
+              {from_x, from_y - 1},
+              {from_x, from_y + 1}
+            ]
+          end)
           |> Enum.map(&{&1, all_adjacent?})
           |> Enum.into(%{})
 
@@ -58,6 +65,12 @@ defmodule Mazes.RectangularMaze do
   def wall?(%__MODULE__{} = maze, from, to), do: !maze.adjacency_matrix[from][to]
   def put_wall(%__MODULE__{} = maze, from, to), do: set_adjacency(maze, from, to, false)
   def remove_wall(%__MODULE__{} = maze, from, to), do: set_adjacency(maze, from, to, true)
+
+  def adjacent_cells(maze, from) do
+    maze.adjacency_matrix[from]
+    |> Enum.filter(fn {_, adjacency} -> adjacency end)
+    |> Enum.map(fn {cell, _} -> cell end)
+  end
 
   defp set_adjacency(maze, from, to, value) do
     adjacency_matrix =
