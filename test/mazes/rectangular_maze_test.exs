@@ -3,7 +3,7 @@ defmodule Mazes.RectangularMazeTest do
   alias Mazes.RectangularMaze
 
   describe "new" do
-    test "generates an adjacency matrix with no adjacent cells" do
+    test "generates an adjacency matrix with no adjacent vertices" do
       assert RectangularMaze.new(2, 3) === %RectangularMaze{
                width: 2,
                height: 3,
@@ -38,7 +38,7 @@ defmodule Mazes.RectangularMazeTest do
              }
     end
 
-    test "generates an adjacency matrix with all cells adjacent" do
+    test "generates an adjacency matrix with all vertices adjacent" do
       assert RectangularMaze.new(2, 3, true) === %RectangularMaze{
                width: 2,
                height: 3,
@@ -75,7 +75,7 @@ defmodule Mazes.RectangularMazeTest do
   end
 
   describe "outer_wall?" do
-    test "checks if there is the outer wall between two cells" do
+    test "checks if there is the outer wall between two vertices" do
       maze = RectangularMaze.new(2, 3)
       assert RectangularMaze.outer_wall?(maze, {1, 1}, {0, 1}) == true
       assert RectangularMaze.outer_wall?(maze, {1, 2}, {0, 2}) == true
@@ -125,7 +125,7 @@ defmodule Mazes.RectangularMazeTest do
       assert RectangularMaze.wall?(maze, {2, 3}, {2, 4}) == true
     end
 
-    test "checks if there's a wall between two cells" do
+    test "checks if there's a wall between two vertices" do
       maze = RectangularMaze.new(2, 3)
       assert RectangularMaze.wall?(maze, {1, 3}, {2, 3}) == true
       maze = RectangularMaze.remove_wall(maze, {1, 3}, {2, 3})

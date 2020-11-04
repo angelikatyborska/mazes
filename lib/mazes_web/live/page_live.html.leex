@@ -4,11 +4,13 @@
     <% padding = 10 %>
     <% maze = @algorithm_state.maze %>
     <% square_size = Integer.floor_div(max_size, maze.width) %>
+
     <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding + square_size * maze.width %> <%= 2 * padding + square_size * maze.height %>">
       <g transform="translate(<%= padding %>, <%= padding %>)">
-        <%= RectangularMaze.map(maze, fn {x, y} -> %>
+        <%= RectangularMaze.map(maze, fn {x, y} = vertex -> %>
           <rect width="<%= square_size %>"
                 height="<%= square_size %>"
+                class="<%= if vertex in @solution, do: "highlight", else: "" %>"
                 x="<%= square_size * (x - 1) %>"
                 y="<%= square_size * (y - 1) %>"
           />
@@ -83,5 +85,7 @@
         <button type="submit">Regenerate</button>
       </div>
     </form>
+
+    <button type="button" phx-click="solve">Solve</button>
   </div>
 </div>

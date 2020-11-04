@@ -1,10 +1,16 @@
 defmodule MazesWeb.PageLive do
   use MazesWeb, :live_view
-  alias Mazes.{RectangularMaze, BinaryTreeAlgorithm, SidewinderAlgorithm}
+
+  alias Mazes.{
+    RectangularMaze,
+    RectangularMazeDistances,
+    BinaryTreeAlgorithm,
+    SidewinderAlgorithm
+  }
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, algorithm: BinaryTreeAlgorithm, width: 8, height: 8)
+    socket = assign(socket, algorithm: BinaryTreeAlgorithm, width: 8, height: 8, solution: [])
 
     algorithm_state =
       if connected?(socket) do
@@ -23,7 +29,13 @@ defmodule MazesWeb.PageLive do
   @impl true
   def handle_event("regenerate", _value, socket) do
     algorithm_state = execute(new(socket), socket.assigns.algorithm)
-    {:noreply, assign(socket, :algorithm_state, algorithm_state)}
+
+    socket =
+      socket
+      |> assign(:algorithm_state, algorithm_state)
+      |> assign(:solution, [])
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -47,6 +59,18 @@ defmodule MazesWeb.PageLive do
       |> assign(algorithm: algorithm)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("solve", _value, socket) do
+    solution =
+      RectangularMazeDistances.path(
+        socket.assigns.algorithm_state.maze,
+        {1, 1},
+        {socket.assigns.width, socket.assigns.height}
+      )
+
+    {:noreply, assign(socket, :solution, solution)}
   end
 
   defp new(socket) do

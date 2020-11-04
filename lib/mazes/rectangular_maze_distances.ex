@@ -3,14 +3,33 @@ defmodule Mazes.RectangularMazeDistances do
 
   alias Mazes.RectangularMaze
 
-  @doc "Returns a map of cells where the values are distances from the starting cell"
-  def calculate(maze, start_cell) do
-    calculate(maze, [start_cell], 0, %{})
+  @doc "Returns a list of vertices that form the shortest path from the start to the end vertex"
+  def path(maze, from, to) do
+    distances = distances(maze, to)
+    path(maze, from, to, distances, [from])
   end
 
-  defp calculate(_, [], _, distances), do: distances
+  defp path(maze, to, to, _, acc), do: Enum.reverse(acc)
 
-  defp calculate(maze, cells, distance, distances) do
+  defp path(maze, from, to, distances, acc) do
+    adjacent = RectangularMaze.adjacent_cells(maze, from)
+
+    if adjacent == [] do
+      nil
+    else
+      next = Enum.min_by(adjacent, &distances[&1])
+      path(maze, next, to, distances, [next | acc])
+    end
+  end
+
+  @doc "Returns a map of cells where the values are distances from the starting cell"
+  def distances(maze, start_cell) do
+    distances(maze, [start_cell], 0, %{})
+  end
+
+  defp distances(_, [], _, distances), do: distances
+
+  defp distances(maze, cells, distance, distances) do
     distances =
       Enum.reduce(cells, distances, fn cell, acc ->
         Map.put_new(acc, cell, distance)
@@ -22,6 +41,6 @@ defmodule Mazes.RectangularMazeDistances do
       |> Enum.uniq()
       |> Enum.filter(&(!distances[&1]))
 
-    calculate(maze, adjacent_unvisited_cells, distance + 1, distances)
+    distances(maze, adjacent_unvisited_cells, distance + 1, distances)
   end
 end
