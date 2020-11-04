@@ -1,5 +1,5 @@
 defmodule Mazes.RectangularMaze do
-  defstruct [:width, :height, :adjacency_matrix]
+  defstruct [:width, :height, :adjacency_matrix, :from, :to]
 
   @doc "Returns a rectangular maze with given size, either with all walls or no walls"
   def new(width, height, all_adjacent? \\ false) do
@@ -30,11 +30,18 @@ defmodule Mazes.RectangularMaze do
       end)
       |> Enum.into(%{})
 
-    %__MODULE__{
+    maze = %__MODULE__{
       width: width,
       height: height,
       adjacency_matrix: adjacency_matrix
     }
+
+    border_vertices = border_vertices(maze)
+
+    {from_x, from_y} = from = Enum.random(border_vertices)
+    to = Enum.random(Enum.filter(border_vertices, fn {x, y} -> x !== from_x && y !== from_y end))
+
+    %{maze | from: from, to: to}
   end
 
   def map(maze, func) do
@@ -66,7 +73,7 @@ defmodule Mazes.RectangularMaze do
   def put_wall(%__MODULE__{} = maze, from, to), do: set_adjacency(maze, from, to, false)
   def remove_wall(%__MODULE__{} = maze, from, to), do: set_adjacency(maze, from, to, true)
 
-  def adjacent_cells(maze, from) do
+  def adjacent_vertices(maze, from) do
     maze.adjacency_matrix[from]
     |> Enum.filter(fn {_, adjacency} -> adjacency end)
     |> Enum.map(fn {cell, _} -> cell end)
@@ -79,5 +86,18 @@ defmodule Mazes.RectangularMaze do
       |> put_in([to, from], value)
 
     %{maze | adjacency_matrix: adjacency_matrix}
+  end
+
+  defp border_vertices(maze) do
+    vertices = []
+
+    vertices =
+      Enum.reduce(1..maze.width, vertices, fn x, acc ->
+        [{x, 1}, {x, maze.height} | acc]
+      end)
+
+    Enum.reduce(2..(maze.height - 1), vertices, fn y, acc ->
+      [{1, y}, {maze.width, y} | acc]
+    end)
   end
 end

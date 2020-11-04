@@ -4,71 +4,67 @@ defmodule Mazes.RectangularMazeTest do
 
   describe "new" do
     test "generates an adjacency matrix with no adjacent vertices" do
-      assert RectangularMaze.new(2, 3) === %RectangularMaze{
-               width: 2,
-               height: 3,
-               adjacency_matrix: %{
-                 {1, 1} => %{
-                   {1, 2} => false,
-                   {2, 1} => false
-                 },
-                 {1, 2} => %{
-                   {1, 1} => false,
-                   {1, 3} => false,
-                   {2, 2} => false
-                 },
-                 {1, 3} => %{
-                   {1, 2} => false,
-                   {2, 3} => false
-                 },
-                 {2, 1} => %{
-                   {1, 1} => false,
-                   {2, 2} => false
-                 },
-                 {2, 2} => %{
-                   {1, 2} => false,
-                   {2, 1} => false,
-                   {2, 3} => false
-                 },
-                 {2, 3} => %{
-                   {1, 3} => false,
-                   {2, 2} => false
-                 }
+      result = RectangularMaze.new(2, 3)
+      assert result.width == 2
+      assert result.height == 3
+
+      assert result.adjacency_matrix == %{
+               {1, 1} => %{
+                 {1, 2} => false,
+                 {2, 1} => false
+               },
+               {1, 2} => %{
+                 {1, 1} => false,
+                 {1, 3} => false,
+                 {2, 2} => false
+               },
+               {1, 3} => %{
+                 {1, 2} => false,
+                 {2, 3} => false
+               },
+               {2, 1} => %{
+                 {1, 1} => false,
+                 {2, 2} => false
+               },
+               {2, 2} => %{
+                 {1, 2} => false,
+                 {2, 1} => false,
+                 {2, 3} => false
+               },
+               {2, 3} => %{
+                 {1, 3} => false,
+                 {2, 2} => false
                }
              }
     end
 
     test "generates an adjacency matrix with all vertices adjacent" do
-      assert RectangularMaze.new(2, 3, true) === %RectangularMaze{
-               width: 2,
-               height: 3,
-               adjacency_matrix: %{
-                 {1, 1} => %{
-                   {1, 2} => true,
-                   {2, 1} => true
-                 },
-                 {1, 2} => %{
-                   {1, 1} => true,
-                   {1, 3} => true,
-                   {2, 2} => true
-                 },
-                 {1, 3} => %{
-                   {1, 2} => true,
-                   {2, 3} => true
-                 },
-                 {2, 1} => %{
-                   {1, 1} => true,
-                   {2, 2} => true
-                 },
-                 {2, 2} => %{
-                   {1, 2} => true,
-                   {2, 1} => true,
-                   {2, 3} => true
-                 },
-                 {2, 3} => %{
-                   {1, 3} => true,
-                   {2, 2} => true
-                 }
+      assert RectangularMaze.new(2, 3, true).adjacency_matrix == %{
+               {1, 1} => %{
+                 {1, 2} => true,
+                 {2, 1} => true
+               },
+               {1, 2} => %{
+                 {1, 1} => true,
+                 {1, 3} => true,
+                 {2, 2} => true
+               },
+               {1, 3} => %{
+                 {1, 2} => true,
+                 {2, 3} => true
+               },
+               {2, 1} => %{
+                 {1, 1} => true,
+                 {2, 2} => true
+               },
+               {2, 2} => %{
+                 {1, 2} => true,
+                 {2, 1} => true,
+                 {2, 3} => true
+               },
+               {2, 3} => %{
+                 {1, 3} => true,
+                 {2, 2} => true
                }
              }
     end
@@ -135,23 +131,23 @@ defmodule Mazes.RectangularMazeTest do
     end
   end
 
-  describe "adjacent_cells" do
+  describe "adjacent_vertices" do
     test "returns direct neighbors not separated by a wall" do
       maze = RectangularMaze.new(2, 3)
-      assert RectangularMaze.adjacent_cells(maze, {1, 3}) == []
+      assert RectangularMaze.adjacent_vertices(maze, {1, 3}) == []
       maze = RectangularMaze.remove_wall(maze, {1, 3}, {2, 3})
-      assert RectangularMaze.adjacent_cells(maze, {1, 3}) == [{2, 3}]
+      assert RectangularMaze.adjacent_vertices(maze, {1, 3}) == [{2, 3}]
       maze = RectangularMaze.remove_wall(maze, {1, 3}, {1, 2})
-      assert RectangularMaze.adjacent_cells(maze, {1, 3}) == [{1, 2}, {2, 3}]
+      assert RectangularMaze.adjacent_vertices(maze, {1, 3}) == [{1, 2}, {2, 3}]
       maze = RectangularMaze.put_wall(maze, {1, 3}, {2, 3})
-      assert RectangularMaze.adjacent_cells(maze, {1, 3}) == [{1, 2}]
+      assert RectangularMaze.adjacent_vertices(maze, {1, 3}) == [{1, 2}]
     end
 
     test "when no walls" do
       maze = RectangularMaze.new(3, 3, true)
-      assert RectangularMaze.adjacent_cells(maze, {1, 1}) == [{1, 2}, {2, 1}]
-      assert RectangularMaze.adjacent_cells(maze, {2, 2}) == [{1, 2}, {2, 1}, {2, 3}, {3, 2}]
-      assert RectangularMaze.adjacent_cells(maze, {3, 3}) == [{2, 3}, {3, 2}]
+      assert RectangularMaze.adjacent_vertices(maze, {1, 1}) == [{1, 2}, {2, 1}]
+      assert RectangularMaze.adjacent_vertices(maze, {2, 2}) == [{1, 2}, {2, 1}, {2, 3}, {3, 2}]
+      assert RectangularMaze.adjacent_vertices(maze, {3, 3}) == [{2, 3}, {3, 2}]
     end
   end
 end

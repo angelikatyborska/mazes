@@ -89,6 +89,16 @@
   margin: -1rem 0 2rem;
 }
 
+// end of Phoenix-live specific styles
+
+html, body {
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

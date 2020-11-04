@@ -12,7 +12,7 @@ defmodule Mazes.RectangularMazeDistances do
   defp path(maze, to, to, _, acc), do: Enum.reverse(acc)
 
   defp path(maze, from, to, distances, acc) do
-    adjacent = RectangularMaze.adjacent_cells(maze, from)
+    adjacent = RectangularMaze.adjacent_vertices(maze, from)
 
     if adjacent == [] do
       nil
@@ -37,7 +37,7 @@ defmodule Mazes.RectangularMazeDistances do
 
     adjacent_unvisited_cells =
       cells
-      |> Enum.flat_map(&RectangularMaze.adjacent_cells(maze, &1))
+      |> Enum.flat_map(&RectangularMaze.adjacent_vertices(maze, &1))
       |> Enum.uniq()
       |> Enum.filter(&(!distances[&1]))
 

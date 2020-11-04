@@ -10,7 +10,7 @@ defmodule MazesWeb.PageLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, algorithm: BinaryTreeAlgorithm, width: 8, height: 8, solution: [])
+    socket = assign(socket, algorithm: BinaryTreeAlgorithm, width: 32, height: 32, solution: [])
 
     algorithm_state =
       if connected?(socket) do
@@ -66,8 +66,8 @@ defmodule MazesWeb.PageLive do
     solution =
       RectangularMazeDistances.path(
         socket.assigns.algorithm_state.maze,
-        {1, 1},
-        {socket.assigns.width, socket.assigns.height}
+        socket.assigns.algorithm_state.maze.from,
+        socket.assigns.algorithm_state.maze.to
       )
 
     {:noreply, assign(socket, :solution, solution)}
