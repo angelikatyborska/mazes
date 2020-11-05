@@ -12,17 +12,19 @@
           <% class = if vertex in @solution, do: ["highlight" | class], else: class %>
           <% class = if vertex == maze.from, do: ["start" | class], else: class %>
           <% class = if vertex == maze.to, do: ["end" | class], else: class %>
+          <% fill = @colors && RectangularMazeColors.color(@colors.distances[vertex], @colors.max_distance, @hue) %>
+          <% fill = if vertex in @solution, do: "hsl(#{Integer.mod(@hue + 127, 255)}, 100%, 50%)", else: fill %>
 
           <rect width="<%= square_size %>"
                 height="<%= square_size %>"
                 class="<%= Enum.join(class, " ") %>"
+                <%= if fill do %> style="fill: <%= fill %>" <% end %>
                 x="<%= square_size * (x - 1) %>"
                 y="<%= square_size * (y - 1) %>"
           />
         <% end )%>
 
         <%= RectangularMaze.map(maze, fn {x, y} = vertex -> %>
-        <%= if !(vertex in [maze.from, maze.to]) do %>
           <%= if RectangularMaze.wall?(maze, vertex, RectangularMaze.north(vertex)) do %>
             <line x1="<%= square_size * (x - 1) %>"
                   y1="<%= square_size * (y - 1) %>"
@@ -54,14 +56,13 @@
                   y2="<%= square_size * maze.height %>"
             />
           <% end %>
-          <% end %>
         <% end )%>
       </g>
     </svg>
   </div>
 
   <div class="maze-settings">
-    <form phx-change="settings_change" phx-submit="regenerate">
+    <form phx-change="settings_change" phx-submit="generate">
       <div>
         Maze generation algorithm:
         <input type="radio"
@@ -117,12 +118,24 @@
       </div>
 
       <div>
-        <button type="submit">Regenerate</button>
+        <button type="submit">Generate</button>
+      </div>
+
+      <%= if maze.from && maze.to do %>
+        <button type="button" phx-click="solve" <%= if @solution != [], do: "disabled" %>>Solve</button>
+      <% end %>
+
+      <div>
+        <div>
+          The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
+        </div>
+        <div>
+          <input type="range" name="hue" min="0" max="255" value="<%= @hue %>" id="hue">
+          <label for="hue">Hue</label>
+        </div>
+
+        <button type="button" phx-click="color" <%= if @colors, do: "disabled" %>>Color</button>
       </div>
     </form>
-
-    <%= if maze.from && maze.to do %>
-      <button type="button" phx-click="solve">Solve</button>
-    <% end %>
   </div>
 </div>

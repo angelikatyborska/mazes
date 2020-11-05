@@ -11,16 +11,12 @@
     rect {
       fill: white;
 
-      &.highlight {
-        fill: yellow;
-      }
-
       &.start {
-        fill: green;
+        fill: grey !important;
       }
 
       &.end {
-        fill: red;
+        fill: grey !important;
       }
     }
   }
