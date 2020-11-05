@@ -4,21 +4,21 @@ defmodule Mazes.RectangularMazeDistances do
   alias Mazes.RectangularMaze
 
   @doc "Returns a list of vertices that form the shortest path from the start to the end vertex"
-  def path(maze, from, to) do
+  def shortest_path(maze, from, to) do
     distances = distances(maze, to)
-    path(maze, from, to, distances, [from])
+    shortest_path(maze, from, to, distances, [from])
   end
 
-  defp path(maze, to, to, _, acc), do: Enum.reverse(acc)
+  defp shortest_path(_maze, to, to, _, acc), do: Enum.reverse(acc)
 
-  defp path(maze, from, to, distances, acc) do
+  defp shortest_path(maze, from, to, distances, acc) do
     adjacent = RectangularMaze.adjacent_vertices(maze, from)
 
     if adjacent == [] do
       nil
     else
       next = Enum.min_by(adjacent, &distances[&1])
-      path(maze, next, to, distances, [next | acc])
+      shortest_path(maze, next, to, distances, [next | acc])
     end
   end
 

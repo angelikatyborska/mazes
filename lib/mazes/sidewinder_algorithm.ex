@@ -1,9 +1,7 @@
 defmodule Mazes.SidewinderAlgorithm do
   alias Mazes.RectangularMaze
 
-  defstruct [:maze, :vertices_to_visit, :current_group]
-
-  def init(width, height) do
+  def generate(width, height) do
     maze = RectangularMaze.new(width, height)
 
     vertices =
@@ -17,17 +15,14 @@ defmodule Mazes.SidewinderAlgorithm do
         end
       end)
 
-    %__MODULE__{
-      maze: maze,
-      vertices_to_visit: vertices,
-      current_group: []
-    }
+    do_generate(maze, vertices, [])
   end
 
-  def next_step(%__MODULE__{} = state) do
-    %{maze: maze, vertices_to_visit: [vertex | vertices_to_visit], current_group: current_group} =
-      state
+  defp do_generate(maze, [], _) do
+    maze
+  end
 
+  defp do_generate(maze, [vertex | vertices_to_visit], current_group) do
     north = RectangularMaze.north(vertex)
     east = RectangularMaze.east(vertex)
 
@@ -57,15 +52,6 @@ defmodule Mazes.SidewinderAlgorithm do
           end
       end
 
-    state = %__MODULE__{
-      maze: maze,
-      vertices_to_visit: vertices_to_visit,
-      current_group: current_group
-    }
-
-    case vertices_to_visit do
-      [] -> {:halt, state}
-      _ -> {:cont, state}
-    end
+    do_generate(maze, vertices_to_visit, current_group)
   end
 end

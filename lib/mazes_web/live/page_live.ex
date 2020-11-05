@@ -4,35 +4,32 @@ defmodule MazesWeb.PageLive do
   alias Mazes.{
     RectangularMaze,
     RectangularMazeDistances,
-    BinaryTreeAlgorithm,
-    SidewinderAlgorithm
+    BinaryTreeAlgorithm
   }
 
   @impl true
   def mount(_params, _session, socket) do
     socket = assign(socket, algorithm: BinaryTreeAlgorithm, width: 32, height: 32, solution: [])
 
-    algorithm_state =
+    maze =
       if connected?(socket) do
-        execute(new(socket), socket.assigns.algorithm)
+        generate(socket)
       else
-        new(socket)
+        empty(socket)
       end
 
     socket =
       socket
-      |> assign(algorithm_state: algorithm_state)
+      |> assign(maze: maze)
 
     {:ok, socket}
   end
 
   @impl true
   def handle_event("regenerate", _value, socket) do
-    algorithm_state = execute(new(socket), socket.assigns.algorithm)
-
     socket =
       socket
-      |> assign(:algorithm_state, algorithm_state)
+      |> assign(:maze, generate(socket))
       |> assign(:solution, [])
 
     {:noreply, socket}
@@ -64,26 +61,20 @@ defmodule MazesWeb.PageLive do
   @impl true
   def handle_event("solve", _value, socket) do
     solution =
-      RectangularMazeDistances.path(
-        socket.assigns.algorithm_state.maze,
-        socket.assigns.algorithm_state.maze.from,
-        socket.assigns.algorithm_state.maze.to
+      RectangularMazeDistances.shortest_path(
+        socket.assigns.maze,
+        socket.assigns.maze.from,
+        socket.assigns.maze.to
       )
 
     {:noreply, assign(socket, :solution, solution)}
   end
 
-  defp new(socket) do
-    socket.assigns.algorithm.init(socket.assigns.width, socket.assigns.height)
+  defp empty(socket) do
+    RectangularMaze.new(socket.assigns.width, socket.assigns.height)
   end
 
-  defp execute(algorithm_state, algorithm) do
-    case algorithm.next_step(algorithm_state) do
-      {:cont, algorithm_state} ->
-        execute(algorithm_state, algorithm)
-
-      {:halt, algorithm_state} ->
-        algorithm_state
-    end
+  defp generate(socket) do
+    socket.assigns.algorithm.generate(socket.assigns.width, socket.assigns.height)
   end
 end

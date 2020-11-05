@@ -6,13 +6,13 @@ defmodule Mazes.RectangularMazeDistancesTest do
   describe "path" do
     test "when all walls" do
       maze = RectangularMaze.new(2, 3, false)
-      result = RectangularMazeDistances.path(maze, {1, 1}, {2, 2})
+      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {2, 2})
       assert result == nil
     end
 
     test "when no walls" do
       maze = RectangularMaze.new(2, 3, true)
-      result = RectangularMazeDistances.path(maze, {1, 1}, {2, 3})
+      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {2, 3})
       assert result == [{1, 1}, {1, 2}, {1, 3}, {2, 3}]
     end
 
@@ -23,7 +23,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
         |> RectangularMaze.put_wall({2, 1}, {2, 2})
         |> RectangularMaze.put_wall({2, 3}, {3, 3})
 
-      result = RectangularMazeDistances.path(maze, {1, 1}, {3, 3})
+      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == [{1, 1}, {1, 2}, {2, 2}, {3, 2}, {3, 3}]
     end
   end

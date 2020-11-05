@@ -1,9 +1,7 @@
 defmodule Mazes.BinaryTreeAlgorithm do
   alias Mazes.RectangularMaze
 
-  defstruct [:maze, :vertices_to_visit]
-
-  def init(width, height) do
+  def generate(width, height) do
     maze = RectangularMaze.new(width, height)
 
     vertices =
@@ -17,14 +15,14 @@ defmodule Mazes.BinaryTreeAlgorithm do
         end
       end)
 
-    %__MODULE__{
-      maze: maze,
-      vertices_to_visit: vertices
-    }
+    do_generate(maze, vertices)
   end
 
-  def next_step(%__MODULE__{} = state) do
-    %{maze: maze, vertices_to_visit: [vertex | vertices_to_visit]} = state
+  defp do_generate(maze, []) do
+    maze
+  end
+
+  defp do_generate(maze, [vertex | vertices_to_visit]) do
     north = RectangularMaze.north(vertex)
     east = RectangularMaze.east(vertex)
 
@@ -39,11 +37,6 @@ defmodule Mazes.BinaryTreeAlgorithm do
           RectangularMaze.remove_wall(maze, vertex, Enum.random(list))
       end
 
-    state = %__MODULE__{maze: maze, vertices_to_visit: vertices_to_visit}
-
-    case vertices_to_visit do
-      [] -> {:halt, state}
-      _ -> {:cont, state}
-    end
+    do_generate(maze, vertices_to_visit)
   end
 end
