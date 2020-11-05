@@ -1,6 +1,4 @@
 defmodule Mazes.RectangularMazeDistances do
-  defstruct [:maze, :start_cell, :distances]
-
   alias Mazes.RectangularMaze
 
   @doc "Returns a list of vertices that form the shortest path from the start to the end vertex"
@@ -22,9 +20,16 @@ defmodule Mazes.RectangularMazeDistances do
     end
   end
 
+  @doc "Returns the vertex that is further away from the given one and its distance"
+  def find_max_vertex_by_distance(maze, from, distances \\ nil) do
+    distances = if distances, do: distances, else: distances(maze, from)
+
+    Enum.max_by(distances, fn {vertex, distance} -> distance end)
+  end
+
   @doc "Returns a map of cells where the values are distances from the starting cell"
-  def distances(maze, start_cell) do
-    distances(maze, [start_cell], 0, %{})
+  def distances(maze, from) do
+    distances(maze, [from], 0, %{})
   end
 
   defp distances(_, [], _, distances), do: distances

@@ -28,6 +28,24 @@ defmodule Mazes.RectangularMazeDistancesTest do
     end
   end
 
+  describe "find_max_vertex_by_distance" do
+    test "when no walls" do
+      maze = RectangularMaze.new(2, 3, true)
+
+      result = RectangularMazeDistances.find_max_vertex_by_distance(maze, {2, 2})
+      assert result == {{1, 1}, 2}
+    end
+
+    test "when some walls" do
+      maze = RectangularMaze.new(2, 3, true)
+      maze = RectangularMaze.put_wall(maze, {2, 1}, {2, 2})
+
+      result = RectangularMazeDistances.find_max_vertex_by_distance(maze, {2, 2})
+      assert result == {{2, 1}, 3}
+    end
+  end
+
+
   describe "distances" do
     test "when all walls" do
       maze = RectangularMaze.new(2, 3, false)
