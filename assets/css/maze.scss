@@ -10,10 +10,18 @@
 
     rect {
       fill: white;
-    }
 
-    rect.highlight {
-      fill: yellow;
+      &.highlight {
+        fill: yellow;
+      }
+
+      &.start {
+        fill: green;
+      }
+
+      &.end {
+        fill: red;
+      }
     }
   }
 

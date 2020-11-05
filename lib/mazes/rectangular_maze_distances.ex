@@ -24,7 +24,7 @@ defmodule Mazes.RectangularMazeDistances do
   def find_max_vertex_by_distance(maze, from, distances \\ nil) do
     distances = if distances, do: distances, else: distances(maze, from)
 
-    Enum.max_by(distances, fn {vertex, distance} -> distance end)
+    Enum.max_by(distances, fn {_, distance} -> distance end)
   end
 
   @doc "Returns a map of cells where the values are distances from the starting cell"
@@ -47,5 +47,20 @@ defmodule Mazes.RectangularMazeDistances do
       |> Enum.filter(&(!distances[&1]))
 
     distances(maze, adjacent_unvisited_cells, distance + 1, distances)
+  end
+
+  @doc "Sets from and to of a maze so that the path requires to connect the two is the longest path in the maze"
+  def set_longest_path_from_and_to(maze) do
+    {from, _} = find_max_vertex_by_distance(maze, {1, 1})
+    {to, _} = find_max_vertex_by_distance(maze, from)
+    %{maze | from: from, to: to}
+  end
+
+  @doc "Sets two random border vertices as from and to"
+  def set_random_border_from_and_to(maze) do
+    border_vertices = RectangularMaze.border_vertices(maze)
+    [from, to | _] = Enum.shuffle(border_vertices)
+
+    %{maze | from: from, to: to}
   end
 end

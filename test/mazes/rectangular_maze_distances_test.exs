@@ -45,7 +45,6 @@ defmodule Mazes.RectangularMazeDistancesTest do
     end
   end
 
-
   describe "distances" do
     test "when all walls" do
       maze = RectangularMaze.new(2, 3, false)

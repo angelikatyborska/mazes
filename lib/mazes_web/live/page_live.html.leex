@@ -8,9 +8,14 @@
     <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding + square_size * maze.width %> <%= 2 * padding + square_size * maze.height %>">
       <g transform="translate(<%= padding %>, <%= padding %>)">
         <%= RectangularMaze.map(maze, fn {x, y} = vertex -> %>
+          <% class = [] %>
+          <% class = if vertex in @solution, do: ["highlight" | class], else: class %>
+          <% class = if vertex == maze.from, do: ["start" | class], else: class %>
+          <% class = if vertex == maze.to, do: ["end" | class], else: class %>
+
           <rect width="<%= square_size %>"
                 height="<%= square_size %>"
-                class="<%= if vertex in @solution, do: "highlight", else: "" %>"
+                class="<%= Enum.join(class, " ") %>"
                 x="<%= square_size * (x - 1) %>"
                 y="<%= square_size * (y - 1) %>"
           />
@@ -57,21 +62,51 @@
 
   <div class="maze-settings">
     <form phx-change="settings_change" phx-submit="regenerate">
-      <input type="radio"
-             id="algorithm-binary-tree"
-             value="Elixir.Mazes.BinaryTreeAlgorithm"
-             <%= if @algorithm === Elixir.Mazes.BinaryTreeAlgorithm, do: "checked" %>
-             name="algorithm" />
+      <div>
+        Maze generation algorithm:
+        <input type="radio"
+               id="algorithm-sidewinder"
+               value="Elixir.Mazes.SidewinderAlgorithm"
+               <%= if @algorithm === Elixir.Mazes.SidewinderAlgorithm, do: "checked" %>
+               name="algorithm" />
 
-      <label for="algorithm-binary-tree">Binary Tree</label>
+        <label for="algorithm-sidewinder">Sidewinder</label>
 
-      <input type="radio"
-             id="algorithm-sidewinder"
-             value="Elixir.Mazes.SidewinderAlgorithm"
-             <%= if @algorithm === Elixir.Mazes.SidewinderAlgorithm, do: "checked" %>
-             name="algorithm" />
+        <input type="radio"
+               id="algorithm-binary-tree"
+               value="Elixir.Mazes.BinaryTreeAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.BinaryTreeAlgorithm, do: "checked" %>
+               name="algorithm" />
 
-      <label for="algorithm-sidewinder">Sidewinder</label>
+        <label for="algorithm-binary-tree">Binary Tree</label>
+      </div>
+
+      <div>
+        Entrance and exit placement strategy:
+        <input type="radio"
+               id="entrance-exit-hardest"
+               value="set_longest_path_from_and_to"
+                <%= if @entrance_exit_strategy === :set_longest_path_from_and_to, do: "checked" %>
+               name="entrance_exit_strategy" />
+
+        <label for="entrance-exit-hardest">Longest path</label>
+
+        <input type="radio"
+               id="entrance-exit-random"
+               value="set_random_border_from_and_to"
+                <%= if @entrance_exit_strategy === :set_random_border_from_and_to, do: "checked" %>
+               name="entrance_exit_strategy" />
+
+        <label for="entrance-exit-random">Random</label>
+
+        <input type="radio"
+               id="entrance-exit-nil"
+               value="nil"
+                <%= if @entrance_exit_strategy === :nil, do: "checked" %>
+               name="entrance_exit_strategy" />
+
+        <label for="entrance-exit-nil">None</label>
+      </div>
 
       <div>
         <label for="width">Width</label>
@@ -86,6 +121,8 @@
       </div>
     </form>
 
-    <button type="button" phx-click="solve">Solve</button>
+    <%= if maze.from && maze.to do %>
+      <button type="button" phx-click="solve">Solve</button>
+    <% end %>
   </div>
 </div>
