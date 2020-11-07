@@ -4,6 +4,10 @@ defmodule Mazes.RectangularMazeColors do
     min = 10
     max = 100
     lightness = max - trunc((max - min) * distance / max_distance)
-    "hsl(#{hue}, 100%, #{lightness}%)"
+    "hsl(#{hue}, 80%, #{lightness}%)"
+  end
+
+  def solution_color(hue \\ 0) do
+    "hsl(#{Integer.mod(hue + 180, 360)}, 80%, 50%)"
   end
 end

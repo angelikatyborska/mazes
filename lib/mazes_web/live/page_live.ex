@@ -9,17 +9,27 @@ defmodule MazesWeb.PageLive do
     SidewinderAlgorithm
   }
 
+  def default_width, do: 32
+  def default_height, do: default_width()
+  def default_hue, do: 200
+  def min_width, do: 1
+  def max_width, do: 50
+  def min_height, do: min_width()
+  def max_height, do: max_width()
+  def min_hue, do: 0
+  def max_hue, do: 359
+
   @impl true
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
         algorithm: SidewinderAlgorithm,
         entrance_exit_strategy: :set_longest_path_from_and_to,
-        width: 32,
-        height: 32,
+        width: default_width(),
+        height: default_height(),
         solution: [],
         colors: nil,
-        hue: 155
+        hue: default_hue()
       )
 
     maze =
@@ -58,11 +68,14 @@ defmodule MazesWeb.PageLive do
     } = form_data
 
     width = String.to_integer(width)
-    width = if width > 50, do: 50, else: width
+    width = if width < min_width(), do: min_width(), else: width
+    width = if width > max_width(), do: max_width(), else: width
     height = String.to_integer(height)
-    height = if height > 50, do: 50, else: height
+    height = if height < min_height(), do: min_height(), else: height
+    height = if height > max_height(), do: max_height(), else: height
     hue = String.to_integer(hue)
-    hue = if hue > 255, do: 255, else: hue
+    hue = if hue < min_hue(), do: min_hue(), else: hue
+    hue = if hue > max_hue(), do: max_hue(), else: hue
     algorithm = String.to_existing_atom(algorithm)
     entrance_exit_strategy = String.to_existing_atom(entrance_exit_strategy)
 

@@ -13,7 +13,7 @@
           <% class = if vertex == maze.from, do: ["start" | class], else: class %>
           <% class = if vertex == maze.to, do: ["end" | class], else: class %>
           <% fill = @colors && RectangularMazeColors.color(@colors.distances[vertex], @colors.max_distance, @hue) %>
-          <% fill = if vertex in @solution, do: "hsl(#{Integer.mod(@hue + 127, 255)}, 100%, 50%)", else: fill %>
+          <% fill = if vertex in @solution, do: Mazes.RectangularMazeColors.solution_color(@hue), else: fill %>
 
           <rect width="<%= square_size %>"
                 height="<%= square_size %>"
@@ -66,6 +66,14 @@
       <div>
         Maze generation algorithm:
         <input type="radio"
+               id="algorithm-aldous-broder"
+               value="Elixir.Mazes.AldousBroderAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.AldousBroderAlgorithm, do: "checked" %>
+               name="algorithm" />
+
+        <label for="algorithm-aldous-broder">Aldous-Broder</label>
+
+        <input type="radio"
                id="algorithm-sidewinder"
                value="Elixir.Mazes.SidewinderAlgorithm"
                <%= if @algorithm === Elixir.Mazes.SidewinderAlgorithm, do: "checked" %>
@@ -111,10 +119,10 @@
 
       <div>
         <label for="width">Width</label>
-        <input type="number" min="1" max="50" step="1" name="width" value="<%= @width %>" id="width" />
+        <input type="number" min="<%= min_width() %>" max="<%= max_width() %>" step="1" name="width" value="<%= @width %>" id="width" />
 
         <label for="height">Height</label>
-        <input type="number" min="1" max="50" step="1" name="height" value="<%= @height %>" id="height" />
+        <input type="number" min="<%= min_height() %>" max="<%= max_height() %>" step="1" name="height" value="<%= @height %>" id="height" />
       </div>
 
       <div>
@@ -130,7 +138,7 @@
           The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
         </div>
         <div>
-          <input type="range" name="hue" min="0" max="255" value="<%= @hue %>" id="hue">
+          <input type="range" name="hue" min="<%= min_hue() %>" max="<%= max_hue() %>" value="<%= @hue %>" id="hue">
           <label for="hue">Hue</label>
         </div>
 
