@@ -20,10 +20,10 @@ defmodule Mazes.AldousBroderAlgorithm do
       |> Enum.map(&{&1, false})
       |> Enum.into(%{})
 
-    remaining = length(all_vertices)
     start = Enum.random(all_vertices)
 
-    Map.put(visited_map, start, true)
+    visited_map = Map.put(visited_map, start, true)
+    remaining = length(all_vertices) - 1
 
     do_generate(maze, start, visited_map, remaining)
   end

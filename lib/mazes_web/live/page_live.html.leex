@@ -66,6 +66,14 @@
       <div>
         Maze generation algorithm:
         <input type="radio"
+               id="algorithm-wilsons"
+               value="Elixir.Mazes.WilsonsAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.WilsonsAlgorithm, do: "checked" %>
+               name="algorithm" />
+
+        <label for="algorithm-wilsons">Wilson's</label>
+
+        <input type="radio"
                id="algorithm-aldous-broder"
                value="Elixir.Mazes.AldousBroderAlgorithm"
                 <%= if @algorithm === Elixir.Mazes.AldousBroderAlgorithm, do: "checked" %>
