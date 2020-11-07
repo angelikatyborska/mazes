@@ -70,6 +70,31 @@ defmodule Mazes.RectangularMazeTest do
     end
   end
 
+  describe "vertices" do
+    test "returns sorted from left to right, top to bottom" do
+      maze = RectangularMaze.new(4, 4)
+
+      assert RectangularMaze.vertices(maze) == [
+               {1, 1},
+               {2, 1},
+               {3, 1},
+               {4, 1},
+               {1, 2},
+               {2, 2},
+               {3, 2},
+               {4, 2},
+               {1, 3},
+               {2, 3},
+               {3, 3},
+               {4, 3},
+               {1, 4},
+               {2, 4},
+               {3, 4},
+               {4, 4}
+             ]
+    end
+  end
+
   describe "outer_wall?" do
     test "checks if there is the outer wall between two vertices" do
       maze = RectangularMaze.new(2, 3)
@@ -148,6 +173,19 @@ defmodule Mazes.RectangularMazeTest do
       assert RectangularMaze.adjacent_vertices(maze, {1, 1}) == [{1, 2}, {2, 1}]
       assert RectangularMaze.adjacent_vertices(maze, {2, 2}) == [{1, 2}, {2, 1}, {2, 3}, {3, 2}]
       assert RectangularMaze.adjacent_vertices(maze, {3, 3}) == [{2, 3}, {3, 2}]
+    end
+  end
+
+  describe "dead_ends" do
+    test "returns the list of vertices with just one adjacent vertex" do
+      maze =
+        RectangularMaze.new(3, 3, true)
+        |> RectangularMaze.put_wall({1, 1}, {1, 2})
+        |> RectangularMaze.put_wall({2, 1}, {2, 2})
+        |> RectangularMaze.put_wall({1, 2}, {1, 3})
+        |> RectangularMaze.put_wall({2, 2}, {2, 3})
+
+      assert RectangularMaze.dead_ends(maze) == [{1, 1}, {1, 2}, {1, 3}]
     end
   end
 end

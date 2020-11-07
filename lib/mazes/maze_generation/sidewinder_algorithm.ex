@@ -3,19 +3,9 @@ defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
 
   def generate(width, height) do
     maze = RectangularMaze.new(width, height)
+    all_vertices = RectangularMaze.vertices(maze)
 
-    vertices =
-      maze
-      |> RectangularMaze.vertices()
-      |> Enum.sort(fn {x1, y1}, {x2, y2} ->
-        if y1 == y2 do
-          x1 < x2
-        else
-          y1 < y2
-        end
-      end)
-
-    do_generate(maze, vertices, [])
+    do_generate(maze, all_vertices, [])
   end
 
   defp do_generate(maze, [], _) do

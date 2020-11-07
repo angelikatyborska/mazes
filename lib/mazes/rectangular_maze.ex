@@ -47,6 +47,13 @@ defmodule Mazes.RectangularMaze do
 
   def vertices(maze) do
     Map.keys(maze.adjacency_matrix)
+    |> Enum.sort(fn {x1, y1}, {x2, y2} ->
+      if y1 == y2 do
+        x1 < x2
+      else
+        y1 < y2
+      end
+    end)
   end
 
   def north({x, y}), do: {x, y - 1}
@@ -88,6 +95,7 @@ defmodule Mazes.RectangularMaze do
     %{maze | adjacency_matrix: adjacency_matrix}
   end
 
+  @doc "Returns a list of vertices that are in the last or first column or row"
   def border_vertices(maze) do
     vertices = []
 
@@ -99,5 +107,17 @@ defmodule Mazes.RectangularMaze do
     Enum.reduce(2..(maze.height - 1), vertices, fn y, acc ->
       [{1, y}, {maze.width, y} | acc]
     end)
+  end
+
+  def dead_ends(maze) do
+    maze.adjacency_matrix
+    |> Enum.reduce([], fn {vertex, _}, acc ->
+      if length(adjacent_vertices(maze, vertex)) == 1 do
+        [vertex | acc]
+      else
+        acc
+      end
+    end)
+    |> Enum.reverse()
   end
 end
