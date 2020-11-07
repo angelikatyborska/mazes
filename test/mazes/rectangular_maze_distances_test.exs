@@ -26,6 +26,17 @@ defmodule Mazes.RectangularMazeDistancesTest do
       result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == [{1, 1}, {1, 2}, {2, 2}, {3, 2}, {3, 3}]
     end
+
+    test "when some walls but no path" do
+      maze =
+        RectangularMaze.new(3, 3, true)
+        |> RectangularMaze.put_wall({1, 1}, {1, 2})
+        |> RectangularMaze.put_wall({2, 1}, {2, 2})
+        |> RectangularMaze.put_wall({3, 1}, {3, 2})
+
+      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {3, 3})
+      assert result == nil
+    end
   end
 
   describe "find_max_vertex_by_distance" do

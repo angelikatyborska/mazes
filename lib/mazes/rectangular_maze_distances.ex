@@ -4,20 +4,20 @@ defmodule Mazes.RectangularMazeDistances do
   @doc "Returns a list of vertices that form the shortest path from the start to the end vertex"
   def shortest_path(maze, from, to) do
     distances = distances(maze, to)
-    shortest_path(maze, from, to, distances, [from])
+
+    if distances[from] do
+      shortest_path(maze, from, to, distances, [from])
+    else
+      nil
+    end
   end
 
   defp shortest_path(_maze, to, to, _, acc), do: Enum.reverse(acc)
 
   defp shortest_path(maze, from, to, distances, acc) do
     adjacent = RectangularMaze.adjacent_vertices(maze, from)
-
-    if adjacent == [] do
-      nil
-    else
-      next = Enum.min_by(adjacent, &distances[&1])
-      shortest_path(maze, next, to, distances, [next | acc])
-    end
+    next = Enum.min_by(adjacent, &distances[&1])
+    shortest_path(maze, next, to, distances, [next | acc])
   end
 
   @doc "Returns the vertex that is further away from the given one and its distance"

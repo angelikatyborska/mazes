@@ -66,33 +66,41 @@
       <div>
         Maze generation algorithm:
         <input type="radio"
+               id="algorithm-hunt-and-kill"
+               value="Elixir.Mazes.MazeGeneration.HuntAndKillAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.MazeGeneration.HuntAndKillAlgorithm, do: "checked" %>
+               name="algorithm" />
+
+        <label for="algorithm-hunt-and-kill">Hunt and Kill</label>
+
+        <input type="radio"
                id="algorithm-wilsons"
-               value="Elixir.Mazes.WilsonsAlgorithm"
-                <%= if @algorithm === Elixir.Mazes.WilsonsAlgorithm, do: "checked" %>
+               value="Elixir.Mazes.MazeGeneration.WilsonsAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.MazeGeneration.WilsonsAlgorithm, do: "checked" %>
                name="algorithm" />
 
         <label for="algorithm-wilsons">Wilson's</label>
 
         <input type="radio"
                id="algorithm-aldous-broder"
-               value="Elixir.Mazes.AldousBroderAlgorithm"
-                <%= if @algorithm === Elixir.Mazes.AldousBroderAlgorithm, do: "checked" %>
+               value="Elixir.Mazes.MazeGeneration.AldousBroderAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.MazeGeneration.AldousBroderAlgorithm, do: "checked" %>
                name="algorithm" />
 
         <label for="algorithm-aldous-broder">Aldous-Broder</label>
 
         <input type="radio"
                id="algorithm-sidewinder"
-               value="Elixir.Mazes.SidewinderAlgorithm"
-               <%= if @algorithm === Elixir.Mazes.SidewinderAlgorithm, do: "checked" %>
+               value="Elixir.Mazes.MazeGeneration.SidewinderAlgorithm"
+               <%= if @algorithm === Elixir.Mazes.MazeGeneration.SidewinderAlgorithm, do: "checked" %>
                name="algorithm" />
 
         <label for="algorithm-sidewinder">Sidewinder</label>
 
         <input type="radio"
                id="algorithm-binary-tree"
-               value="Elixir.Mazes.BinaryTreeAlgorithm"
-                <%= if @algorithm === Elixir.Mazes.BinaryTreeAlgorithm, do: "checked" %>
+               value="Elixir.Mazes.MazeGeneration.BinaryTreeAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.MazeGeneration.BinaryTreeAlgorithm, do: "checked" %>
                name="algorithm" />
 
         <label for="algorithm-binary-tree">Binary Tree</label>

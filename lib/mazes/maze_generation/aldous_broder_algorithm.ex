@@ -1,4 +1,4 @@
-defmodule Mazes.AldousBroderAlgorithm do
+defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
   alias Mazes.RectangularMaze
 
   def generate(width, height) do

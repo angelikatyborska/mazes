@@ -1,4 +1,4 @@
-defmodule Mazes.WilsonsAlgorithm do
+defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
   alias Mazes.RectangularMaze
 
   def generate(width, height) do

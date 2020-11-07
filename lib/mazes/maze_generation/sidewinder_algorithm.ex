@@ -1,4 +1,4 @@
-defmodule Mazes.SidewinderAlgorithm do
+defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
   alias Mazes.RectangularMaze
 
   def generate(width, height) do

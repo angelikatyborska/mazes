@@ -1,4 +1,4 @@
-defmodule Mazes.BinaryTreeAlgorithm do
+defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
   alias Mazes.RectangularMaze
 
   def generate(width, height) do

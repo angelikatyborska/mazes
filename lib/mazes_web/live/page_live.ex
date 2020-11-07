@@ -6,9 +6,10 @@ defmodule MazesWeb.PageLive do
     RectangularMazeDistances,
     RectangularMazeEntranceAndExit,
     RectangularMazeColors,
-    SidewinderAlgorithm
+    MazeGeneration.HuntAndKillAlgorithm
   }
 
+  def default_algorithm, do: HuntAndKillAlgorithm
   def default_width, do: 32
   def default_height, do: default_width()
   def default_hue, do: 200
@@ -23,7 +24,7 @@ defmodule MazesWeb.PageLive do
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
-        algorithm: SidewinderAlgorithm,
+        algorithm: default_algorithm(),
         entrance_exit_strategy: :set_longest_path_from_and_to,
         width: default_width(),
         height: default_height(),
