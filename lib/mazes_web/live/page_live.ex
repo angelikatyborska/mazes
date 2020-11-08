@@ -3,8 +3,8 @@ defmodule MazesWeb.PageLive do
 
   alias Mazes.{
     RectangularMaze,
-    RectangularMazeDistances,
-    RectangularMazeEntranceAndExit
+    MazeDistances,
+    MazeEntranceAndExit
   }
 
   alias MazesWeb.PageView
@@ -46,21 +46,20 @@ defmodule MazesWeb.PageLive do
 
     maze =
       if socket.assigns.entrance_exit_strategy do
-        apply(RectangularMazeEntranceAndExit, socket.assigns.entrance_exit_strategy, [maze])
+        apply(MazeEntranceAndExit, socket.assigns.entrance_exit_strategy, [maze])
       else
         maze
       end
 
     solution =
       if maze.from && maze.to,
-        do: RectangularMazeDistances.shortest_path(maze, maze.from, maze.to),
+        do: MazeDistances.shortest_path(maze, maze.from, maze.to),
         else: []
 
     from = maze.from || {trunc(Float.ceil(maze.width / 2)), trunc(Float.ceil(maze.height / 2))}
-    distances = RectangularMazeDistances.distances(maze, from)
+    distances = MazeDistances.distances(maze, from)
 
-    {_, max_distance} =
-      RectangularMazeDistances.find_max_vertex_by_distance(maze, from, distances)
+    {_, max_distance} = MazeDistances.find_max_vertex_by_distance(maze, from, distances)
 
     colors = %{distances: distances, max_distance: max_distance}
 
@@ -68,8 +67,8 @@ defmodule MazesWeb.PageLive do
       if socket.assigns.entrance_exit_strategy == :set_longest_path_from_and_to do
         solution
       else
-        temp_maze = Mazes.RectangularMazeEntranceAndExit.set_longest_path_from_and_to(maze)
-        RectangularMazeDistances.shortest_path(temp_maze, temp_maze.from, temp_maze.to)
+        temp_maze = Mazes.MazeEntranceAndExit.set_longest_path_from_and_to(maze)
+        MazeDistances.shortest_path(temp_maze, temp_maze.from, temp_maze.to)
       end
 
     socket

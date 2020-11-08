@@ -1,18 +1,18 @@
-defmodule Mazes.RectangularMazeDistancesTest do
+defmodule Mazes.MazeDistancesTest do
   use ExUnit.Case
   alias Mazes.RectangularMaze
-  alias Mazes.RectangularMazeDistances
+  alias Mazes.MazeDistances
 
   describe "path" do
     test "when all walls" do
       maze = RectangularMaze.new(2, 3, false)
-      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {2, 2})
+      result = MazeDistances.shortest_path(maze, {1, 1}, {2, 2})
       assert result == nil
     end
 
     test "when no walls" do
       maze = RectangularMaze.new(2, 3, true)
-      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {2, 3})
+      result = MazeDistances.shortest_path(maze, {1, 1}, {2, 3})
       assert result == [{1, 1}, {1, 2}, {1, 3}, {2, 3}]
     end
 
@@ -23,7 +23,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
         |> RectangularMaze.put_wall({2, 1}, {2, 2})
         |> RectangularMaze.put_wall({2, 3}, {3, 3})
 
-      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {3, 3})
+      result = MazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == [{1, 1}, {1, 2}, {2, 2}, {3, 2}, {3, 3}]
     end
 
@@ -34,7 +34,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
         |> RectangularMaze.put_wall({2, 1}, {2, 2})
         |> RectangularMaze.put_wall({3, 1}, {3, 2})
 
-      result = RectangularMazeDistances.shortest_path(maze, {1, 1}, {3, 3})
+      result = MazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == nil
     end
   end
@@ -43,7 +43,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
     test "when no walls" do
       maze = RectangularMaze.new(2, 3, true)
 
-      result = RectangularMazeDistances.find_max_vertex_by_distance(maze, {2, 2})
+      result = MazeDistances.find_max_vertex_by_distance(maze, {2, 2})
       assert result == {{1, 1}, 2}
     end
 
@@ -51,7 +51,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
       maze = RectangularMaze.new(2, 3, true)
       maze = RectangularMaze.put_wall(maze, {2, 1}, {2, 2})
 
-      result = RectangularMazeDistances.find_max_vertex_by_distance(maze, {2, 2})
+      result = MazeDistances.find_max_vertex_by_distance(maze, {2, 2})
       assert result == {{2, 1}, 3}
     end
   end
@@ -60,7 +60,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
     test "when all walls" do
       maze = RectangularMaze.new(2, 3, false)
 
-      result = RectangularMazeDistances.distances(maze, {1, 1})
+      result = MazeDistances.distances(maze, {1, 1})
 
       assert result == %{
                {1, 1} => 0
@@ -70,7 +70,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
     test "when no walls" do
       maze = RectangularMaze.new(2, 3, true)
 
-      result = RectangularMazeDistances.distances(maze, {1, 1})
+      result = MazeDistances.distances(maze, {1, 1})
 
       assert result == %{
                {1, 1} => 0,
@@ -81,7 +81,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
                {2, 3} => 3
              }
 
-      result = RectangularMazeDistances.distances(maze, {2, 2})
+      result = MazeDistances.distances(maze, {2, 2})
 
       assert result == %{
                {1, 1} => 2,
@@ -97,7 +97,7 @@ defmodule Mazes.RectangularMazeDistancesTest do
       maze = RectangularMaze.new(2, 3, true)
       maze = RectangularMaze.put_wall(maze, {2, 1}, {2, 2})
 
-      result = RectangularMazeDistances.distances(maze, {2, 2})
+      result = MazeDistances.distances(maze, {2, 2})
 
       assert result == %{
                {1, 1} => 2,

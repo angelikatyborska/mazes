@@ -3,7 +3,7 @@ defmodule MazesWeb.PageView do
 
   alias Mazes.{
     RectangularMaze,
-    RectangularMazeColors,
+    MazeColors,
     MazeGeneration.HuntAndKillAlgorithm
   }
 
@@ -37,11 +37,11 @@ defmodule MazesWeb.PageView do
   def vertex_fill(vertex, solution, show_solution, colors, show_colors, hue) do
     fill =
       show_colors && colors &&
-        RectangularMazeColors.color(colors.distances[vertex], colors.max_distance, hue)
+        MazeColors.color(colors.distances[vertex], colors.max_distance, hue)
 
     fill =
       if show_solution && vertex in solution,
-        do: Mazes.RectangularMazeColors.solution_color(hue),
+        do: Mazes.MazeColors.solution_color(hue),
         else: fill
 
     if fill, do: "style=\"fill: #{fill}\""

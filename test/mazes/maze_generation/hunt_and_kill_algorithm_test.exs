@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.HuntAndKillAlgorithmTest do
   alias Mazes.MazeGeneration.HuntAndKillAlgorithm
-  alias Mazes.RectangularMazeDistances
+  alias Mazes.MazeDistances
 
   use ExUnit.Case
 
@@ -10,6 +10,6 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithmTest do
 
   test "produces a maze that can be solved" do
     maze = HuntAndKillAlgorithm.generate(10, 10)
-    assert RectangularMazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+    assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
   end
 end

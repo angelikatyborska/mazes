@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.BinaryTreeAlgorithmTest do
   alias Mazes.MazeGeneration.BinaryTreeAlgorithm
-  alias Mazes.RectangularMazeDistances
+  alias Mazes.MazeDistances
 
   use ExUnit.Case
 
@@ -10,6 +10,6 @@ defmodule Mazes.MazeGeneration.BinaryTreeAlgorithmTest do
 
   test "produces a maze that can be solved" do
     maze = BinaryTreeAlgorithm.generate(10, 10)
-    assert RectangularMazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+    assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
   end
 end

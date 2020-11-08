@@ -1,6 +1,4 @@
-defmodule Mazes.RectangularMazeDistances do
-  alias Mazes.RectangularMaze
-
+defmodule Mazes.MazeDistances do
   @doc "Returns a list of vertices that form the shortest path from the start to the end vertex"
   def shortest_path(maze, from, to) do
     distances = distances(maze, to)
@@ -15,7 +13,7 @@ defmodule Mazes.RectangularMazeDistances do
   defp shortest_path(_maze, to, to, _, acc), do: Enum.reverse(acc)
 
   defp shortest_path(maze, from, to, distances, acc) do
-    adjacent = RectangularMaze.adjacent_vertices(maze, from)
+    adjacent = maze.module.adjacent_vertices(maze, from)
     next = Enum.min_by(adjacent, &distances[&1])
     shortest_path(maze, next, to, distances, [next | acc])
   end
@@ -42,7 +40,7 @@ defmodule Mazes.RectangularMazeDistances do
 
     adjacent_unvisited_cells =
       cells
-      |> Enum.flat_map(&RectangularMaze.adjacent_vertices(maze, &1))
+      |> Enum.flat_map(&maze.module.adjacent_vertices(maze, &1))
       |> Enum.uniq()
       |> Enum.filter(&(!distances[&1]))
 

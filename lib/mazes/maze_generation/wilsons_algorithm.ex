@@ -1,9 +1,9 @@
 defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
   alias Mazes.RectangularMaze
 
-  def generate(width, height) do
-    maze = RectangularMaze.new(width, height)
-    all_vertices = RectangularMaze.vertices(maze)
+  def generate(width, height, module \\ RectangularMaze) do
+    maze = module.new(width, height)
+    all_vertices = module.vertices(maze)
 
     visited =
       all_vertices
@@ -15,41 +15,41 @@ defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
     visited = Map.put(visited, start, true)
     remaining = length(all_vertices) - 1
 
-    do_generate(maze, [], visited, remaining)
+    do_generate(module, maze, [], visited, remaining)
   end
 
-  defp do_generate(maze, _, _, 0) do
+  defp do_generate(_, maze, _, _, 0) do
     maze
   end
 
-  defp do_generate(maze, [], visited, remaining) do
+  defp do_generate(module, maze, [], visited, remaining) do
     random_unvisited_vertex =
       visited
       |> Enum.filter(fn {_, visited?} -> !visited? end)
       |> Enum.map(fn {vertex, _} -> vertex end)
       |> Enum.random()
 
-    do_generate(maze, [random_unvisited_vertex], visited, remaining)
+    do_generate(module, maze, [random_unvisited_vertex], visited, remaining)
   end
 
-  defp do_generate(maze, [current_vertex | _] = current_path, visited, remaining) do
-    random_neighbor = Enum.random(RectangularMaze.neighboring_vertices(maze, current_vertex))
+  defp do_generate(module, maze, [current_vertex | _] = current_path, visited, remaining) do
+    random_neighbor = Enum.random(module.neighboring_vertices(maze, current_vertex))
 
     if visited[random_neighbor] do
       {maze, visited} =
         [random_neighbor | current_path]
         |> Enum.chunk_every(2, 1, :discard)
         |> Enum.reduce({maze, visited}, fn [from, to], {maze, visited} ->
-          maze = RectangularMaze.remove_wall(maze, from, to)
+          maze = module.remove_wall(maze, from, to)
           visited = Map.put(visited, to, true)
           {maze, visited}
         end)
 
       remaining = remaining - length(current_path)
-      do_generate(maze, [], visited, remaining)
+      do_generate(module, maze, [], visited, remaining)
     else
       current_path = [random_neighbor | maybe_remove_loop(current_path, random_neighbor, [])]
-      do_generate(maze, current_path, visited, remaining)
+      do_generate(module, maze, current_path, visited, remaining)
     end
   end
 
