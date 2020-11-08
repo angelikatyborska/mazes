@@ -1,3 +1,13 @@
 .maze-settings {
+  section {
+    margin-bottom: 1em;
+  }
 
+  .maze-settings-generation-algorithm,
+  .maze-settings-exit-strategy,
+  .maze-settings-dimensions {
+    label {
+      display: block;
+    }
+  }
 }

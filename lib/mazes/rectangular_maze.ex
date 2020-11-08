@@ -109,15 +109,11 @@ defmodule Mazes.RectangularMaze do
     end)
   end
 
-  def dead_ends(maze) do
-    maze.adjacency_matrix
-    |> Enum.reduce([], fn {vertex, _}, acc ->
-      if length(adjacent_vertices(maze, vertex)) == 1 do
-        [vertex | acc]
-      else
-        acc
-      end
+  @doc "Groups vertices by the number of adjacent vertices they have"
+  def group_vertices_by_adjacent_count(maze) do
+    vertices(maze)
+    |> Enum.group_by(fn vertex ->
+      length(adjacent_vertices(maze, vertex))
     end)
-    |> Enum.reverse()
   end
 end

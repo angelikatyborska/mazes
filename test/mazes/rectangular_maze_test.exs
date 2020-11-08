@@ -176,8 +176,8 @@ defmodule Mazes.RectangularMazeTest do
     end
   end
 
-  describe "dead_ends" do
-    test "returns the list of vertices with just one adjacent vertex" do
+  describe "group_vertices_by_adjacent_count" do
+    test "returns a map with lists of vertices" do
       maze =
         RectangularMaze.new(3, 3, true)
         |> RectangularMaze.put_wall({1, 1}, {1, 2})
@@ -185,7 +185,12 @@ defmodule Mazes.RectangularMazeTest do
         |> RectangularMaze.put_wall({1, 2}, {1, 3})
         |> RectangularMaze.put_wall({2, 2}, {2, 3})
 
-      assert RectangularMaze.dead_ends(maze) == [{1, 1}, {1, 2}, {1, 3}]
+      assert RectangularMaze.group_vertices_by_adjacent_count(maze) ==
+               %{
+                 1 => [{1, 1}, {1, 2}, {1, 3}],
+                 2 => [{2, 1}, {3, 1}, {2, 2}, {2, 3}, {3, 3}],
+                 3 => [{3, 2}]
+               }
     end
   end
 end

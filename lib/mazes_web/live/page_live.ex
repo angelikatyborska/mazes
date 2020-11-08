@@ -5,33 +5,13 @@ defmodule MazesWeb.PageLive do
     RectangularMaze,
     RectangularMazeDistances,
     RectangularMazeEntranceAndExit,
-    RectangularMazeColors,
-    MazeGeneration.HuntAndKillAlgorithm
   }
 
-  def default_algorithm, do: HuntAndKillAlgorithm
-  def default_width, do: 32
-  def default_height, do: default_width()
-  def default_hue, do: 200
-  def min_width, do: 1
-  def max_width, do: 50
-  def min_height, do: min_width()
-  def max_height, do: max_width()
-  def min_hue, do: 0
-  def max_hue, do: 359
+  alias MazesWeb.PageView
 
   @impl true
   def mount(_params, _session, socket) do
-    socket =
-      assign(socket,
-        algorithm: default_algorithm(),
-        entrance_exit_strategy: :set_longest_path_from_and_to,
-        width: default_width(),
-        height: default_height(),
-        solution: [],
-        colors: nil,
-        hue: default_hue()
-      )
+    socket = assign(socket, PageView.default_state())
 
     maze =
       if connected?(socket) do
@@ -60,44 +40,8 @@ defmodule MazesWeb.PageLive do
 
   @impl true
   def handle_event("settings_change", form_data, socket) do
-    %{
-      "algorithm" => algorithm,
-      "width" => width,
-      "height" => height,
-      "hue" => hue,
-      "entrance_exit_strategy" => entrance_exit_strategy
-    } = form_data
-
-    width = String.to_integer(width)
-    width = if width < min_width(), do: min_width(), else: width
-    width = if width > max_width(), do: max_width(), else: width
-    height = String.to_integer(height)
-    height = if height < min_height(), do: min_height(), else: height
-    height = if height > max_height(), do: max_height(), else: height
-    hue = String.to_integer(hue)
-    hue = if hue < min_hue(), do: min_hue(), else: hue
-    hue = if hue > max_hue(), do: max_hue(), else: hue
-    algorithm = String.to_existing_atom(algorithm)
-    entrance_exit_strategy = String.to_existing_atom(entrance_exit_strategy)
-
-    entrance_exit_strategy =
-      if entrance_exit_strategy in [
-           :set_longest_path_from_and_to,
-           :set_random_border_from_and_to,
-           nil
-         ] do
-        entrance_exit_strategy
-      else
-        :set_longest_path_from_and_to
-      end
-
-    socket =
-      socket
-      |> assign(width: width)
-      |> assign(height: height)
-      |> assign(hue: hue)
-      |> assign(algorithm: algorithm)
-      |> assign(entrance_exit_strategy: entrance_exit_strategy)
+    assigns = PageView.update_maze_settings(form_data, socket.assigns)
+    socket = assign(socket, assigns)
 
     {:noreply, socket}
   end

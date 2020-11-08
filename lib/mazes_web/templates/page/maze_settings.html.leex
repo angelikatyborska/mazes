@@ -1,0 +1,101 @@
+<div class="maze-settings">
+  <form phx-change="settings_change" phx-submit="generate">
+    <section class="maze-settings-generation-algorithm">
+      Maze generation algorithm:
+      <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
+        <label for="<%= slug %>">
+          <input type="radio"
+                 id="<%= slug %>"
+                 value="<%= module %>"
+                  <%= if to_string(@algorithm) === module, do: "checked" %>
+                 name="algorithm" />
+
+          <%= label %>
+        </label>
+      <% end) %>
+    </section>
+
+    <section class="maze-settings-exit-strategy">
+      Entrance and exit placement strategy:
+      <%= Enum.map(opts_for_entrance_exit_strategy_select(), fn %{slug: slug, function: function, label: label} -> %>
+        <label for="<%= slug %>">
+          <input type="radio"
+                 id="<%= slug %>"
+                 value="<%= function %>"
+                  <%= if to_string(@entrance_exit_strategy || "nil") === function, do: "checked" %>
+                 name="entrance_exit_strategy" />
+
+          <%= label %>
+        </label>
+      <% end) %>
+    </section>
+
+    <section class="maze-settings-dimensions">
+      <label for="width">
+        Width
+        <input type="number"
+               min="<%= min_width() %>"
+               max="<%= max_width() %>"
+               step="1"
+               name="width"
+               value="<%= @width %>"
+               id="width" />
+      </label>
+
+      <label for="height">
+        Height
+        <input type="number"
+               min="<%= min_height() %>"
+               max="<%= max_height() %>"
+               step="1"
+               name="height"
+               value="<%= @height %>"
+               id="height" />
+      </label>
+    </section>
+
+    <section>
+      <div>
+        <button type="button" phx-click="color" <%= if @colors, do: "disabled" %>>Color</button
+      </div>
+      <div>
+        The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
+      </div>
+      <div>
+        <label for="hue">
+          Hue
+          <input type="range" name="hue" min="<%= min_hue() %>" max="<%= max_hue() %>" value="<%= @hue %>" id="hue">
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <button type="submit">Generate</button>
+
+      <%= if @maze.from && @maze.to do %>
+        <button type="button" phx-click="solve" <%= if @solution != [], do: "disabled" %>>Solve</button>
+      <% end %>
+    </section>
+  </form>
+
+  <div>
+    <div>Stats</div>
+    <div>Number of vertices by number of connections</div>
+    <div>
+      <table>
+        <tr>
+          <th>Connections</th>
+          <th>Vertices</th>
+          <th>% total</th>
+        </tr>
+        <%= Enum.map(Mazes.RectangularMaze.group_vertices_by_adjacent_count(@maze), fn {count, vertices} -> %>
+          <tr>
+            <td><%= count %></td>
+            <td><%= length(vertices) %></td>
+            <td><%= trunc(1000 * length(vertices) / length(Mazes.RectangularMaze.vertices(@maze))) / 10 %>%</td>
+          </tr>
+        <% end) %>
+      </table>
+    </div>
+  </div>
+</div>
