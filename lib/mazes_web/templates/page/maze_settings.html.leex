@@ -55,6 +55,19 @@
     </section>
 
     <section>
+      <button type="submit">Generate</button>
+    </section>
+
+    <%= if @maze.from && @maze.to do %>
+      <section>
+        <label for="show-solution">
+          <input type="checkbox" id="show-solution" name="show_solution" <%= if @show_solution, do: "checked" %> />
+          Show solution
+        </label>
+      </section>
+    <% end %>
+
+    <section>
       <div>
         <label for="show-colors">
           <input type="checkbox" id="show-colors" name="show_colors" <%= if @show_colors, do: "checked" %> />
@@ -70,17 +83,6 @@
           <input type="range" name="hue" min="<%= min_hue() %>" max="<%= max_hue() %>" value="<%= @hue %>" id="hue">
         </label>
       </div>
-    </section>
-
-    <section>
-      <button type="submit">Generate</button>
-
-      <%= if @maze.from && @maze.to do %>
-        <label for="show-solution">
-          <input type="checkbox" id="show-solution" name="show_solution" <%= if @show_solution, do: "checked" %> />
-          Show solution
-        </label>
-      <% end %>
     </section>
   </form>
 

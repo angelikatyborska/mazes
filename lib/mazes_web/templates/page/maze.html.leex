@@ -1,7 +1,7 @@
 <div class="maze">
   <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding() + square_size(@maze) * @maze.width %> <%= 2 * padding() + square_size(@maze) * @maze.height %>">
     <g transform="translate(<%= padding() %>, <%= padding() %>)">
-      <%= RectangularMaze.map(@maze, fn {x, y} = vertex -> %>
+      <%= Enum.map(RectangularMaze.vertices(@maze), fn {x, y} = vertex -> %>
         <rect width="<%= square_size(@maze) %>"
               height="<%= square_size(@maze) %>"
               class="<%= vertex_class(@maze, vertex, @solution, @show_solution) %>"
@@ -11,7 +11,7 @@
         />
       <% end )%>
 
-      <%= RectangularMaze.map(@maze, fn {x, y} = vertex -> %>
+      <%= Enum.map(RectangularMaze.vertices(@maze), fn {x, y} = vertex -> %>
         <%= if RectangularMaze.wall?(@maze, vertex, RectangularMaze.north(vertex)) do %>
           <line x1="<%= square_size(@maze) * (x - 1) %>"
                 y1="<%= square_size(@maze) * (y - 1) %>"

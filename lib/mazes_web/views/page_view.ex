@@ -19,10 +19,12 @@ defmodule MazesWeb.PageView do
   def max_hue, do: 359
 
   # doesn't matter that much because the svg is responsive
-  def max_svg_width, do: 600
+  def max_svg_width, do: 1000
 
-  def padding, do: 10
-  def square_size(maze), do: Integer.floor_div(max_svg_width(), maze.width)
+  def padding, do: 20
+
+  def square_size(maze),
+    do: Integer.floor_div(max_svg_width(), Enum.max([maze.width, maze.height]))
 
   def vertex_class(maze, vertex, solution, show_solution) do
     class = []

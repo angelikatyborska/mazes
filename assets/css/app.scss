@@ -100,8 +100,10 @@ html, body {
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: auto 300px;
+  display: flex;
+  position: relative;
+  min-height: 0;
+  max-height: 90vh;
 }
 
 @import './maze.scss';

@@ -37,14 +37,6 @@ defmodule Mazes.RectangularMaze do
     }
   end
 
-  def map(maze, func) do
-    Enum.map(1..maze.width, fn x ->
-      Enum.map(1..maze.height, fn y ->
-        func.({x, y})
-      end)
-    end)
-  end
-
   def vertices(maze) do
     Map.keys(maze.adjacency_matrix)
     |> Enum.sort(fn {x1, y1}, {x2, y2} ->
