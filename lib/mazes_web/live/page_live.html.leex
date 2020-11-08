@@ -67,6 +67,14 @@
         Maze generation algorithm:
         <input type="radio"
                id="algorithm-hunt-and-kill"
+               value="Elixir.Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm"
+                <%= if @algorithm === Elixir.Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm, do: "checked" %>
+               name="algorithm" />
+
+        <label for="algorithm-hunt-and-kill">Recursive Backtracker (biased)</label>
+
+        <input type="radio"
+               id="algorithm-hunt-and-kill"
                value="Elixir.Mazes.MazeGeneration.HuntAndKillAlgorithm"
                 <%= if @algorithm === Elixir.Mazes.MazeGeneration.HuntAndKillAlgorithm, do: "checked" %>
                name="algorithm" />
