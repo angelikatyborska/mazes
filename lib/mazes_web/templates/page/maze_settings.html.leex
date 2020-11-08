@@ -56,7 +56,10 @@
 
     <section>
       <div>
-        <button type="button" phx-click="color" <%= if @colors, do: "disabled" %>>Color</button
+        <label for="show-colors">
+          <input type="checkbox" id="show-colors" name="show_colors" <%= if @show_colors, do: "checked" %> />
+          Colors
+        </label>
       </div>
       <div>
         The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
@@ -73,13 +76,17 @@
       <button type="submit">Generate</button>
 
       <%= if @maze.from && @maze.to do %>
-        <button type="button" phx-click="solve" <%= if @solution != [], do: "disabled" %>>Solve</button>
+        <label for="show-solution">
+          <input type="checkbox" id="show-solution" name="show_solution" <%= if @show_solution, do: "checked" %> />
+          Show solution
+        </label>
       <% end %>
     </section>
   </form>
 
   <div>
     <div>Stats</div>
+    <div>Longest path length: <%= @longest_path && length(@longest_path) %></div>
     <div>Number of vertices by number of connections</div>
     <div>
       <table>

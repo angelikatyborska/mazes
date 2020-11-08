@@ -4,7 +4,7 @@ defmodule MazesWeb.PageLive do
   alias Mazes.{
     RectangularMaze,
     RectangularMazeDistances,
-    RectangularMazeEntranceAndExit,
+    RectangularMazeEntranceAndExit
   }
 
   alias MazesWeb.PageView
@@ -13,28 +13,19 @@ defmodule MazesWeb.PageLive do
   def mount(_params, _session, socket) do
     socket = assign(socket, PageView.default_state())
 
-    maze =
+    socket =
       if connected?(socket) do
         generate(socket)
       else
         empty(socket)
       end
 
-    socket =
-      socket
-      |> assign(maze: maze)
-
     {:ok, socket}
   end
 
   @impl true
   def handle_event("generate", _value, socket) do
-    socket =
-      socket
-      |> assign(:maze, generate(socket))
-      |> assign(:solution, [])
-      |> assign(:colors, nil)
-
+    socket = generate(socket)
     {:noreply, socket}
   end
 
@@ -46,41 +37,45 @@ defmodule MazesWeb.PageLive do
     {:noreply, socket}
   end
 
-  @impl true
-  def handle_event("solve", _value, socket) do
-    solution =
-      RectangularMazeDistances.shortest_path(
-        socket.assigns.maze,
-        socket.assigns.maze.from,
-        socket.assigns.maze.to
-      )
-
-    {:noreply, assign(socket, :solution, solution)}
-  end
-
-  def handle_event("color", _value, socket) do
-    maze = socket.assigns.maze
-    from = maze.from || {trunc(Float.ceil(maze.width / 2)), trunc(Float.ceil(maze.height / 2))}
-
-    distances = RectangularMazeDistances.distances(socket.assigns.maze, from)
-
-    {_, max_distance} =
-      RectangularMazeDistances.find_max_vertex_by_distance(maze, from, distances)
-
-    {:noreply, assign(socket, :colors, %{distances: distances, max_distance: max_distance})}
-  end
-
   defp empty(socket) do
-    RectangularMaze.new(socket.assigns.width, socket.assigns.height)
+    assign(socket, :maze, RectangularMaze.new(socket.assigns.width, socket.assigns.height))
   end
 
   defp generate(socket) do
     maze = socket.assigns.algorithm.generate(socket.assigns.width, socket.assigns.height)
 
-    if socket.assigns.entrance_exit_strategy do
-      apply(RectangularMazeEntranceAndExit, socket.assigns.entrance_exit_strategy, [maze])
-    else
-      maze
-    end
+    maze =
+      if socket.assigns.entrance_exit_strategy do
+        apply(RectangularMazeEntranceAndExit, socket.assigns.entrance_exit_strategy, [maze])
+      else
+        maze
+      end
+
+    solution =
+      if maze.from && maze.to,
+        do: RectangularMazeDistances.shortest_path(maze, maze.from, maze.to),
+        else: []
+
+    from = maze.from || {trunc(Float.ceil(maze.width / 2)), trunc(Float.ceil(maze.height / 2))}
+    distances = RectangularMazeDistances.distances(maze, from)
+
+    {_, max_distance} =
+      RectangularMazeDistances.find_max_vertex_by_distance(maze, from, distances)
+
+    colors = %{distances: distances, max_distance: max_distance}
+
+    longest_path =
+      if socket.assigns.entrance_exit_strategy == :set_longest_path_from_and_to do
+        solution
+      else
+        temp_maze = Mazes.RectangularMazeEntranceAndExit.set_longest_path_from_and_to(maze)
+        RectangularMazeDistances.shortest_path(temp_maze, temp_maze.from, temp_maze.to)
+      end
+
+    socket
+    |> assign(:maze, maze)
+    |> assign(:solution, solution)
+    |> assign(:colors, colors)
+    |> assign(:longest_path, longest_path)
   end
 end

@@ -4,8 +4,8 @@
       <%= RectangularMaze.map(@maze, fn {x, y} = vertex -> %>
         <rect width="<%= square_size(@maze) %>"
               height="<%= square_size(@maze) %>"
-              class="<%= vertex_class(@maze, vertex, @solution) %>"
-              <%= raw vertex_fill(vertex, @solution, @colors, @hue) %>
+              class="<%= vertex_class(@maze, vertex, @solution, @show_solution) %>"
+              <%= raw vertex_fill(vertex, @solution, @show_solution, @colors, @show_colors, @hue) %>
               x="<%= square_size(@maze) * (x - 1) %>"
               y="<%= square_size(@maze) * (y - 1) %>"
         />

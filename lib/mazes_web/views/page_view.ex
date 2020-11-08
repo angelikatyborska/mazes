@@ -24,19 +24,24 @@ defmodule MazesWeb.PageView do
   def padding, do: 10
   def square_size(maze), do: Integer.floor_div(max_svg_width(), maze.width)
 
-  def vertex_class(maze, vertex, solution) do
+  def vertex_class(maze, vertex, solution, show_solution) do
     class = []
-    class = if vertex in solution, do: ["highlight" | class], else: class
+    class = if show_solution && vertex in solution, do: ["highlight" | class], else: class
     class = if vertex == maze.from, do: ["start" | class], else: class
     class = if vertex == maze.to, do: ["end" | class], else: class
     Enum.join(class, "  ")
   end
 
-  def vertex_fill(vertex, solution, colors, hue) do
+  def vertex_fill(vertex, solution, show_solution, colors, show_colors, hue) do
     fill =
-      colors && RectangularMazeColors.color(colors.distances[vertex], colors.max_distance, hue)
+      show_colors && colors &&
+        RectangularMazeColors.color(colors.distances[vertex], colors.max_distance, hue)
 
-    fill = if vertex in solution, do: Mazes.RectangularMazeColors.solution_color(hue), else: fill
+    fill =
+      if show_solution && vertex in solution,
+        do: Mazes.RectangularMazeColors.solution_color(hue),
+        else: fill
+
     if fill, do: "style=\"fill: #{fill}\""
   end
 
@@ -71,7 +76,7 @@ defmodule MazesWeb.PageView do
         module: "Elixir.Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm",
         slug: "algorithm-recursive-backtracker",
         label: "Recursive Backtracker (biased)"
-      },
+      }
     ]
   end
 
@@ -102,7 +107,10 @@ defmodule MazesWeb.PageView do
       width: default_width(),
       height: default_height(),
       solution: [],
+      show_solution: false,
       colors: nil,
+      show_colors: false,
+      longest_path: nil,
       hue: default_hue()
     }
   end
@@ -116,6 +124,9 @@ defmodule MazesWeb.PageView do
       "entrance_exit_strategy" => entrance_exit_strategy
     } = form_data
 
+    show_colors = form_data["show_colors"]
+    show_solution = form_data["show_solution"]
+
     width = String.to_integer(width)
     width = if width < min_width(), do: min_width(), else: width
     width = if width > max_width(), do: max_width(), else: width
@@ -125,6 +136,8 @@ defmodule MazesWeb.PageView do
     hue = String.to_integer(hue)
     hue = if hue < min_hue(), do: min_hue(), else: hue
     hue = if hue > max_hue(), do: max_hue(), else: hue
+    show_solution = show_solution === "on"
+    show_colors = show_colors === "on"
 
     algorithm =
       if algorithm in Enum.map(opts_for_algorithm_select(), & &1.module) do
@@ -134,7 +147,10 @@ defmodule MazesWeb.PageView do
       end
 
     entrance_exit_strategy =
-      if to_string(entrance_exit_strategy) in Enum.map(opts_for_entrance_exit_strategy_select(), & &1.function) do
+      if to_string(entrance_exit_strategy) in Enum.map(
+           opts_for_entrance_exit_strategy_select(),
+           & &1.function
+         ) do
         String.to_existing_atom(entrance_exit_strategy)
       else
         :set_longest_path_from_and_to
@@ -145,7 +161,9 @@ defmodule MazesWeb.PageView do
       {:height, height},
       {:hue, hue},
       {:algorithm, algorithm},
-      {:entrance_exit_strategy, entrance_exit_strategy}
+      {:entrance_exit_strategy, entrance_exit_strategy},
+      {:show_solution, show_solution},
+      {:show_colors, show_colors}
     ]
     |> Enum.reduce(%{}, fn {key, value}, acc ->
       if state[key] != value, do: Map.put(acc, key, value), else: acc
