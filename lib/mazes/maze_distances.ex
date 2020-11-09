@@ -25,25 +25,25 @@ defmodule Mazes.MazeDistances do
     Enum.max_by(distances, fn {_, distance} -> distance end)
   end
 
-  @doc "Returns a map of cells where the values are distances from the starting cell"
+  @doc "Returns a map of vertices where the values are distances from the starting cell"
   def distances(maze, from) do
     distances(maze, [from], 0, %{})
   end
 
   defp distances(_, [], _, distances), do: distances
 
-  defp distances(maze, cells, distance, distances) do
+  defp distances(maze, vertices, distance, distances) do
     distances =
-      Enum.reduce(cells, distances, fn cell, acc ->
+      Enum.reduce(vertices, distances, fn cell, acc ->
         Map.put_new(acc, cell, distance)
       end)
 
-    adjacent_unvisited_cells =
-      cells
+    adjacent_unvisited_vertices =
+      vertices
       |> Enum.flat_map(&maze.module.adjacent_vertices(maze, &1))
       |> Enum.uniq()
       |> Enum.filter(&(!distances[&1]))
 
-    distances(maze, adjacent_unvisited_cells, distance + 1, distances)
+    distances(maze, adjacent_unvisited_vertices, distance + 1, distances)
   end
 end

@@ -1,8 +1,15 @@
 defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
+  @behaviour Maze.MazeGeneration.Algorithm
   alias Mazes.RectangularMaze
 
-  def generate(width, height, module \\ RectangularMaze) do
-    maze = module.new(width, height)
+  @impl true
+  def supported_maze_types do
+    [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask]
+  end
+
+  @impl true
+  def generate(opts, module \\ RectangularMaze) do
+    maze = module.new(opts)
     all_vertices = module.vertices(maze)
 
     visited =

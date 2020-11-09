@@ -90,7 +90,7 @@ defmodule MazesWeb.PageView do
         label: "Longest path"
       },
       %{
-        function: "set_random_border_from_and_to",
+        function: "set_random_from_and_to",
         slug: "entrance-exit-random",
         label: "Random"
       },

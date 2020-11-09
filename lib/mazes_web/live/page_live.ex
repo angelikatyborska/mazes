@@ -38,11 +38,19 @@ defmodule MazesWeb.PageLive do
   end
 
   defp empty(socket) do
-    assign(socket, :maze, RectangularMaze.new(socket.assigns.width, socket.assigns.height))
+    assign(
+      socket,
+      :maze,
+      RectangularMaze.new(width: socket.assigns.width, height: socket.assigns.height)
+    )
   end
 
   defp generate(socket) do
-    maze = socket.assigns.algorithm.generate(socket.assigns.width, socket.assigns.height)
+    maze =
+      socket.assigns.algorithm.generate(
+        [width: socket.assigns.width, height: socket.assigns.height],
+        RectangularMaze
+      )
 
     maze =
       if socket.assigns.entrance_exit_strategy do
@@ -56,7 +64,7 @@ defmodule MazesWeb.PageLive do
         do: MazeDistances.shortest_path(maze, maze.from, maze.to),
         else: []
 
-    from = maze.from || {trunc(Float.ceil(maze.width / 2)), trunc(Float.ceil(maze.height / 2))}
+    from = maze.from || maze.module.center(maze)
     distances = MazeDistances.distances(maze, from)
 
     {_, max_distance} = MazeDistances.find_max_vertex_by_distance(maze, from, distances)

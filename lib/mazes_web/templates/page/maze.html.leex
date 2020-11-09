@@ -1,7 +1,7 @@
 <div class="maze">
   <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding() + square_size(@maze) * @maze.width %> <%= 2 * padding() + square_size(@maze) * @maze.height %>">
     <g transform="translate(<%= padding() %>, <%= padding() %>)">
-      <%= Enum.map(RectangularMaze.vertices(@maze), fn {x, y} = vertex -> %>
+      <%= Enum.map(@maze.module.vertices(@maze), fn {x, y} = vertex -> %>
         <rect width="<%= square_size(@maze) %>"
               height="<%= square_size(@maze) %>"
               class="<%= vertex_class(@maze, vertex, @solution, @show_solution) %>"
@@ -11,8 +11,8 @@
         />
       <% end )%>
 
-      <%= Enum.map(RectangularMaze.vertices(@maze), fn {x, y} = vertex -> %>
-        <%= if RectangularMaze.wall?(@maze, vertex, RectangularMaze.north(vertex)) do %>
+      <%= Enum.map(@maze.module.vertices(@maze), fn {x, y} = vertex -> %>
+        <%= if @maze.module.wall?(@maze, vertex, @maze.module.north(vertex)) do %>
           <line x1="<%= square_size(@maze) * (x - 1) %>"
                 y1="<%= square_size(@maze) * (y - 1) %>"
                 x2="<%= square_size(@maze) * (x) %>"
@@ -20,7 +20,7 @@
           />
         <% end %>
 
-        <%= if RectangularMaze.wall?(@maze, vertex, RectangularMaze.west(vertex)) do %>
+        <%= if @maze.module.wall?(@maze, vertex, @maze.module.west(vertex)) do %>
           <line x1="<%= square_size(@maze) * (x - 1) %>"
                 y1="<%= square_size(@maze) * (y - 1) %>"
                 x2="<%= square_size(@maze) * (x - 1) %>"
@@ -28,19 +28,19 @@
           />
         <% end %>
 
-        <%= if x == @maze.width do %>
-          <line x1="<%= square_size(@maze) * @maze.width %>"
+        <%= if x == @maze.width || !(@maze.module.east(vertex) in @maze.module.neighboring_vertices(@maze, vertex)) do %>
+          <line x1="<%= square_size(@maze) * x %>"
                 y1="<%= square_size(@maze) * (y - 1) %>"
-                x2="<%= square_size(@maze) * @maze.width %>"
+                x2="<%= square_size(@maze) * x %>"
                 y2="<%= square_size(@maze) * (y) %>"
           />
         <% end %>
 
-        <%= if y == @maze.height do %>
+        <%= if y == @maze.height || !(@maze.module.south(vertex) in @maze.module.neighboring_vertices(@maze, vertex)) do %>
           <line x1="<%= square_size(@maze) * (x - 1) %>"
-                y1="<%= square_size(@maze) * @maze.height %>"
+                y1="<%= square_size(@maze) * y %>"
                 x2="<%= square_size(@maze) * (x) %>"
-                y2="<%= square_size(@maze) * @maze.height %>"
+                y2="<%= square_size(@maze) * y %>"
           />
         <% end %>
       <% end )%>

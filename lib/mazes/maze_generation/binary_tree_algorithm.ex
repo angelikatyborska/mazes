@@ -1,9 +1,16 @@
 defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
+  @behaviour Maze.MazeGeneration.Algorithm
   alias Mazes.RectangularMaze
 
-  def generate(width, height) do
-    maze = RectangularMaze.new(width, height)
-    all_vertices = RectangularMaze.vertices(maze)
+  @impl true
+  def supported_maze_types do
+    [Mazes.RectangularMaze]
+  end
+
+  @impl true
+  def generate(opts, module \\ RectangularMaze) do
+    maze = module.new(opts)
+    all_vertices = module.vertices(maze)
 
     do_generate(maze, all_vertices)
   end
@@ -13,10 +20,10 @@ defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
   end
 
   defp do_generate(maze, [vertex | vertices_to_visit]) do
-    north = RectangularMaze.north(vertex)
-    east = RectangularMaze.east(vertex)
+    north = maze.module.north(vertex)
+    east = maze.module.east(vertex)
 
-    can_be_removed = Enum.filter([north, east], &(!RectangularMaze.outer_wall?(maze, vertex, &1)))
+    can_be_removed = Enum.filter([north, east], &(!maze.module.outer_wall?(maze, vertex, &1)))
 
     maze =
       case can_be_removed do
@@ -24,7 +31,7 @@ defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
           maze
 
         list ->
-          RectangularMaze.remove_wall(maze, vertex, Enum.random(list))
+          maze.module.remove_wall(maze, vertex, Enum.random(list))
       end
 
     do_generate(maze, vertices_to_visit)
