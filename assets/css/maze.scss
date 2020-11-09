@@ -1,24 +1,3 @@
 .maze {
   flex: 1 1 auto;
-
-  svg {
-    line {
-      stroke: black;
-      stroke-width: 3;
-      stroke-linecap: round;
-    }
-
-    rect {
-      fill: white;
-
-      &.start {
-        fill: grey !important;
-      }
-
-      &.end {
-        fill: grey !important;
-      }
-    }
-  }
-
 }

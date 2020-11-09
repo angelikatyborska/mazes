@@ -2,7 +2,6 @@ defmodule MazesWeb.PageView do
   use MazesWeb, :view
 
   alias Mazes.{
-    RectangularMaze,
     MazeColors,
     MazeGeneration.HuntAndKillAlgorithm
   }
@@ -26,23 +25,24 @@ defmodule MazesWeb.PageView do
   def square_size(maze),
     do: Integer.floor_div(max_svg_width(), Enum.max([maze.width, maze.height]))
 
-  def vertex_class(maze, vertex, solution, show_solution) do
-    class = []
-    class = if show_solution && vertex in solution, do: ["highlight" | class], else: class
-    class = if vertex == maze.from, do: ["start" | class], else: class
-    class = if vertex == maze.to, do: ["end" | class], else: class
-    Enum.join(class, "  ")
-  end
-
-  def vertex_fill(vertex, solution, show_solution, colors, show_colors, hue) do
+  def vertex_fill(maze, vertex, solution, show_solution, colors, show_colors, hue) do
     fill =
-      show_colors && colors &&
-        MazeColors.color(colors.distances[vertex], colors.max_distance, hue)
+      cond do
+        vertex == maze.from ->
+          "lightgray"
 
-    fill =
-      if show_solution && vertex in solution,
-        do: Mazes.MazeColors.solution_color(hue),
-        else: fill
+        vertex == maze.to ->
+          "gray"
+
+        show_solution && vertex in solution ->
+          Mazes.MazeColors.solution_color(hue)
+
+        show_colors && colors ->
+          MazeColors.color(colors.distances[vertex], colors.max_distance, hue)
+
+        true ->
+          "white"
+      end
 
     if fill, do: "style=\"fill: #{fill}\""
   end
