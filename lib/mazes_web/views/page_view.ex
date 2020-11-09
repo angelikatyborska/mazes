@@ -11,7 +11,7 @@ defmodule MazesWeb.PageView do
   def default_height, do: default_width()
   def default_hue, do: 200
   def min_width, do: 1
-  def max_width, do: 50
+  def max_width, do: 64
   def min_height, do: min_width()
   def max_height, do: max_width()
   def min_hue, do: 0
@@ -50,16 +50,6 @@ defmodule MazesWeb.PageView do
   def opts_for_algorithm_select do
     [
       %{
-        module: "Elixir.Mazes.MazeGeneration.BinaryTreeAlgorithm",
-        slug: "algorithm-binary-tree",
-        label: "Binary Tree (biased)"
-      },
-      %{
-        module: "Elixir.Mazes.MazeGeneration.SidewinderAlgorithm",
-        slug: "algorithm-sidewinder",
-        label: "Sidewinder (biased)"
-      },
-      %{
         module: "Elixir.Mazes.MazeGeneration.AldousBroderAlgorithm",
         slug: "algorithm-aldous-broder",
         label: "Aldous-Broder (unbiased)"
@@ -78,6 +68,16 @@ defmodule MazesWeb.PageView do
         module: "Elixir.Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm",
         slug: "algorithm-recursive-backtracker",
         label: "Recursive Backtracker (biased)"
+      },
+      %{
+        module: "Elixir.Mazes.MazeGeneration.BinaryTreeAlgorithm",
+        slug: "algorithm-binary-tree",
+        label: "Binary Tree (biased)"
+      },
+      %{
+        module: "Elixir.Mazes.MazeGeneration.SidewinderAlgorithm",
+        slug: "algorithm-sidewinder",
+        label: "Sidewinder (biased)"
       }
     ]
   end
