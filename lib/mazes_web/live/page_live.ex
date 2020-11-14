@@ -4,17 +4,21 @@ defmodule MazesWeb.PageLive do
   alias Mazes.{
     RectangularMaze,
     MazeDistances,
-    MazeEntranceAndExit
+    MazeEntranceAndExit,
+    Settings
   }
 
   alias MazesWeb.PageView
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, PageView.default_state())
+    socket = assign(socket, :settings, Settings.default_settings())
 
     socket =
       if connected?(socket) do
+        masks = Settings.preload_masks_from_files()
+        socket = assign(socket, :masks, masks)
+
         generate(socket)
       else
         empty(socket)
@@ -31,30 +35,45 @@ defmodule MazesWeb.PageLive do
 
   @impl true
   def handle_event("settings_change", form_data, socket) do
-    assigns = PageView.update_maze_settings(form_data, socket.assigns)
-    socket = assign(socket, assigns)
+    settings = Settings.update_maze_settings(form_data, socket.assigns.settings)
+    socket = assign(socket, :settings, settings)
 
     {:noreply, socket}
   end
 
   defp empty(socket) do
-    assign(
-      socket,
+    socket
+    |> assign(
       :maze,
-      RectangularMaze.new(width: socket.assigns.width, height: socket.assigns.height)
+      RectangularMaze.new(
+        width: socket.assigns.settings.width,
+        height: socket.assigns.settings.height
+      )
     )
+    |> assign(:solution, [])
+    |> assign(:colors, nil)
+    |> assign(:longest_path, [])
   end
 
   defp generate(socket) do
+    opts = Settings.get_opts_for_generate(socket.assigns.settings)
+
+    opts =
+      if Keyword.get(opts, :mask) do
+        Keyword.put(opts, :file, socket.assigns.masks[Keyword.get(opts, :mask)])
+      else
+        opts
+      end
+
     maze =
-      socket.assigns.algorithm.generate(
-        [width: socket.assigns.width, height: socket.assigns.height],
-        RectangularMaze
+      socket.assigns.settings.algorithm.generate(
+        opts,
+        socket.assigns.settings.shape
       )
 
     maze =
-      if socket.assigns.entrance_exit_strategy do
-        apply(MazeEntranceAndExit, socket.assigns.entrance_exit_strategy, [maze])
+      if socket.assigns.settings.entrance_exit_strategy do
+        apply(MazeEntranceAndExit, socket.assigns.settings.entrance_exit_strategy, [maze])
       else
         maze
       end
@@ -72,7 +91,7 @@ defmodule MazesWeb.PageLive do
     colors = %{distances: distances, max_distance: max_distance}
 
     longest_path =
-      if socket.assigns.entrance_exit_strategy == :set_longest_path_from_and_to do
+      if socket.assigns.settings.entrance_exit_strategy == :set_longest_path_from_and_to do
         solution
       else
         temp_maze = Mazes.MazeEntranceAndExit.set_longest_path_from_and_to(maze)

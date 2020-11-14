@@ -1,5 +1,5 @@
 defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
-  @behaviour Maze.MazeGeneration.Algorithm
+  @behaviour Mazes.MazeGeneration.Algorithm
   alias Mazes.RectangularMaze
 
   @impl true

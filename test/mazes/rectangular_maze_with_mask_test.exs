@@ -108,6 +108,24 @@ defmodule Mazes.RectangularMazeWithMaskTest do
                }
              }
     end
+
+    test "with mask from file" do
+      result = RectangularMazeWithMask.new(file: "./test/fixtures/stairs.png")
+      assert result.width == 4
+      assert result.height == 3
+
+      assert result.adjacency_matrix == %{
+               {1, 3} => %{{2, 3} => false},
+               {2, 2} => %{{2, 3} => false, {3, 2} => false},
+               {2, 3} => %{{1, 3} => false, {2, 2} => false, {3, 3} => false},
+               {3, 1} => %{{3, 2} => false, {4, 1} => false},
+               {3, 2} => %{{2, 2} => false, {3, 1} => false, {3, 3} => false, {4, 2} => false},
+               {3, 3} => %{{2, 3} => false, {3, 2} => false, {4, 3} => false},
+               {4, 1} => %{{3, 1} => false, {4, 2} => false},
+               {4, 2} => %{{3, 2} => false, {4, 1} => false, {4, 3} => false},
+               {4, 3} => %{{3, 3} => false, {4, 2} => false}
+             }
+    end
   end
 
   describe "vertices" do
@@ -161,14 +179,15 @@ defmodule Mazes.RectangularMazeWithMaskTest do
     end
 
     test "when real center is not in the maze" do
-      #      maze = RectangularMazeWithMask.new(
-      #        width: 5,
-      #        height: 5,
-      #        all_vertices_adjacent?: true,
-      #        mask_vertices: [{3, 3}]
-      #      )
-      #
-      #      assert RectangularMazeWithMask.center(maze) == {3, 2}
+      maze =
+        RectangularMazeWithMask.new(
+          width: 5,
+          height: 5,
+          all_vertices_adjacent?: true,
+          mask_vertices: [{3, 3}]
+        )
+
+      assert RectangularMazeWithMask.center(maze) == {3, 2}
 
       maze =
         RectangularMazeWithMask.new(

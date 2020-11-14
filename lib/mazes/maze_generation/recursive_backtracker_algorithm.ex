@@ -1,5 +1,5 @@
 defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
-  @behaviour Maze.MazeGeneration.Algorithm
+  @behaviour Mazes.MazeGeneration.Algorithm
   alias Mazes.RectangularMaze
 
   @impl true

@@ -6,51 +6,57 @@ defmodule Mazes.RectangularMazeWithMask do
   @doc "Returns a rectangular maze with given size, either with all walls or no walls"
   @impl true
   def new(opts) do
-    width = Keyword.get(opts, :width, 10)
-    height = Keyword.get(opts, :height, 10)
-    all_vertices_adjacent? = Keyword.get(opts, :all_vertices_adjacent?, false)
+    file = Keyword.get(opts, :file)
 
-    mask_vertices = Keyword.get(opts, :mask_vertices, [])
+    if file do
+      new_from_file(file)
+    else
+      width = Keyword.get(opts, :width, 10)
+      height = Keyword.get(opts, :height, 10)
+      all_vertices_adjacent? = Keyword.get(opts, :all_vertices_adjacent?, false)
 
-    vertices =
-      Enum.reduce(1..width, [], fn x, acc ->
-        Enum.reduce(1..height, acc, fn y, acc2 ->
-          vertex = {x, y}
+      mask_vertices = Keyword.get(opts, :mask_vertices, [])
 
-          if vertex in mask_vertices do
-            acc2
-          else
-            [vertex | acc2]
-          end
-        end)
-      end)
+      vertices =
+        Enum.reduce(1..width, [], fn x, acc ->
+          Enum.reduce(1..height, acc, fn y, acc2 ->
+            vertex = {x, y}
 
-    adjacency_matrix =
-      vertices
-      |> Enum.map(fn {from_x, from_y} = from ->
-        value =
-          vertices
-          |> Enum.filter(fn {x, y} ->
-            {x, y} in [
-              {from_x - 1, from_y},
-              {from_x + 1, from_y},
-              {from_x, from_y - 1},
-              {from_x, from_y + 1}
-            ]
+            if vertex in mask_vertices do
+              acc2
+            else
+              [vertex | acc2]
+            end
           end)
-          |> Enum.map(&{&1, all_vertices_adjacent?})
-          |> Enum.into(%{})
+        end)
 
-        {from, value}
-      end)
-      |> Enum.into(%{})
+      adjacency_matrix =
+        vertices
+        |> Enum.map(fn {from_x, from_y} = from ->
+          value =
+            vertices
+            |> Enum.filter(fn {x, y} ->
+              {x, y} in [
+                {from_x - 1, from_y},
+                {from_x + 1, from_y},
+                {from_x, from_y - 1},
+                {from_x, from_y + 1}
+              ]
+            end)
+            |> Enum.map(&{&1, all_vertices_adjacent?})
+            |> Enum.into(%{})
 
-    %Maze{
-      width: width,
-      height: height,
-      adjacency_matrix: adjacency_matrix,
-      module: __MODULE__
-    }
+          {from, value}
+        end)
+        |> Enum.into(%{})
+
+      %Maze{
+        width: width,
+        height: height,
+        adjacency_matrix: adjacency_matrix,
+        module: __MODULE__
+      }
+    end
   end
 
   @impl true
@@ -123,4 +129,33 @@ defmodule Mazes.RectangularMazeWithMask do
   def south(vertex), do: RectangularMaze.south(vertex)
   def east(vertex), do: RectangularMaze.east(vertex)
   def west(vertex), do: RectangularMaze.west(vertex)
+
+  defp new_from_file(filename) when is_binary(filename) do
+    {:ok, file} = Imagineer.load(filename)
+    new_from_file(file)
+  end
+
+  defp new_from_file(%Imagineer.Image.PNG{pixels: pixels}) do
+    threshold = 100
+    height = length(pixels)
+    width = length(hd(pixels))
+
+    mask_vertices =
+      pixels
+      |> Enum.with_index()
+      |> Enum.reduce([], fn {pixels, row}, acc ->
+        pixels
+        |> Enum.with_index()
+        |> Enum.reduce(acc, fn {pixel, column}, acc2 ->
+          # pixel can be {r, g, b} or {r, g, b, a}
+          if Enum.all?(Tuple.to_list(pixel), &(&1 > threshold)) do
+            [{column + 1, row + 1} | acc2]
+          else
+            acc2
+          end
+        end)
+      end)
+
+    new(width: width, height: height, mask_vertices: mask_vertices)
+  end
 end

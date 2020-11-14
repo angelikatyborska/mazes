@@ -1,13 +1,72 @@
 <div class="maze-settings">
   <form phx-change="settings_change" phx-submit="generate">
+    <section class="maze-settings-shape">
+      Maze shape:
+      <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
+      <label for="<%= slug %>">
+        <input type="radio"
+               id="<%= slug %>"
+               value="<%= slug %>"
+                <%= if @settings.shape === module, do: "checked" %>
+               name="shape" />
+
+        <%= label %>
+      </label>
+      <% end) %>
+    </section>
+
+    <section class="maze-settings-dimensions">
+      <%= if :width in Settings.maze_options_per_shape()[@settings.shape] do %>
+      <label for="width">
+        Width
+        <input type="number"
+               min="<%= Settings.min_width() %>"
+               max="<%= Settings.max_width() %>"
+               step="1"
+               name="width"
+               value="<%= @settings.width %>"
+               id="width" />
+      </label>
+      <% end %>
+
+      <%= if :height in Settings.maze_options_per_shape()[@settings.shape] do %>
+      <label for="height">
+        Height
+        <input type="number"
+               min="<%= Settings.min_height() %>"
+               max="<%= Settings.max_height() %>"
+               step="1"
+               name="height"
+               value="<%= @settings.height %>"
+               id="height" />
+      </label>
+      <% end %>
+
+      <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
+        Mask
+        <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label} -> %>
+        <label for="<%= slug %>">
+          <input type="radio"
+                 id="<%= slug %>"
+                  <%= if @settings.mask === path, do: "checked" %>
+                 value="<%= slug %>"
+                 name="mask" />
+
+        <%= label %> <img src="<%= path %>" />
+      </label>
+        <% end) %>
+      <% end %>
+    </section>
+
     <section class="maze-settings-generation-algorithm">
       Maze generation algorithm:
       <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
         <label for="<%= slug %>">
           <input type="radio"
+                  <%= algorithm_disabled?(@settings.shape, module) %>
                  id="<%= slug %>"
-                 value="<%= module %>"
-                  <%= if to_string(@algorithm) === module, do: "checked" %>
+                  <%= if @settings.algorithm === module, do: "checked" %>
+                 value="<%= slug %>"
                  name="algorithm" />
 
           <%= label %>
@@ -21,37 +80,13 @@
         <label for="<%= slug %>">
           <input type="radio"
                  id="<%= slug %>"
-                 value="<%= function %>"
-                  <%= if to_string(@entrance_exit_strategy || "nil") === function, do: "checked" %>
+                 value="<%= slug %>"
+                  <%= if @settings.entrance_exit_strategy === function, do: "checked" %>
                  name="entrance_exit_strategy" />
 
           <%= label %>
         </label>
       <% end) %>
-    </section>
-
-    <section class="maze-settings-dimensions">
-      <label for="width">
-        Width
-        <input type="number"
-               min="<%= min_width() %>"
-               max="<%= max_width() %>"
-               step="1"
-               name="width"
-               value="<%= @width %>"
-               id="width" />
-      </label>
-
-      <label for="height">
-        Height
-        <input type="number"
-               min="<%= min_height() %>"
-               max="<%= max_height() %>"
-               step="1"
-               name="height"
-               value="<%= @height %>"
-               id="height" />
-      </label>
     </section>
 
     <section>
@@ -61,7 +96,7 @@
     <%= if @maze.from && @maze.to do %>
       <section>
         <label for="show-solution">
-          <input type="checkbox" id="show-solution" name="show_solution" <%= if @show_solution, do: "checked" %> />
+          <input type="checkbox" id="show-solution" name="show_solution" <%= if @settings.show_solution, do: "checked" %> />
           Show solution
         </label>
       </section>
@@ -70,7 +105,11 @@
     <section>
       <div>
         <label for="show-colors">
-          <input type="checkbox" id="show-colors" name="show_colors" <%= if @show_colors, do: "checked" %> />
+          <input type="checkbox"
+                 id="show-colors"
+                 name="show_colors"
+                 <%= if @settings.show_colors, do: "checked" %>
+          />
           Colors
         </label>
       </div>
@@ -80,7 +119,13 @@
       <div>
         <label for="hue">
           Hue
-          <input type="range" name="hue" min="<%= min_hue() %>" max="<%= max_hue() %>" value="<%= @hue %>" id="hue">
+          <input type="range"
+                 name="hue"
+                 min="<%= Settings.min_hue() %>"
+                 max="<%= Settings.max_hue() %>"
+                 value="<%= @settings.hue %>"
+                 id="hue"
+          >
         </label>
       </div>
     </section>
