@@ -3,9 +3,8 @@ defmodule MazesWeb.PageLive do
 
   alias Mazes.{
     RectangularMaze,
-    MazeDistances,
-    MazeEntranceAndExit,
-    Settings
+    Settings,
+    Generate
   }
 
   alias MazesWeb.PageView
@@ -56,47 +55,8 @@ defmodule MazesWeb.PageLive do
   end
 
   defp generate(socket) do
-    opts = Settings.get_opts_for_generate(socket.assigns.settings)
-
-    opts =
-      if Keyword.get(opts, :mask) do
-        Keyword.put(opts, :file, socket.assigns.masks[Keyword.get(opts, :mask)])
-      else
-        opts
-      end
-
-    maze =
-      socket.assigns.settings.algorithm.generate(
-        opts,
-        socket.assigns.settings.shape
-      )
-
-    maze =
-      if socket.assigns.settings.entrance_exit_strategy do
-        apply(MazeEntranceAndExit, socket.assigns.settings.entrance_exit_strategy, [maze])
-      else
-        maze
-      end
-
-    solution =
-      if maze.from && maze.to,
-        do: MazeDistances.shortest_path(maze, maze.from, maze.to),
-        else: []
-
-    from = maze.from || maze.module.center(maze)
-    distances = MazeDistances.distances(maze, from)
-
-    {_, max_distance} = MazeDistances.find_max_vertex_by_distance(maze, from, distances)
-
-    colors = %{distances: distances, max_distance: max_distance}
-
-    longest_path =
-      if socket.assigns.settings.entrance_exit_strategy == :set_longest_path_from_and_to do
-        solution
-      else
-        temp_maze = Mazes.MazeEntranceAndExit.set_longest_path_from_and_to(maze)
-        MazeDistances.shortest_path(temp_maze, temp_maze.from, temp_maze.to)
-      end
+    %{maze: maze, solution: solution, colors: colors, longest_path: longest_path} =
+      Generate.from_settings(socket.assigns.settings, socket.assigns.masks)
 
     socket
     |> assign(:maze, maze)
