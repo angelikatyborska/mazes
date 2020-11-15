@@ -1,50 +1,6 @@
-<div class="maze" id="maze">
-  <svg width="100%" height="100%" viewbox="0 0 <%= 2 * padding() + square_size(@maze) * @maze.width %> <%= 2 * padding() + square_size(@maze) * @maze.height %>">
-  <%= Enum.map(@maze.module.vertices(@maze), fn {x, y} = vertex -> %>
-  <rect width="<%= square_size(@maze) + 1 %>"
-        height="<%= square_size(@maze) + 1 %>"
-        <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue) %>
-        x="<%= padding() + square_size(@maze) * (x - 1) %>"
-        y="<%= padding() + square_size(@maze) * (y - 1) %>"
-  />
-  <% end )%>
-
-  <%= Enum.map(@maze.module.vertices(@maze), fn {x, y} = vertex -> %>
-    <%= if @maze.module.wall?(@maze, vertex, @maze.module.north(vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= padding() + square_size(@maze) * (x) %>"
-          y2="<%= padding() + square_size(@maze) * (y - 1) %>"
-    />
-    <% end %>
-
-    <%= if @maze.module.wall?(@maze, vertex, @maze.module.west(vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= padding() + square_size(@maze) * (x - 1) %>"
-          y2="<%= padding() + square_size(@maze) * (y) %>"
-    />
-    <% end %>
-
-    <%= if x == @maze.width || !(@maze.module.east(vertex) in @maze.module.neighboring_vertices(@maze, vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= padding() + square_size(@maze) * x %>"
-          y1="<%= padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= padding() + square_size(@maze) * x %>"
-          y2="<%= padding() + square_size(@maze) * (y) %>"
-    />
-    <% end %>
-
-    <%= if y == @maze.height || !(@maze.module.south(vertex) in @maze.module.neighboring_vertices(@maze, vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= padding() + square_size(@maze) * y %>"
-          x2="<%= padding() + square_size(@maze) * (x) %>"
-          y2="<%= padding() + square_size(@maze) * y %>"
-    />
-    <% end %>
-  <% end )%>
-  </svg>
-</div>
+<%= case @maze.module do %>
+<% m when m in [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask] -> %>
+<%= render("rectangular_maze.html", assigns) %>
+<% m -> %>
+<%= render("circle_maze.html", assigns) %>
+<% end %>

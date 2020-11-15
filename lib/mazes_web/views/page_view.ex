@@ -90,4 +90,27 @@ defmodule MazesWeb.PageView do
       "disabled"
     end
   end
+
+  def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do
+    ratio = alpha / :math.pi()
+
+    {theta, x_delta_sign, y_delta_sign} =
+      case ratio do
+        ratio when ratio >= 0.0 and ratio < 0.5 ->
+          {alpha, 1, -1}
+
+        ratio when ratio >= 0.5 and ratio < 1.0 ->
+          {:math.pi() - alpha, 1, 1}
+
+        ratio when ratio >= 1.0 and ratio < 1.5 ->
+          {alpha - :math.pi(), -1, 1}
+
+        ratio when ratio >= 1.0 and ratio <= 2 ->
+          {:math.pi() * 2 - alpha, -1, -1}
+      end
+
+    x = x_delta_sign * radius * :math.sin(theta) + cx
+    y = y_delta_sign * radius * :math.cos(theta) + cy
+    {x, y}
+  end
 end
