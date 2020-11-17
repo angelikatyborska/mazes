@@ -13,9 +13,10 @@ defmodule Mazes.MazeGeneration.AldousBroderAlgorithmTest do
     assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
   end
 
+  # TODO: refactor as a macro? do not pass all options to all maze types...
   test "produces a maze that can be solved for all maze types it supports" do
     Enum.each(AldousBroderAlgorithm.supported_maze_types(), fn module ->
-      maze = AldousBroderAlgorithm.generate([width: 10, height: 10], module)
+      maze = AldousBroderAlgorithm.generate([width: 10, height: 10, rings: 10], module)
       assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
     end)
   end

@@ -15,7 +15,7 @@ defmodule Mazes.MazeGeneration.SidewinderAlgorithmTest do
 
   test "produces a maze that can be solved for all maze types it supports" do
     Enum.each(SidewinderAlgorithm.supported_maze_types(), fn module ->
-      maze = SidewinderAlgorithm.generate([width: 10, height: 10], module)
+      maze = SidewinderAlgorithm.generate([width: 10, height: 10, rings: 10], module)
       assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
     end)
   end

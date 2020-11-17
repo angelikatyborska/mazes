@@ -1,6 +1,6 @@
 <%= case @maze.module do %>
 <% m when m in [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask] -> %>
 <%= render("rectangular_maze.html", assigns) %>
-<% m -> %>
-<%= render("circle_maze.html", assigns) %>
+<% m when m in [Mazes.CircularMaze] -> %>
+<%= render("circular_maze.html", assigns) %>
 <% end %>

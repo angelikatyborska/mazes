@@ -4,7 +4,7 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithm do
 
   @impl true
   def supported_maze_types do
-    [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask]
+    [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask, Mazes.CircularMaze]
   end
 
   @impl true

@@ -42,6 +42,19 @@
       </label>
       <% end %>
 
+      <%= if :rings in Settings.maze_options_per_shape()[@settings.shape] do %>
+      <label for="rings">
+        Rings
+        <input type="number"
+               min="<%= Settings.min_rings() %>"
+               max="<%= Settings.max_rings() %>"
+               step="1"
+               name="rings"
+               value="<%= @settings.rings %>"
+               id="rings" />
+      </label>
+      <% end %>
+
       <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
         Mask
         <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label} -> %>

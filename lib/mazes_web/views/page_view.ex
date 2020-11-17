@@ -11,26 +11,29 @@ defmodule MazesWeb.PageView do
   def square_size(maze),
     do: Integer.floor_div(max_svg_width(), Enum.max([maze.width, maze.height]))
 
+  def vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue) do
+    cond do
+      vertex == maze.from ->
+        "lightgray"
+
+      vertex == maze.to ->
+        "gray"
+
+      show_solution && vertex in solution ->
+        MazeColors.solution_color(hue)
+
+      show_colors && colors ->
+        MazeColors.color(colors.distances[vertex], colors.max_distance, hue)
+
+      true ->
+        "white"
+    end
+  end
+
   def vertex_fill(maze, vertex, solution, show_solution, colors, show_colors, hue) do
-    fill =
-      cond do
-        vertex == maze.from ->
-          "lightgray"
+    fill = vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue)
 
-        vertex == maze.to ->
-          "gray"
-
-        show_solution && vertex in solution ->
-          MazeColors.solution_color(hue)
-
-        show_colors && colors ->
-          MazeColors.color(colors.distances[vertex], colors.max_distance, hue)
-
-        true ->
-          "white"
-      end
-
-    if fill, do: "style=\"fill: #{fill}\""
+    "style=\"fill: #{fill}\""
   end
 
   def line_style(maze) do
@@ -47,7 +50,8 @@ defmodule MazesWeb.PageView do
   def opts_for_shape_select() do
     labels = %{
       "rectangle" => "Rectangle",
-      "rectangle-with-mask" => "Rectangle with a mask"
+      "rectangle-with-mask" => "Rectangle with a mask",
+      "circle" => "Circle"
     }
 
     Enum.map(Settings.shapes(), &Map.merge(&1, %{label: labels[&1.slug]}))
@@ -112,5 +116,38 @@ defmodule MazesWeb.PageView do
     x = x_delta_sign * radius * :math.sin(theta) + cx
     y = y_delta_sign * radius * :math.cos(theta) + cy
     {x, y}
+  end
+
+  def circular_maze_radius(maze) do
+    trunc(max_svg_width() / maze.width) * maze.width
+  end
+
+  def circular_maze_center(maze) do
+    center_x = padding() + circular_maze_radius(maze)
+    center_y = padding() + circular_maze_radius(maze)
+    {center_x, center_y}
+  end
+
+  def circular_maze_vertex_points(maze, column_count, ring, current_column) do
+    center = circular_maze_center(maze)
+    radius_delta = trunc(circular_maze_radius(maze) / maze.width)
+
+    angle_steps = column_count
+    angle_delta = 2 * :math.pi() / angle_steps
+
+    start_angle = (current_column - 1) * angle_delta
+    end_angle = current_column * angle_delta
+
+    outer_arc_radius = ring * radius_delta
+    inner_arc_radius = (ring - 1) * radius_delta
+
+    %{
+      outer_arc_radius: outer_arc_radius,
+      outer_arc_start: move_coordinate_by_radius_and_angle(center, outer_arc_radius, start_angle),
+      outer_arc_end: move_coordinate_by_radius_and_angle(center, outer_arc_radius, end_angle),
+      inner_arc_radius: inner_arc_radius,
+      inner_arc_start: move_coordinate_by_radius_and_angle(center, inner_arc_radius, start_angle),
+      inner_arc_end: move_coordinate_by_radius_and_angle(center, inner_arc_radius, end_angle)
+    }
   end
 end
