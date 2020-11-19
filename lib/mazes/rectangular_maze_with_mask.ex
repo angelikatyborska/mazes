@@ -1,7 +1,6 @@
 defmodule Mazes.RectangularMazeWithMask do
   @behaviour Mazes.Maze
-  alias Mazes.Maze
-  alias Mazes.RectangularMaze
+  alias Mazes.{Maze, RectangularMaze}
 
   @doc "Returns a rectangular maze with given size, either with all walls or no walls"
   @impl true
@@ -50,41 +49,20 @@ defmodule Mazes.RectangularMazeWithMask do
         end)
         |> Enum.into(%{})
 
-      %Maze{
+      %{
         width: width,
         height: height,
         adjacency_matrix: adjacency_matrix,
-        module: __MODULE__
+        module: __MODULE__,
+        from: nil,
+        to: nil
       }
     end
   end
 
   @impl true
-  def vertices(maze) do
-    RectangularMaze.vertices(maze)
-  end
-
-  @doc "Returns all neighboring vertices that do not have a wall between themselves and the given one"
-  @impl true
-  def adjacent_vertices(maze, from) do
-    RectangularMaze.adjacent_vertices(maze, from)
-  end
-
-  @doc "Returns all neighboring vertices regardless of whether there is a wall or not"
-  @impl true
-  def neighboring_vertices(maze, from) do
-    RectangularMaze.neighboring_vertices(maze, from)
-  end
-
-  @doc "Groups vertices by the number of adjacent vertices they have"
-  @impl true
-  def group_vertices_by_adjacent_count(maze) do
-    RectangularMaze.group_vertices_by_adjacent_count(maze)
-  end
-
-  @impl true
   def center(maze) do
-    vertices = vertices(maze)
+    vertices = Maze.vertices(maze)
     center = {trunc(Float.ceil(maze.width / 2)), trunc(Float.ceil(maze.height / 2))}
     approximate_center(maze, vertices, center, [center])
   end
@@ -106,21 +84,6 @@ defmodule Mazes.RectangularMazeWithMask do
       new_candidates = new_candidates -- candidates
       approximate_center(maze, vertices, real_center, new_candidates)
     end
-  end
-
-  @impl true
-  def wall?(maze, from, to) do
-    RectangularMaze.wall?(maze, from, to)
-  end
-
-  @impl true
-  def put_wall(maze, from, to) do
-    RectangularMaze.put_wall(maze, from, to)
-  end
-
-  @impl true
-  def remove_wall(maze, from, to) do
-    RectangularMaze.remove_wall(maze, from, to)
   end
 
   # Not part of the behavior, functions needed for drawing the grid

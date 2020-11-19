@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.HuntAndKillAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -13,9 +13,9 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     visited =
       all_vertices
@@ -37,15 +37,15 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithm do
   defp do_generate(module, maze, current_vertex, visited, remaining) do
     unvisited_neighbors =
       maze
-      |> module.neighboring_vertices(current_vertex)
+      |> Maze.neighboring_vertices(current_vertex)
       |> Enum.filter(&(!visited[&1]))
 
     {from, next_vertex} =
       if unvisited_neighbors == [] do
-        module.vertices(maze)
+        Maze.vertices(maze)
         |> Enum.find_value(fn vertex ->
           visited_neighbors =
-            module.neighboring_vertices(maze, vertex)
+            Maze.neighboring_vertices(maze, vertex)
             |> Enum.filter(&visited[&1])
 
           if !visited[vertex] && length(visited_neighbors) >= 1 do
@@ -58,7 +58,7 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithm do
         {current_vertex, Enum.random(unvisited_neighbors)}
       end
 
-    maze = module.remove_wall(maze, from, next_vertex)
+    maze = Maze.remove_wall(maze, from, next_vertex)
     visited = Map.put(visited, next_vertex, true)
     do_generate(module, maze, next_vertex, visited, remaining - 1)
   end

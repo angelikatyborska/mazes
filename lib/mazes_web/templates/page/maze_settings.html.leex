@@ -159,11 +159,11 @@
           <th>Vertices</th>
           <th>% total</th>
         </tr>
-        <%= Enum.map(Mazes.RectangularMaze.group_vertices_by_adjacent_count(@maze), fn {count, vertices} -> %>
+        <%= Enum.map(Mazes.Maze.group_vertices_by_adjacent_count(@maze), fn {count, vertices} -> %>
           <tr>
             <td><%= count %></td>
             <td><%= length(vertices) %></td>
-            <td><%= trunc(1000 * length(vertices) / length(Mazes.RectangularMaze.vertices(@maze))) / 10 %>%</td>
+            <td><%= trunc(1000 * length(vertices) / length(Mazes.Maze.vertices(@maze))) / 10 %>%</td>
           </tr>
         <% end) %>
       </table>

@@ -1,7 +1,7 @@
 defmodule MazesWeb.PageView do
   use MazesWeb, :view
 
-  alias Mazes.{Settings, MazeColors}
+  alias Mazes.{Settings, MazeColors, Maze}
 
   # doesn't matter that much because the svg is responsive
   def max_svg_width, do: 1000
@@ -38,7 +38,7 @@ defmodule MazesWeb.PageView do
 
   def line_style(maze) do
     stroke_width =
-      case Enum.max([maze.width, maze.height]) do
+      case Enum.max(Enum.filter([maze[:width], maze[:height], maze[:rings]], & &1)) do
         n when n <= 16 -> 3
         n when n <= 32 -> 2
         n when n <= 64 -> 1
@@ -129,7 +129,7 @@ defmodule MazesWeb.PageView do
   end
 
   def circular_maze_radius(maze) do
-    trunc(max_svg_width() / maze.width) * maze.width
+    trunc(max_svg_width() / maze.rings) * maze.rings
   end
 
   def circular_maze_center(maze) do
@@ -140,7 +140,7 @@ defmodule MazesWeb.PageView do
 
   def circular_maze_vertex_points(maze, column_count, ring, current_column) do
     center = circular_maze_center(maze)
-    radius_delta = trunc(circular_maze_radius(maze) / maze.width)
+    radius_delta = trunc(circular_maze_radius(maze) / maze.rings)
 
     angle_steps = column_count
     angle_delta = 2 * :math.pi() / angle_steps

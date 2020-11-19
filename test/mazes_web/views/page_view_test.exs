@@ -7,7 +7,7 @@ defmodule MazesWeb.PageViewTest do
   describe "vertex_fill" do
     test "white vertex by default" do
       maze = RectangularMaze.new(height: 5, width: 5)
-      maze = %{maze | from: {1, 1}, to: {5, 5}}
+      maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
 
       assert PageView.vertex_fill(maze, {1, 2}, [], false, %{}, false, 123) ==
                "style=\"fill: white\""
@@ -18,7 +18,7 @@ defmodule MazesWeb.PageViewTest do
 
     test "from and to" do
       maze = RectangularMaze.new(height: 5, width: 5)
-      maze = %{maze | from: {1, 1}, to: {5, 5}}
+      maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
 
       assert PageView.vertex_fill(maze, {1, 1}, [], false, %{}, false, 123) ==
                "style=\"fill: lightgray\""
@@ -29,7 +29,7 @@ defmodule MazesWeb.PageViewTest do
 
     test "with colors" do
       maze = RectangularMaze.new(height: 5, width: 5)
-      maze = %{maze | from: {1, 1}, to: {5, 5}}
+      maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
       colors = %{distances: %{{1, 2} => 1, {5, 4} => 10}, max_distance: 20}
 
       assert PageView.vertex_fill(maze, {1, 2}, [], false, colors, false, 123) ==
@@ -47,7 +47,7 @@ defmodule MazesWeb.PageViewTest do
 
     test "when part of solution" do
       maze = RectangularMaze.new(height: 5, width: 5)
-      maze = %{maze | from: {1, 1}, to: {5, 5}}
+      maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
       colors = %{distances: %{{1, 2} => 1, {5, 4} => 10}, max_distance: 20}
       solution = [{1, 1}, {1, 2}, {5, 5}]
 

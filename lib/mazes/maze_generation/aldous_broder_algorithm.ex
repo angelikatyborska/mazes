@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -13,9 +13,9 @@ defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     visited =
       all_vertices
@@ -37,13 +37,13 @@ defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
   defp do_generate(module, maze, current_vertex, visited, remaining) do
     random_neighbor =
       maze
-      |> module.neighboring_vertices(current_vertex)
+      |> Maze.neighboring_vertices(current_vertex)
       |> Enum.random()
 
     if visited[random_neighbor] do
       do_generate(module, maze, random_neighbor, visited, remaining)
     else
-      maze = module.remove_wall(maze, current_vertex, random_neighbor)
+      maze = Maze.remove_wall(maze, current_vertex, random_neighbor)
       visited = Map.put(visited, random_neighbor, true)
       do_generate(module, maze, random_neighbor, visited, remaining - 1)
     end

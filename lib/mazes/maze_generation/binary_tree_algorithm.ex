@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -8,9 +8,9 @@ defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     do_generate(maze, all_vertices)
   end
@@ -31,7 +31,7 @@ defmodule Mazes.MazeGeneration.BinaryTreeAlgorithm do
           maze
 
         list ->
-          maze.module.remove_wall(maze, vertex, Enum.random(list))
+          Maze.remove_wall(maze, vertex, Enum.random(list))
       end
 
     do_generate(maze, vertices_to_visit)

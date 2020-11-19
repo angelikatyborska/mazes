@@ -83,6 +83,18 @@ defmodule Mazes.HexagonalMazeTest do
     end
   end
 
+  describe "center" do
+    test "odd size" do
+      maze = HexagonalMaze.new(width: 5, height: 5)
+      assert HexagonalMaze.center(maze) == {3, 3}
+    end
+
+    test "even size" do
+      maze = HexagonalMaze.new(width: 4, height: 4)
+      assert HexagonalMaze.center(maze) == {2, 2}
+    end
+  end
+
   test "north" do
     assert HexagonalMaze.north({1, 1}) == {1, 0}
     assert HexagonalMaze.north({1, 2}) == {1, 1}

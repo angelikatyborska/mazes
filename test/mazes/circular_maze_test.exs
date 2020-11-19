@@ -5,8 +5,7 @@ defmodule Mazes.CircularMazeTest do
   describe "new" do
     test "sets a correct adjacency matrix" do
       result = CircularMaze.new(rings: 4)
-      assert result.width == 4
-      assert result.height == 4
+      assert result.rings == 4
 
       assert result.adjacency_matrix == %{
                {1, 1} => %{

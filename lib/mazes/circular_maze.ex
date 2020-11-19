@@ -30,11 +30,12 @@ defmodule Mazes.CircularMaze do
         all_vertices_adjacent?
       )
 
-    %Maze{
-      width: rings,
-      height: rings,
+    %{
+      rings: rings,
       adjacency_matrix: adjacency_matrix,
-      module: __MODULE__
+      module: __MODULE__,
+      from: nil,
+      to: nil
     }
   end
 
@@ -102,70 +103,14 @@ defmodule Mazes.CircularMaze do
   end
 
   @impl true
-  def vertices(maze) do
-    Map.keys(maze.adjacency_matrix)
-    |> Enum.sort(&sorter/2)
-  end
-
-  defp sorter({x1, y1}, {x2, y2}) do
-    if y1 == y2 do
-      x1 < x2
-    else
-      y1 < y2
-    end
-  end
-
-  @doc "Returns all neighboring vertices that do not have a wall between themselves and the given one"
-  @impl true
-  def adjacent_vertices(maze, from) do
-    maze.adjacency_matrix[from]
-    |> Enum.filter(fn {_, adjacency} -> adjacency end)
-    |> Enum.map(fn {cell, _} -> cell end)
-    |> Enum.sort(&sorter/2)
-  end
-
-  @doc "Returns all neighboring vertices regardless of whether there is a wall or not"
-  @impl true
-  def neighboring_vertices(maze, from) do
-    maze.adjacency_matrix[from]
-    |> Enum.map(fn {cell, _} -> cell end)
-    |> Enum.sort(&sorter/2)
-  end
-
-  defp set_adjacency(maze, from, to, value) do
-    adjacency_matrix =
-      maze.adjacency_matrix
-      |> put_in([from, to], value)
-      |> put_in([to, from], value)
-
-    %{maze | adjacency_matrix: adjacency_matrix}
-  end
-
-  @doc "Groups vertices by the number of adjacent vertices they have"
-  @impl true
-  def group_vertices_by_adjacent_count(maze) do
-    vertices(maze)
-    |> Enum.group_by(fn vertex ->
-      length(adjacent_vertices(maze, vertex))
-    end)
-  end
-
-  @impl true
   def center(_) do
     {1, 1}
   end
 
-  @impl true
-  def wall?(%Maze{} = maze, from, to), do: !maze.adjacency_matrix[from][to]
-  @impl true
-  def put_wall(%Maze{} = maze, from, to), do: set_adjacency(maze, from, to, false)
-  @impl true
-  def remove_wall(%Maze{} = maze, from, to), do: set_adjacency(maze, from, to, true)
-
   # Not part of the behavior, functions needed for drawing the grid
 
   def rings(maze) do
-    vertices(maze)
+    Maze.vertices(maze)
     |> Enum.group_by(&elem(&1, 1))
     |> Enum.map(fn {ring, vertices} ->
       %{ring: ring, column_count: length(vertices), vertices: vertices}
@@ -173,10 +118,10 @@ defmodule Mazes.CircularMaze do
   end
 
   def inner(maze, {_, y} = vertex),
-    do: Enum.find(neighboring_vertices(maze, vertex), &(elem(&1, 1) == y - 1))
+    do: Enum.find(Maze.neighboring_vertices(maze, vertex), &(elem(&1, 1) == y - 1))
 
   def cw(maze, {x, y} = vertex) do
-    Enum.find(neighboring_vertices(maze, vertex), &(&1 == {x + 1, y})) ||
-      Enum.find(neighboring_vertices(maze, vertex), &(&1 == {1, y}))
+    Enum.find(Maze.neighboring_vertices(maze, vertex), &(&1 == {x + 1, y})) ||
+      Enum.find(Maze.neighboring_vertices(maze, vertex), &(&1 == {1, y}))
   end
 end

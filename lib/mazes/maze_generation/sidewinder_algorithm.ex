@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -8,9 +8,9 @@ defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     do_generate(maze, all_vertices, [])
   end
@@ -35,7 +35,7 @@ defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
 
           case to_be_removed do
             ^east ->
-              maze = maze.module.remove_wall(maze, vertex, east)
+              maze = Maze.remove_wall(maze, vertex, east)
               {maze, [vertex | current_group]}
 
             ^north ->
@@ -44,7 +44,7 @@ defmodule Mazes.MazeGeneration.SidewinderAlgorithm do
                 |> Enum.map(&{&1, maze.module.north(&1)})
                 |> Enum.random()
 
-              maze = maze.module.remove_wall(maze, remove_from, remove_to)
+              maze = Maze.remove_wall(maze, remove_from, remove_to)
               {maze, []}
           end
       end

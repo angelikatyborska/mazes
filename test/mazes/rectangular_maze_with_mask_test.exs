@@ -128,43 +128,6 @@ defmodule Mazes.RectangularMazeWithMaskTest do
     end
   end
 
-  describe "vertices" do
-    test "with a mask" do
-      maze = RectangularMazeWithMask.new(width: 3, height: 3, mask_vertices: [{1, 1}, {3, 3}])
-
-      assert RectangularMazeWithMask.vertices(maze) == [
-               {2, 1},
-               {3, 1},
-               {1, 2},
-               {2, 2},
-               {3, 2},
-               {1, 3},
-               {2, 3}
-             ]
-    end
-  end
-
-  describe "adjacent_vertices" do
-    test "with a mask" do
-      maze =
-        RectangularMazeWithMask.new(
-          width: 3,
-          height: 3,
-          all_vertices_adjacent?: true,
-          mask_vertices: [{1, 1}, {3, 3}]
-        )
-
-      assert RectangularMazeWithMask.adjacent_vertices(maze, {2, 1}) == [{3, 1}, {2, 2}]
-
-      assert RectangularMazeWithMask.adjacent_vertices(maze, {2, 2}) == [
-               {2, 1},
-               {1, 2},
-               {3, 2},
-               {2, 3}
-             ]
-    end
-  end
-
   describe "center" do
     test "when real center is in the maze" do
       maze =

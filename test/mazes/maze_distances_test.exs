@@ -1,7 +1,6 @@
 defmodule Mazes.MazeDistancesTest do
   use ExUnit.Case
-  alias Mazes.RectangularMaze
-  alias Mazes.MazeDistances
+  alias Mazes.{RectangularMaze, Maze, MazeDistances}
 
   describe "path" do
     test "when all walls" do
@@ -19,9 +18,9 @@ defmodule Mazes.MazeDistancesTest do
     test "when some walls" do
       maze =
         RectangularMaze.new(width: 3, height: 3, all_vertices_adjacent?: true)
-        |> RectangularMaze.put_wall({1, 1}, {2, 1})
-        |> RectangularMaze.put_wall({2, 1}, {2, 2})
-        |> RectangularMaze.put_wall({2, 3}, {3, 3})
+        |> Maze.put_wall({1, 1}, {2, 1})
+        |> Maze.put_wall({2, 1}, {2, 2})
+        |> Maze.put_wall({2, 3}, {3, 3})
 
       result = MazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == [{1, 1}, {1, 2}, {2, 2}, {3, 2}, {3, 3}]
@@ -30,9 +29,9 @@ defmodule Mazes.MazeDistancesTest do
     test "when some walls but no path" do
       maze =
         RectangularMaze.new(width: 3, height: 3, all_vertices_adjacent?: true)
-        |> RectangularMaze.put_wall({1, 1}, {1, 2})
-        |> RectangularMaze.put_wall({2, 1}, {2, 2})
-        |> RectangularMaze.put_wall({3, 1}, {3, 2})
+        |> Maze.put_wall({1, 1}, {1, 2})
+        |> Maze.put_wall({2, 1}, {2, 2})
+        |> Maze.put_wall({3, 1}, {3, 2})
 
       result = MazeDistances.shortest_path(maze, {1, 1}, {3, 3})
       assert result == nil
@@ -49,7 +48,7 @@ defmodule Mazes.MazeDistancesTest do
 
     test "when some walls" do
       maze = RectangularMaze.new(width: 2, height: 3, all_vertices_adjacent?: true)
-      maze = RectangularMaze.put_wall(maze, {2, 1}, {2, 2})
+      maze = Maze.put_wall(maze, {2, 1}, {2, 2})
 
       result = MazeDistances.find_max_vertex_by_distance(maze, {2, 2})
       assert result == {{2, 1}, 3}
@@ -95,7 +94,7 @@ defmodule Mazes.MazeDistancesTest do
 
     test "when some walls" do
       maze = RectangularMaze.new(width: 2, height: 3, all_vertices_adjacent?: true)
-      maze = RectangularMaze.put_wall(maze, {2, 1}, {2, 2})
+      maze = Maze.put_wall(maze, {2, 1}, {2, 2})
 
       result = MazeDistances.distances(maze, {2, 2})
 

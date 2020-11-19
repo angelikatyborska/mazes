@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -13,9 +13,9 @@ defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     visited =
       all_vertices
@@ -45,14 +45,14 @@ defmodule Mazes.MazeGeneration.WilsonsAlgorithm do
   end
 
   defp do_generate(module, maze, [current_vertex | _] = current_path, visited, remaining) do
-    random_neighbor = Enum.random(module.neighboring_vertices(maze, current_vertex))
+    random_neighbor = Enum.random(Maze.neighboring_vertices(maze, current_vertex))
 
     if visited[random_neighbor] do
       {maze, visited} =
         [random_neighbor | current_path]
         |> Enum.chunk_every(2, 1, :discard)
         |> Enum.reduce({maze, visited}, fn [from, to], {maze, visited} ->
-          maze = module.remove_wall(maze, from, to)
+          maze = Maze.remove_wall(maze, from, to)
           visited = Map.put(visited, to, true)
           {maze, visited}
         end)

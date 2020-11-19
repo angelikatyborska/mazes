@@ -1,6 +1,6 @@
 defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
   @behaviour Mazes.MazeGeneration.Algorithm
-  alias Mazes.RectangularMaze
+  alias Mazes.Maze
 
   @impl true
   def supported_maze_types do
@@ -13,9 +13,9 @@ defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
   end
 
   @impl true
-  def generate(opts, module \\ RectangularMaze) do
+  def generate(opts, module \\ Mazes.RectangularMaze) do
     maze = module.new(opts)
-    all_vertices = module.vertices(maze)
+    all_vertices = Maze.vertices(maze)
 
     visited =
       all_vertices
@@ -35,14 +35,14 @@ defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
   defp do_generate(module, maze, [current_vertex | stack_tail] = stack, visited) do
     unvisited_neighbors =
       maze
-      |> module.neighboring_vertices(current_vertex)
+      |> Maze.neighboring_vertices(current_vertex)
       |> Enum.filter(&(!visited[&1]))
 
     if unvisited_neighbors == [] do
       do_generate(module, maze, stack_tail, visited)
     else
       next_vertex = Enum.random(unvisited_neighbors)
-      maze = module.remove_wall(maze, current_vertex, next_vertex)
+      maze = Maze.remove_wall(maze, current_vertex, next_vertex)
       visited = Map.put(visited, next_vertex, true)
       do_generate(module, maze, [next_vertex | stack], visited)
     end
