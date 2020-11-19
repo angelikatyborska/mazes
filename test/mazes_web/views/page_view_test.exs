@@ -154,6 +154,30 @@ defmodule MazesWeb.PageViewTest do
       assert_in_delta(y, -100, @delta)
     end
 
+    test "450deg" do
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 400}, 100, :math.pi() * 2.5)
+      assert_in_delta(x, 500, @delta)
+      assert_in_delta(y, 400, @delta)
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 400}, 200, :math.pi() * 2.5)
+      assert_in_delta(x, 600, @delta)
+      assert_in_delta(y, 400, @delta)
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 100}, 200, :math.pi() * 2.5)
+      assert_in_delta(x, 600, @delta)
+      assert_in_delta(y, 100, @delta)
+    end
+
+    test "-270deg" do
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 400}, 100, :math.pi() * -1.5)
+      assert_in_delta(x, 500, @delta)
+      assert_in_delta(y, 400, @delta)
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 400}, 200, :math.pi() * -1.5)
+      assert_in_delta(x, 600, @delta)
+      assert_in_delta(y, 400, @delta)
+      {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 100}, 200, :math.pi() * -1.5)
+      assert_in_delta(x, 600, @delta)
+      assert_in_delta(y, 100, @delta)
+    end
+
     test "45deg" do
       {x, y} = PageView.move_coordinate_by_radius_and_angle({400, 400}, 100, :math.pi() * 0.25)
       assert_in_delta(x, 400 + 100 * :math.pow(2, 0.5) / 2, @delta)

@@ -4,7 +4,12 @@ defmodule Mazes.MazeGeneration.AldousBroderAlgorithm do
 
   @impl true
   def supported_maze_types do
-    [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask, Mazes.CircularMaze]
+    [
+      Mazes.RectangularMaze,
+      Mazes.RectangularMazeWithMask,
+      Mazes.CircularMaze,
+      Mazes.HexagonalMaze
+    ]
   end
 
   @impl true

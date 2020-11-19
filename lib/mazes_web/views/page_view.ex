@@ -39,9 +39,9 @@ defmodule MazesWeb.PageView do
   def line_style(maze) do
     stroke_width =
       case Enum.max([maze.width, maze.height]) do
-        n when n <= 64 -> 3
-        n when n <= 128 -> 2
-        n when n <= 256 -> 1
+        n when n <= 16 -> 3
+        n when n <= 32 -> 2
+        n when n <= 64 -> 1
       end
 
     "stroke: black; stroke-width: #{stroke_width}; stroke-linecap: round;"
@@ -51,7 +51,8 @@ defmodule MazesWeb.PageView do
     labels = %{
       "rectangle" => "Rectangle",
       "rectangle-with-mask" => "Rectangle with a mask",
-      "circle" => "Circle"
+      "circle" => "Circle",
+      "hex" => "Hex"
     }
 
     Enum.map(Settings.shapes(), &Map.merge(&1, %{label: labels[&1.slug]}))
@@ -96,26 +97,35 @@ defmodule MazesWeb.PageView do
   end
 
   def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do
-    ratio = alpha / :math.pi()
+    cond do
+      alpha > 2 * :math.pi() ->
+        move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha - 2 * :math.pi())
 
-    {theta, x_delta_sign, y_delta_sign} =
-      case ratio do
-        ratio when ratio >= 0.0 and ratio < 0.5 ->
-          {alpha, 1, -1}
+      alpha < 0 ->
+        move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha + 2 * :math.pi())
 
-        ratio when ratio >= 0.5 and ratio < 1.0 ->
-          {:math.pi() - alpha, 1, 1}
+      true ->
+        ratio = alpha / :math.pi()
 
-        ratio when ratio >= 1.0 and ratio < 1.5 ->
-          {alpha - :math.pi(), -1, 1}
+        {theta, x_delta_sign, y_delta_sign} =
+          case ratio do
+            ratio when ratio >= 0.0 and ratio < 0.5 ->
+              {alpha, 1, -1}
 
-        ratio when ratio >= 1.0 and ratio <= 2 ->
-          {:math.pi() * 2 - alpha, -1, -1}
-      end
+            ratio when ratio >= 0.5 and ratio < 1.0 ->
+              {:math.pi() - alpha, 1, 1}
 
-    x = x_delta_sign * radius * :math.sin(theta) + cx
-    y = y_delta_sign * radius * :math.cos(theta) + cy
-    {x, y}
+            ratio when ratio >= 1.0 and ratio < 1.5 ->
+              {alpha - :math.pi(), -1, 1}
+
+            ratio when ratio >= 1.0 and ratio <= 2 ->
+              {:math.pi() * 2 - alpha, -1, -1}
+          end
+
+        x = x_delta_sign * radius * :math.sin(theta) + cx
+        y = y_delta_sign * radius * :math.cos(theta) + cy
+        {x, y}
+    end
   end
 
   def circular_maze_radius(maze) do

@@ -16,6 +16,7 @@ defmodule Mazes.Settings do
     RectangularMaze,
     RectangularMazeWithMask,
     CircularMaze,
+    HexagonalMaze,
     MazeGeneration.HuntAndKillAlgorithm
   }
 
@@ -64,6 +65,10 @@ defmodule Mazes.Settings do
       %{
         module: CircularMaze,
         slug: "circle"
+      },
+      %{
+        module: HexagonalMaze,
+        slug: "hex"
       }
     ]
   end
@@ -118,7 +123,8 @@ defmodule Mazes.Settings do
     %{
       RectangularMaze => [:width, :height],
       RectangularMazeWithMask => [:mask],
-      CircularMaze => [:rings]
+      CircularMaze => [:rings],
+      HexagonalMaze => [:width, :height]
     }
   end
 

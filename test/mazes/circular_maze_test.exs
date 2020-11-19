@@ -3,7 +3,7 @@ defmodule Mazes.CircularMazeTest do
   alias Mazes.CircularMaze
 
   describe "new" do
-    test "xxx" do
+    test "sets a correct adjacency matrix" do
       result = CircularMaze.new(rings: 4)
       assert result.width == 4
       assert result.height == 4
