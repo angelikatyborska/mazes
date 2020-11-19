@@ -5,7 +5,7 @@ defmodule Mazes.CircularMaze do
   @doc "Returns a circular maze with given size, either with all walls or no walls"
   @impl true
   def new(opts) do
-    rings = Keyword.get(opts, :rings)
+    radius = Keyword.get(opts, :radius, 10)
     first_ring_vertex_count = 8
 
     all_vertices_adjacent? = Keyword.get(opts, :all_vertices_adjacent?, false)
@@ -23,7 +23,7 @@ defmodule Mazes.CircularMaze do
     adjacency_matrix =
       do_new(
         2,
-        rings,
+        radius,
         adjacency_matrix,
         1,
         first_ring_vertex_count,
@@ -31,7 +31,7 @@ defmodule Mazes.CircularMaze do
       )
 
     %{
-      rings: rings,
+      radius: radius,
       adjacency_matrix: adjacency_matrix,
       module: __MODULE__,
       from: nil,
@@ -90,12 +90,12 @@ defmodule Mazes.CircularMaze do
     )
   end
 
-  defp get_next_right_vertex_count_growth(ring, x \\ 3, delta \\ 2) do
-    if ring == x do
+  defp get_next_right_vertex_count_growth(ring, next_growth_at_ring \\ 3, delta \\ 2) do
+    if ring == next_growth_at_ring do
       2
     else
-      if ring >= x + delta do
-        get_next_right_vertex_count_growth(ring, x * delta, delta)
+      if ring >= next_growth_at_ring + delta do
+        get_next_right_vertex_count_growth(ring, next_growth_at_ring * delta, delta)
       else
         1
       end

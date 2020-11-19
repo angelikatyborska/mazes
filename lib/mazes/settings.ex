@@ -5,7 +5,7 @@ defmodule Mazes.Settings do
     :entrance_exit_strategy,
     :width,
     :height,
-    :rings,
+    :radius,
     :show_solution,
     :show_colors,
     :hue,
@@ -26,14 +26,14 @@ defmodule Mazes.Settings do
   def default_entrance_exit_strategy, do: :set_longest_path_from_and_to
   def default_width, do: 32
   def default_height, do: default_width()
-  def default_rings, do: 8
+  def default_radius, do: 8
   def default_hue, do: 200
   def min_width, do: 2
   def max_width, do: 64
   def min_height, do: min_width()
   def max_height, do: max_width()
-  def min_rings, do: 2
-  def max_rings, do: 32
+  def min_radius, do: 2
+  def max_radius, do: 32
   def min_hue, do: 0
   def max_hue, do: 359
 
@@ -44,7 +44,7 @@ defmodule Mazes.Settings do
       entrance_exit_strategy: default_entrance_exit_strategy(),
       width: default_width(),
       height: default_height(),
-      rings: default_rings(),
+      radius: default_radius(),
       show_solution: false,
       show_colors: false,
       hue: default_hue(),
@@ -123,7 +123,7 @@ defmodule Mazes.Settings do
     %{
       RectangularMaze => [:width, :height],
       RectangularMazeWithMask => [:mask],
-      CircularMaze => [:rings],
+      CircularMaze => [:radius],
       HexagonalMaze => [:width, :height]
     }
   end
@@ -172,7 +172,7 @@ defmodule Mazes.Settings do
     algorithm = form_data["algorithm"]
     width = form_data["width"]
     height = form_data["height"]
-    rings = form_data["rings"]
+    radius = form_data["radius"]
     mask = form_data["mask"]
     show_colors = form_data["show_colors"]
     show_solution = form_data["show_solution"]
@@ -195,13 +195,13 @@ defmodule Mazes.Settings do
         settings.height
       end
 
-    rings =
-      if rings && rings != "" do
-        rings = String.to_integer(rings)
-        rings = if rings < min_rings(), do: min_rings(), else: rings
-        if rings > max_rings(), do: max_rings(), else: rings
+    radius =
+      if radius && radius != "" do
+        radius = String.to_integer(radius)
+        radius = if radius < min_radius(), do: min_radius(), else: radius
+        if radius > max_radius(), do: max_radius(), else: radius
       else
-        settings.rings
+        settings.radius
       end
 
     hue = String.to_integer(hue)
@@ -245,7 +245,7 @@ defmodule Mazes.Settings do
       settings
       | width: width,
         height: height,
-        rings: rings,
+        radius: radius,
         hue: hue,
         shape: shape,
         algorithm: algorithm,

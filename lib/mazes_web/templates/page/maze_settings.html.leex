@@ -42,16 +42,16 @@
       </label>
       <% end %>
 
-      <%= if :rings in Settings.maze_options_per_shape()[@settings.shape] do %>
-      <label for="rings">
-        Rings
+      <%= if :radius in Settings.maze_options_per_shape()[@settings.shape] do %>
+      <label for="radius">
+        Radius
         <input type="number"
-               min="<%= Settings.min_rings() %>"
-               max="<%= Settings.max_rings() %>"
+               min="<%= Settings.min_radius() %>"
+               max="<%= Settings.max_radius() %>"
                step="1"
-               name="rings"
-               value="<%= @settings.rings %>"
-               id="rings" />
+               name="radius"
+               value="<%= @settings.radius %>"
+               id="radius" />
       </label>
       <% end %>
 
