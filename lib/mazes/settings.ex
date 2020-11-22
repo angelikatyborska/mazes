@@ -177,36 +177,11 @@ defmodule Mazes.Settings do
     show_colors = form_data["show_colors"]
     show_solution = form_data["show_solution"]
 
-    width =
-      if width && width != "" do
-        width = String.to_integer(width)
-        width = if width < min_width(), do: min_width(), else: width
-        if width > max_width(), do: max_width(), else: width
-      else
-        settings.width
-      end
+    width = change_int(width, min_width(), max_width()) || settings.width
+    height = change_int(height, min_height(), max_height()) || settings.height
+    radius = change_int(radius, min_radius(), max_radius()) || settings.radius
+    hue = change_int(hue, min_hue(), max_hue()) || settings.hue
 
-    height =
-      if height && height != "" do
-        height = String.to_integer(height)
-        height = if height < min_height(), do: min_height(), else: height
-        if height > max_height(), do: max_height(), else: height
-      else
-        settings.height
-      end
-
-    radius =
-      if radius && radius != "" do
-        radius = String.to_integer(radius)
-        radius = if radius < min_radius(), do: min_radius(), else: radius
-        if radius > max_radius(), do: max_radius(), else: radius
-      else
-        settings.radius
-      end
-
-    hue = String.to_integer(hue)
-    hue = if hue < min_hue(), do: min_hue(), else: hue
-    hue = if hue > max_hue(), do: max_hue(), else: hue
     show_solution = show_solution === "on"
     show_colors = show_colors === "on"
 
@@ -254,5 +229,13 @@ defmodule Mazes.Settings do
         show_solution: show_solution,
         show_colors: show_colors
     }
+  end
+
+  defp change_int(value, min, max) do
+    if value && value != "" do
+      value = String.to_integer(value)
+      value = if value < min, do: min, else: value
+      if value > max, do: max, else: value
+    end
   end
 end
