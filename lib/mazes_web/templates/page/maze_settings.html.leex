@@ -83,19 +83,18 @@
     </section>
 
     <section class="maze-settings-generation-algorithm">
-      Maze generation algorithm:
-      <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
-        <label for="<%= slug %>">
-          <input type="radio"
+      <label for="algorithm">Maze generation algorithm:</label>
+      <select name="algorithm" id="algorithm">
+        <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
+          <option id="<%= slug %>"
                   <%= algorithm_disabled?(@settings.shape, module) %>
-                 id="<%= slug %>"
-                  <%= if @settings.algorithm === module, do: "checked" %>
+                  <%= if @settings.algorithm === module, do: "selected" %>
                  value="<%= slug %>"
-                 name="algorithm" />
-
-          <%= label %>
-        </label>
-      <% end) %>
+                 name="algorithm">
+            <%= label %>
+          </option>
+        <% end) %>
+      </select>
     </section>
 
     <section class="maze-settings-exit-strategy">
