@@ -1,55 +1,66 @@
 <div class="maze-settings">
   <h1>Mazes</h1>
   <form phx-change="settings_change" phx-submit="generate">
-    <section class="maze-settings-shape">
-      <div class="maze-settings-section-title">Shape</div>
-      <div class="maze-settings-icon-checkboxes">
-        <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
-        <div class="maze-settings-icon-checkbox">
-          <input type="radio"
-                 id="<%= slug %>"
-                 value="<%= slug %>"
-                 aria-label="<%= label %>"
-                  <%= if @settings.shape === module, do: "checked" %>
-                 name="shape" />
-          <label for="<%= slug %>" title="<%= label %>">
-            <%= raw render "#{slug}.svg" %>
-          </label>
+    <section>
+      <h2>Generate</h2>
+      <div class="maze-settings-form-group">
+        <div class="maze-settings-label">Shape</div>
+        <div class="maze-settings-icon-radios">
+          <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
+          <div class="maze-settings-icon-radio">
+            <input type="radio"
+                   id="<%= slug %>"
+                   value="<%= slug %>"
+                   aria-label="<%= label %>"
+                    <%= if @settings.shape === module, do: "checked" %>
+                   name="shape" />
+            <label for="<%= slug %>" title="<%= label %>">
+              <%= raw render "#{slug}.svg" %>
+            </label>
+          </div>
+          <% end) %>
         </div>
-        <% end) %>
       </div>
-    </section>
 
-    <section class="maze-settings-dimensions">
-      <%= if :width in Settings.maze_options_per_shape()[@settings.shape] do %>
-      <label for="width">
-        Width
-        <input type="number"
-               min="<%= Settings.min_width() %>"
-               max="<%= Settings.max_width() %>"
-               step="1"
-               name="width"
-               value="<%= @settings.width %>"
-               id="width" />
-      </label>
-      <% end %>
+      <div class="maze-settings-form-group">
+        <%= if :width in Settings.maze_options_per_shape()[@settings.shape] do %>
+          <div class="maze-settings-label">Size</div>
+        <% end %>
 
-      <%= if :height in Settings.maze_options_per_shape()[@settings.shape] do %>
-      <label for="height">
-        Height
-        <input type="number"
-               min="<%= Settings.min_height() %>"
-               max="<%= Settings.max_height() %>"
-               step="1"
-               name="height"
-               value="<%= @settings.height %>"
-               id="height" />
-      </label>
-      <% end %>
+        <%= if :width in Settings.maze_options_per_shape()[@settings.shape] do %>
+        <div class="maze-settings-size">
+          <div>
+            <label for="width">
+              Width
+            </label>
+            <input type="number"
+                   min="<%= Settings.min_width() %>"
+                   max="<%= Settings.max_width() %>"
+                   step="1"
+                   name="width"
+                   value="<%= @settings.width %>"
+                   id="width" />
+          </div>
 
-      <%= if :radius in Settings.maze_options_per_shape()[@settings.shape] do %>
-      <label for="radius">
-        Radius
+          <div>
+            <label for="height">
+              Height
+            </label>
+            <input type="number"
+                   min="<%= Settings.min_height() %>"
+                   max="<%= Settings.max_height() %>"
+                   step="1"
+                   name="height"
+                   value="<%= @settings.height %>"
+                   id="height" />
+          </div>
+        </div>
+        <% end %>
+
+        <%= if :radius in Settings.maze_options_per_shape()[@settings.shape] do %>
+        <label class="maze-settings-label" for="radius">
+          Radius
+        </label>
         <input type="number"
                min="<%= Settings.min_radius() %>"
                max="<%= Settings.max_radius() %>"
@@ -57,90 +68,98 @@
                name="radius"
                value="<%= @settings.radius %>"
                id="radius" />
-      </label>
-      <% end %>
+        <% end %>
 
-      <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
-      <div class="maze-settings-section-title">Mask</div>
-      <div class="maze-settings-icon-checkboxes">
-        <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label, emoji: emoji, width: width} -> %>
-        <div class="maze-settings-icon-checkbox maze-settings-mask">
-          <input type="radio"
-                 id="<%= slug %>"
-                  <%= if @settings.mask === path, do: "checked" %>
-                 value="<%= slug %>"
-                 name="mask" />
+        <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
+        <div class="maze-settings-label">Mask</div>
+        <div class="maze-settings-icon-radios">
+          <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label, emoji: emoji, width: width} -> %>
+          <div class="maze-settings-icon-radio maze-settings-mask">
+            <input type="radio"
+                   id="<%= slug %>"
+                    <%= if @settings.mask === path, do: "checked" %>
+                   value="<%= slug %>"
+                   name="mask" />
 
-          <label for="<%= slug %>" title="<%= label %>">
-            <%= emoji %>
-            <span class="maze-settings-mask-preview">
-              <img src="<%= path %>" width="<%= width %>px"/>
-            </span>
+            <label for="<%= slug %>" title="<%= label %>" aria-label="<%= label %>">
+              <%= emoji %>
+              <span class="maze-settings-mask-preview">
+                <img alt="" aria-hidden="true" src="<%= path %>" width="<%= width %>px"/>
+              </span>
+            </label>
+          </div>
+          <% end) %>
+        </div>
+        <% end %>
+      </div>
+
+      <div class="maze-settings-form-group">
+        <label class="maze-settings-label" for="algorithm">Algorithm</label>
+        <select name="algorithm" id="algorithm">
+          <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
+            <option id="<%= slug %>"
+                    <%= algorithm_disabled?(@settings.shape, module) %>
+                    <%= if @settings.algorithm === module, do: "selected" %>
+                   value="<%= slug %>">
+              <%= label %>
+            </option>
+          <% end) %>
+        </select>
+      </div>
+
+      <div class="maze-settings-form-group">
+        <div class="maze-settings-label">Entrance & exit</div>
+        <div class="mazes-settings-radio-group">
+          <%= Enum.map(opts_for_entrance_exit_strategy_select(), fn %{slug: slug, function: function, label: label} -> %>
+          <div class="radio">
+            <input type="radio"
+                   id="<%= slug %>"
+                   value="<%= slug %>"
+                    <%= if @settings.entrance_exit_strategy === function, do: "checked" %>
+                   name="entrance_exit_strategy" />
+            <label for="<%= slug %>">
+              <%= label %>
+            </label>
+          </div>
+          <% end) %>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit" class="button">Generate</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Display</h2>
+      <div class="mazes-settings-checkbox-group maze-settings-form-group">
+        <%= if @maze.from && @maze.to do %>
+        <div class="checkbox">
+          <input type="checkbox" id="show-solution" name="show_solution" <%= if @settings.show_solution, do: "checked" %> />
+          <label for="show-solution">
+            Solution
           </label>
         </div>
-        <% end) %>
-      </div>
-      <% end %>
-    </section>
+        <% end %>
 
-    <section class="maze-settings-generation-algorithm">
-      <label for="algorithm">Maze generation algorithm:</label>
-      <select name="algorithm" id="algorithm">
-        <%= Enum.map(opts_for_algorithm_select(), fn %{slug: slug, module: module, label: label} -> %>
-          <option id="<%= slug %>"
-                  <%= algorithm_disabled?(@settings.shape, module) %>
-                  <%= if @settings.algorithm === module, do: "selected" %>
-                 value="<%= slug %>">
-            <%= label %>
-          </option>
-        <% end) %>
-      </select>
-    </section>
-
-    <section class="maze-settings-exit-strategy">
-      Entrance and exit placement strategy:
-      <%= Enum.map(opts_for_entrance_exit_strategy_select(), fn %{slug: slug, function: function, label: label} -> %>
-        <label for="<%= slug %>">
-          <input type="radio"
-                 id="<%= slug %>"
-                 value="<%= slug %>"
-                  <%= if @settings.entrance_exit_strategy === function, do: "checked" %>
-                 name="entrance_exit_strategy" />
-
-          <%= label %>
-        </label>
-      <% end) %>
-    </section>
-
-    <section>
-      <button type="submit">Generate</button>
-    </section>
-
-    <%= if @maze.from && @maze.to do %>
-      <section>
-        <label for="show-solution">
-          <input type="checkbox" id="show-solution" name="show_solution" <%= if @settings.show_solution, do: "checked" %> />
-          Show solution
-        </label>
-      </section>
-    <% end %>
-
-    <section>
-      <div>
-        <label for="show-colors">
+        <div class="checkbox">
           <input type="checkbox"
                  id="show-colors"
                  name="show_colors"
                  <%= if @settings.show_colors, do: "checked" %>
           />
-          Colors
-        </label>
+          <label for="show-colors" class="maze-settings-colors-label">
+            Colors
+          </label>
+        </div>
       </div>
-      <div>
+
+      <div class="maze-settings-form-group maze-settings-colors-hint">
         The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
       </div>
-      <div>
-        <label for="hue">
+
+      <div class="maze-settings-form-group">
+        <label for="hue" class="maze-settings-label">
           Hue
           <input type="range"
                  name="hue"
@@ -154,29 +173,7 @@
     </section>
   </form>
 
-  <div>
-    <a href="#" download="maze.svg" id="download-maze">Download SVG</a>
-  </div>
-
-  <div>
-    <div>Stats</div>
-    <div>Longest path length: <%= @longest_path && length(@longest_path) %></div>
-    <div>Number of vertices by number of connections</div>
-    <div>
-      <table>
-        <tr>
-          <th>Connections</th>
-          <th>Vertices</th>
-          <th>% total</th>
-        </tr>
-        <%= Enum.map(Mazes.Maze.group_vertices_by_adjacent_count(@maze), fn {count, vertices} -> %>
-          <tr>
-            <td><%= count %></td>
-            <td><%= length(vertices) %></td>
-            <td><%= trunc(1000 * length(vertices) / length(Mazes.Maze.vertices(@maze))) / 10 %>%</td>
-          </tr>
-        <% end) %>
-      </table>
-    </div>
+  <div class="maze-settings-form-group">
+    <a href="#" download="maze.svg" id="download-maze" class="button">Download SVG</a>
   </div>
 </div>

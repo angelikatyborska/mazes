@@ -1,4 +1,21 @@
-<div class="grid">
-  <%= render PageView, "maze.html", assigns %>
-  <%= render PageView, "maze_settings.html", assigns %>
+<div class="grid" style="--accent-color: <%= Mazes.MazeColors.solution_color(assigns[:settings].hue) %>">
+  <div class="column-left">
+    <%= render PageView, "maze_settings.html", assigns %>
+  </div>
+
+  <div class="column-main">
+    <%= render PageView, "maze.html", assigns %>
+  </div>
+
+  <div class="column-right">
+    <%= render PageView, "maze_stats.html", assigns %>
+    <footer>
+      <p>
+        Created by <a href="https://angelika.me/">Angelika Tyborska</a>.
+        Source code available on <a href="https://github.com/angelikatyborska/mazes">GitHub</a>.</p>
+      <p>
+        Based on the book <a href="http://www.mazesforprogrammers.com/">Mazes for Programmers</a> by <a href="https://weblog.jamisbuck.org/">Jamis Buck</a>.
+      </p>
+    </footer>
+  </div>
 </div>

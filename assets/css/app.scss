@@ -1,102 +1,42 @@
-/* This file is for your main application css. */
-@import "../node_modules/nprogress/nprogress.css";
+@import "./phoenix.scss";
 
-/* LiveView specific classes for your customizations */
-.phx-no-feedback.invalid-feedback,
-.phx-no-feedback .invalid-feedback {
-  display: none;
-}
+$font_size_xl: 24px;
+$font_size_l: 18px;
+$font_size_m: 16px;
+$font_size_s: 12px;
 
-.phx-click-loading {
-  opacity: 0.5;
-  transition: opacity 1s ease-out;
-}
+$margin_mini: 4px;
+$margin_small: 8px;
+$margin_medium: 16px;
+$margin_big: 32px;
 
-.phx-disconnected{
-  cursor: wait;
-}
-.phx-disconnected *{
-  pointer-events: none;
-}
+$white: white;
+$black: black;
+$light_gray: #e7e7e7;
 
-.phx-modal {
-  opacity: 1!important;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
+@mixin outline() {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
 }
 
-.phx-modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+@mixin keyboard_only_focus() {
+  html[data-js-focus-visible] &:focus[data-focus-visible-added] {
+    @content;
+  }
 }
 
-.phx-modal-close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+* {
+  @include keyboard_only_focus {
+    @include outline();
+  }
 }
-
-.phx-modal-close:hover,
-.phx-modal-close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-
-/* Alerts and form errors */
-.alert {
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-.alert-info {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #bce8f1;
-}
-.alert-warning {
-  color: #8a6d3b;
-  background-color: #fcf8e3;
-  border-color: #faebcc;
-}
-.alert-danger {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
-}
-.alert p {
-  margin-bottom: 0;
-}
-.alert:empty {
-  display: none;
-}
-.invalid-feedback {
-  color: #a94442;
-  display: block;
-  margin: -1rem 0 2rem;
-}
-
-// end of Phoenix-live specific styles
 
 html, body {
   margin: 0;
 }
 
 body {
-  background-color: #eee;
+  background-color: $light_gray;
   font-family: -apple-system, Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
@@ -104,12 +44,183 @@ body {
   box-sizing: border-box;
 }
 
+a {
+  color: inherit;
+
+  &:visited {
+    color: inherit;
+  }
+}
+
 .grid {
   display: flex;
   position: relative;
   min-height: 0;
-  max-height: 90vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+h1, h2 {
+  margin-top: 0;
+  margin-bottom: $margin_medium;
+}
+
+h1 {
+  font-size: $font_size_xl;
+}
+
+h2 {
+  font-size: $font_size_l;
+}
+
+input[type="text"], input[type="number"], select {
+  border: 1px solid $black;
+  background: $white;
+  padding: $margin_mini;
+}
+
+.button {
+  border-radius: 0;
+  -webkit-appearance: none;
+  text-decoration: none;
+  border: 1px solid $black;
+  background: $white;
+  padding: $margin_mini $margin_small;
+  font-size: $font_size_m;
+  color: inherit;
+  cursor: pointer;
+  box-shadow: $margin_mini $margin_mini 0 0 $light_gray;
+  position: relative;
+
+  &:active {
+    color: inherit;
+  }
+
+  &:hover {
+    top: $margin_mini / 2;
+    left: $margin_mini / 2;
+    box-shadow: $margin_mini / 2 $margin_mini / 2 0 0 $light_gray;
+  }
+}
+
+table {
+  border-collapse: collapse;
+
+  tr td, tr th {
+    border: 1px solid $black;
+    padding: $margin_small;
+  }
+}
+
+input {
+  min-width: 0;
+}
+
+.radio, .checkbox {
+  $height: 12px;
+
+  display: inline-flex;
+  white-space: nowrap;
+
+  input {
+    background: transparent;
+    opacity: 0;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    width: $height;
+    height: $height;
+    z-index: -1;
+  }
+
+  input + label {
+    cursor: pointer;
+    position: relative;
+    padding-left: $height + $margin_small;
+
+    &:before, &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: $height;
+      height: $height;
+      border: 1px solid $black;
+      background: $white;
+    }
+
+    &:after {
+      margin-left: $height / 4;
+      width: $height / 2;
+      height: $height / 2;
+      background: $white;
+    }
+
+    &:hover {
+      &:after {
+        background: $light_gray;
+      }
+    }
+  }
+
+  input:checked + label {
+    &:before {
+      background: $light_gray;
+    }
+
+    &:after {
+      background: $black;
+    }
+  }
+
+  input:focus + label {
+    @include outline();
+  }
+}
+
+.radio {
+  input + label {
+    &:before, &:after {
+      border-radius: 50%;
+    }
+  }
+}
+
+.column-left, .column-main, .column-right {
+  margin: $margin_medium;
+}
+
+.column-left, .column-right {
+  flex: 0 0 auto;
+  width: 320px;
+}
+
+.column-main {
+  flex: 1 1 auto;
+  display: flex;
+}
+
+.column-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: auto;
+}
+
+.maze-settings, footer, .maze-stats, .maze {
+  width: 100%;
+  padding: $margin_medium;
+  border: 2px solid $black;
+  background-color: $white;
+}
+
+footer {
+  margin-top: $margin_medium;
+  font-size: $font_size_s;
 }
 
 @import './maze.scss';
 @import './maze_settings';
+@import './maze_stats';

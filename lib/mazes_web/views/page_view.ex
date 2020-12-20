@@ -7,7 +7,7 @@ defmodule MazesWeb.PageView do
   # but affects how stroke looks like
   def max_svg_width, do: 1000
 
-  def padding, do: 20
+  def padding, do: 16
 
   def square_size(maze),
     do: Integer.floor_div(max_svg_width(), Enum.max([maze.width, maze.height]))

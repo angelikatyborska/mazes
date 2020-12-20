@@ -1,0 +1,23 @@
+<div class="maze-stats">
+  <h2>Stats</h2>
+  <table>
+    <tr>
+      <th>Connections per vertex</th>
+      <th>Number of vertices</th>
+      <th>% total</th>
+    </tr>
+    <%= Enum.map(Mazes.Maze.group_vertices_by_adjacent_count(@maze), fn {count, vertices} -> %>
+      <tr>
+        <td><%= count %></td>
+        <td><%= length(vertices) %></td>
+        <td><%= trunc(1000 * length(vertices) / length(Mazes.Maze.vertices(@maze))) / 10 %>%</td>
+      </tr>
+    <% end) %>
+  </table>
+  <table>
+    <tr>
+      <th>Longest path</th>
+      <td><%= @longest_path && length(@longest_path) %></td>
+    </tr>
+  </table>
+</div>

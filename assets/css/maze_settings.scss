@@ -1,29 +1,47 @@
 .maze-settings {
-  flex: 0 0 auto;
-  width: 300px;
+  height: 100%;
+  overflow: auto;
+  font-size: $margin_medium;
 
   section {
-    margin-bottom: 1em;
+    margin-bottom: $margin_big;
   }
 
-  .maze-settings-shape,
-  .maze-settings-generation-algorithm,
-  .maze-settings-exit-strategy,
-  .maze-settings-dimensions {
-    label {
-      display: block;
+  label {
+    display: block;
+  }
+
+  input, select {
+    width: 100%;
+  }
+
+  .maze-settings-label {
+    margin-bottom: $margin_small;
+    font-weight: bold;
+  }
+
+  .maze-settings-form-group {
+    margin-bottom: $margin_medium;
+  }
+
+  .radio, .checkbox {
+    display: inline-flex;
+
+    &:not(:last-child) {
+      margin-right: $margin_medium;
     }
   }
 
-  .maze-settings-section-title {
-
+  .mazes-settings-radio-group, .mazes-settings-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
   }
 
-  .maze-settings-icon-checkboxes {
+  .maze-settings-icon-radios {
     $height: 32px;
     display: flex;
 
-    .maze-settings-icon-checkbox {
+    .maze-settings-icon-radio {
       position: relative;
     }
 
@@ -39,17 +57,29 @@
     }
 
     input:checked + label {
-      background-color: yellow; // TODO pretty
+      border: 1px solid $black;
+      background-color: $light_gray;
     }
 
-    input:focus + label {
-      background-color: red; // TODO pretty
+    input {
+      @include keyboard_only_focus() {
+        & + label {
+          @include outline();
+        }
+      }
     }
 
     label {
       flex: 0 0 auto;
-      padding: 4px;
+      padding: $margin_small;
       cursor: pointer;
+      border: 1px solid transparent;
+
+      svg {
+        * {
+          fill: $white;
+        }
+      }
     }
 
     svg {
@@ -66,6 +96,16 @@
   .maze-settings-mask {
     position: relative;
 
+    input {
+      @include keyboard_only_focus() {
+        & + label {
+          .maze-settings-mask-preview {
+            display: block;
+          }
+        }
+      }
+    }
+
     &:hover {
       .maze-settings-mask-preview {
         display: block;
@@ -77,13 +117,35 @@
       top: 100%;
       left: 0;
       display: none;
-      padding: 4px;
-      border-radius: 2px;
-      background: white;
+      padding: $margin_small;
+      background: $white;
+      border: 1px solid $black;
 
       img {
         display: block;
       }
     }
+  }
+
+  .maze-settings-size {
+    display: flex;
+
+    > * {
+      display: flex;
+
+      &:not(:last-child) {
+        margin-right: $margin_medium;
+      }
+
+      > * {
+        &:not(:last-child) {
+          margin-right: $margin_small;
+        }
+      }
+    }
+  }
+
+  .maze-settings-colors-hint {
+    font-size: $font_size_s;
   }
 }

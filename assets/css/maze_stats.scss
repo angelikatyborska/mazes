@@ -1,0 +1,7 @@
+.maze-stats {
+  font-size: $font_size_s;
+
+  table + table {
+    margin-top: $margin_medium;
+  }
+}
