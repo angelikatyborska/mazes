@@ -1,18 +1,24 @@
 <div class="maze-settings">
   <form phx-change="settings_change" phx-submit="generate">
     <section class="maze-settings-shape">
-      Maze shape:
-      <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
-      <label for="<%= slug %>">
-        <input type="radio"
-               id="<%= slug %>"
-               value="<%= slug %>"
-                <%= if @settings.shape === module, do: "checked" %>
-               name="shape" />
-
-        <%= label %>
-      </label>
-      <% end) %>
+      <div class="maze-settings-section-title">Maze shape:</div>
+      <div class="maze-settings-icon-checkboxes">
+        <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
+        <div class="maze-settings-icon-checkbox">
+          <input type="radio"
+                 id="<%= slug %>"
+                 value="<%= slug %>"
+                 aria-label="<%= label %>"
+                  <%= if @settings.shape === module, do: "checked" %>
+                 name="shape" />
+          <label for="<%= slug %>">
+            <span title="<%= label %>">
+              <%= raw render "#{slug}.svg" %>
+            </span>
+          </label>
+        </div>
+        <% end) %>
+      </div>
     </section>
 
     <section class="maze-settings-dimensions">

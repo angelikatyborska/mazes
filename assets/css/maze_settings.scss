@@ -14,4 +14,52 @@
       display: block;
     }
   }
+
+  .maze-settings-section-title {
+
+  }
+
+  .maze-settings-icon-checkboxes {
+    $height: 32px;
+    display: flex;
+
+    .maze-settings-icon-checkbox {
+      position: relative;
+    }
+
+    input {
+      background: transparent;
+      opacity: 0;
+      position: absolute;
+      margin: 0;
+      padding: 0;
+      width: $height;
+      height: $height;
+      z-index: -1;
+    }
+
+    input:checked + label {
+      background-color: yellow; // TODO pretty
+    }
+
+    input:focus + label {
+      background-color: red; // TODO pretty
+    }
+
+    label {
+      flex: 0 0 auto;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    svg {
+      width: 100%;
+      height: $height;
+      display: block;
+
+      * {
+        fill: transparent;
+      }
+    }
+  }
 }
