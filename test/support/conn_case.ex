@@ -28,6 +28,15 @@ defmodule MazesWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint MazesWeb.Endpoint
+
+      def assert_valid_html(html, vnu_opts \\ []) do
+        default_vnu_opts = [
+          fail_on_warnings: true,
+          filter: Mazes.VnuHTMLMessageFilter
+        ]
+
+        Vnu.Assertions.assert_valid_html(html, Keyword.merge(default_vnu_opts, vnu_opts))
+      end
     end
   end
 

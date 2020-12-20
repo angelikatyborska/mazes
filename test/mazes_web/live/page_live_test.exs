@@ -3,7 +3,17 @@ defmodule MazesWeb.PageLiveTest do
 
   import Phoenix.LiveViewTest
 
-  test "disconnected and connected render", %{conn: conn} do
-    {:ok, _page_live, _disconnected_html} = live(conn, "/")
+  test "disconnected render", %{conn: conn} do
+    conn = get(conn, "/")
+
+    conn
+    |> html_response(200)
+    |> assert_valid_html()
+  end
+
+  test "connected render", %{conn: conn} do
+    {:ok, _page_live, html} = live(conn, "/")
+
+    assert_valid_html(html)
   end
 end

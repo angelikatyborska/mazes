@@ -42,7 +42,8 @@ defmodule Mazes.MixProject do
       {:telemetry_poller, "~> 0.4"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:imagineer, "~> 0.3.3"}
+      {:imagineer, "~> 0.3.3"},
+      {:vnu, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
 
