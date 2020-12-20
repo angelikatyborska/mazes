@@ -62,4 +62,28 @@
       }
     }
   }
+
+  .maze-settings-mask {
+    position: relative;
+
+    &:hover {
+      .maze-settings-mask-preview {
+        display: block;
+      }
+    }
+
+    .maze-settings-mask-preview {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      display: none;
+      padding: 4px;
+      border-radius: 2px;
+      background: white;
+
+      img {
+        display: block;
+      }
+    }
+  }
 }

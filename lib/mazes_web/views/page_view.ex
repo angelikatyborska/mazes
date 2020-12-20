@@ -83,12 +83,14 @@ defmodule MazesWeb.PageView do
   end
 
   def opts_for_mask_select() do
-    [
-      %{path: "/images/maze_patterns/heart.png", label: "Heart", slug: "heart"},
-      %{path: "/images/maze_patterns/star.png", label: "Star", slug: "star"},
-      %{path: "/images/maze_patterns/puzzle.png", label: "Puzzle", slug: "puzzle"},
-      %{path: "/images/maze_patterns/amazing.png", label: "A*maze*ing!", slug: "amazing"}
-    ]
+    opts = %{
+      "heart" => %{emoji: "❤️", label: "Heart", width: 32},
+      "star" => %{emoji: "⭐️", label: "Star", width: 32},
+      "puzzle" => %{emoji: "🧩", label: "Puzzle", width: 32},
+      "amazing" => %{emoji: "🔤", label: "A*maze*ing!", width: 64}
+    }
+
+    Enum.map(Settings.mask_files(), &Map.merge(&1, opts[&1.slug]))
   end
 
   def algorithm_disabled?(shape, algorithm) do

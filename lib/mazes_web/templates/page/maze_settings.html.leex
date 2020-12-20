@@ -1,7 +1,7 @@
 <div class="maze-settings">
   <form phx-change="settings_change" phx-submit="generate">
     <section class="maze-settings-shape">
-      <div class="maze-settings-section-title">Maze shape:</div>
+      <div class="maze-settings-section-title">Shape</div>
       <div class="maze-settings-icon-checkboxes">
         <%= Enum.map(opts_for_shape_select(), fn %{slug: slug, module: module, label: label} -> %>
         <div class="maze-settings-icon-checkbox">
@@ -11,10 +11,8 @@
                  aria-label="<%= label %>"
                   <%= if @settings.shape === module, do: "checked" %>
                  name="shape" />
-          <label for="<%= slug %>">
-            <span title="<%= label %>">
-              <%= raw render "#{slug}.svg" %>
-            </span>
+          <label for="<%= slug %>" title="<%= label %>">
+            <%= raw render "#{slug}.svg" %>
           </label>
         </div>
         <% end) %>
@@ -62,18 +60,25 @@
       <% end %>
 
       <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
-        Mask
-        <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label} -> %>
-        <label for="<%= slug %>">
+      <div class="maze-settings-section-title">Mask</div>
+      <div class="maze-settings-icon-checkboxes">
+        <%= Enum.map(opts_for_mask_select(), fn %{slug: slug, path: path, label: label, emoji: emoji, width: width} -> %>
+        <div class="maze-settings-icon-checkbox maze-settings-mask">
           <input type="radio"
                  id="<%= slug %>"
                   <%= if @settings.mask === path, do: "checked" %>
                  value="<%= slug %>"
                  name="mask" />
 
-        <%= label %> <img src="<%= path %>" />
-      </label>
+          <label for="<%= slug %>" title="<%= label %>">
+            <%= emoji %>
+            <span class="maze-settings-mask-preview">
+              <img src="<%= path %>" width="<%= width %>px"/>
+            </span>
+          </label>
+        </div>
         <% end) %>
+      </div>
       <% end %>
     </section>
 
