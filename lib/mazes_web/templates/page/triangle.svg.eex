@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 67 64" width="64px" height="64px" preserveAspectRatio="xMaxYMid" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="0 0 67 64" width="64px" height="64px" preserveAspectRatio="xMaxYMid" xmlns="http://www.w3.org/2000/svg">
   <rect x="60.382" y="62.296" width="0.116" height="0.116" style="fill: rgb(216, 216, 216);"/>
-  <path d="M 33.5 2 L 63.5 62 L 3.5 62 L 33.5 2 Z" style="stroke-width: 2px; stroke-linejoin: round; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);" bx:shape="triangle 3.5 2 60 60 0.5 0 1@b91249bb"/>
+  <path d="M 33.5 2 L 63.5 62 L 3.5 62 L 33.5 2 Z" style="stroke-width: 2px; stroke-linejoin: round; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);"/>
 </svg>

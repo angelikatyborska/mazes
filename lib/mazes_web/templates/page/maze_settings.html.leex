@@ -1,4 +1,5 @@
 <div class="maze-settings">
+  <h1>Mazes</h1>
   <form phx-change="settings_change" phx-submit="generate">
     <section class="maze-settings-shape">
       <div class="maze-settings-section-title">Shape</div>
@@ -89,8 +90,7 @@
           <option id="<%= slug %>"
                   <%= algorithm_disabled?(@settings.shape, module) %>
                   <%= if @settings.algorithm === module, do: "selected" %>
-                 value="<%= slug %>"
-                 name="algorithm">
+                 value="<%= slug %>">
             <%= label %>
           </option>
         <% end) %>

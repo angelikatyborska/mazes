@@ -10,10 +10,4 @@ defmodule MazesWeb.PageLiveTest do
     |> html_response(200)
     |> assert_valid_html()
   end
-
-  test "connected render", %{conn: conn} do
-    {:ok, _page_live, html} = live(conn, "/")
-
-    assert_valid_html(html)
-  end
 end
