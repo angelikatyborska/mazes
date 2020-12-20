@@ -8,7 +8,7 @@
     <%= Enum.map(Mazes.CircularMaze.rings(@maze), fn %{ring: ring, column_count: column_count, vertices: vertices} -> %>
     <%= if ring == 1 do %>
     <circle cx="<%= center_x %>" cy="<%= center_y %>" r="<%= circular_maze_radius(@maze) / @maze.radius %>"
-            <%= raw vertex_fill(@maze, {1, 1}, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue) %>
+            <%= raw vertex_fill(@maze, {1, 1}, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
     />
     <% else %>
     <%= Enum.map(vertices, fn {current_column, ring} = vertex -> %>
@@ -28,9 +28,9 @@
              L <%= inner_arc_end_x %> <%= inner_arc_end_y %>
              A <%= inner_arc_radius %> <%= inner_arc_radius %> 0 0 0 <%= inner_arc_start_x %> <%= inner_arc_start_y %>
              L <%= outer_arc_start_x %> <%= outer_arc_start_y %>"
-          stroke="<%= vertex_color(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue) %>"
+          stroke="<%= vertex_color(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>"
           stroke-width="4"
-          <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue) %>
+          <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
     />
 
     <% end) %>

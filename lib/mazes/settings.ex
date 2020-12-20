@@ -9,6 +9,7 @@ defmodule Mazes.Settings do
     :show_solution,
     :show_colors,
     :hue,
+    :saturation,
     :mask
   ])
 
@@ -28,6 +29,7 @@ defmodule Mazes.Settings do
   def default_height, do: default_width()
   def default_radius, do: 8
   def default_hue, do: 200
+  def default_saturation, do: 60
   def min_width, do: 2
   def max_width, do: 64
   def min_height, do: min_width()
@@ -36,6 +38,8 @@ defmodule Mazes.Settings do
   def max_radius, do: 32
   def min_hue, do: 0
   def max_hue, do: 359
+  def min_saturation, do: 0
+  def max_saturation, do: 100
 
   def default_settings do
     %__MODULE__{
@@ -48,6 +52,7 @@ defmodule Mazes.Settings do
       show_solution: false,
       show_colors: false,
       hue: default_hue(),
+      saturation: default_saturation(),
       mask: default_mask()
     }
   end
@@ -168,6 +173,7 @@ defmodule Mazes.Settings do
     %{
       "shape" => shape,
       "hue" => hue,
+      "saturation" => saturation,
       "entrance_exit_strategy" => entrance_exit_strategy
     } = form_data
 
@@ -183,6 +189,7 @@ defmodule Mazes.Settings do
     height = change_int(height, min_height(), max_height()) || settings.height
     radius = change_int(radius, min_radius(), max_radius()) || settings.radius
     hue = change_int(hue, min_hue(), max_hue()) || settings.hue
+    saturation = change_int(saturation, min_saturation(), max_saturation()) || settings.saturation
 
     show_solution = show_solution === "on"
     show_colors = show_colors === "on"
@@ -224,6 +231,7 @@ defmodule Mazes.Settings do
         height: height,
         radius: radius,
         hue: hue,
+        saturation: saturation,
         shape: shape,
         algorithm: algorithm,
         mask: mask,

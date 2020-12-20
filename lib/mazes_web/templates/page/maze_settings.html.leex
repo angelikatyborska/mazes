@@ -169,6 +169,16 @@
                  id="hue"
           >
         </label>
+        <label for="saturation" class="maze-settings-label">
+          Saturation
+          <input type="range"
+                 name="saturation"
+                 min="<%= Settings.min_saturation() %>"
+                 max="<%= Settings.max_saturation() %>"
+                 value="<%= @settings.saturation %>"
+                 id="saturation"
+          >
+        </label>
       </div>
     </section>
   </form>

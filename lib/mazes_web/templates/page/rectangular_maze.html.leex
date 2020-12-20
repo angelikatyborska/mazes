@@ -3,7 +3,7 @@
   <%= Enum.map(Maze.vertices(@maze), fn {x, y} = vertex -> %>
   <rect width="<%= square_size(@maze) + 1 %>"
         height="<%= square_size(@maze) + 1 %>"
-        <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue) %>
+        <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
         x="<%= padding() + square_size(@maze) * (x - 1) %>"
         y="<%= padding() + square_size(@maze) * (y - 1) %>"
   />
