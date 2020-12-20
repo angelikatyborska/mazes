@@ -144,6 +144,8 @@ defmodule Mazes.Settings do
   def mask_files() do
     [
       %{path: "/images/maze_patterns/heart.png", slug: "heart"},
+      %{path: "/images/maze_patterns/star.png", slug: "star"},
+      %{path: "/images/maze_patterns/puzzle.png", slug: "puzzle"},
       %{path: "/images/maze_patterns/amazing.png", slug: "amazing"}
     ]
   end

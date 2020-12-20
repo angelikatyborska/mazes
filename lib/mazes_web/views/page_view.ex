@@ -85,6 +85,8 @@ defmodule MazesWeb.PageView do
   def opts_for_mask_select() do
     [
       %{path: "/images/maze_patterns/heart.png", label: "Heart", slug: "heart"},
+      %{path: "/images/maze_patterns/star.png", label: "Star", slug: "star"},
+      %{path: "/images/maze_patterns/puzzle.png", label: "Puzzle", slug: "puzzle"},
       %{path: "/images/maze_patterns/amazing.png", label: "A*maze*ing!", slug: "amazing"}
     ]
   end
