@@ -14,6 +14,14 @@ $white: white;
 $black: black;
 $light_gray: #e7e7e7;
 
+$small_screen: 640px;
+$medium_screen: 800px;
+$big_screen: 1200px;
+
+$small: 'screen and (min-width: #{$small_screen})';
+$medium: 'screen and (min-width: #{$medium_screen})';
+$big: 'screen and (min-width: #{$big_screen})';
+
 @mixin outline() {
   outline: 2px solid var(--accent-color);
   outline-offset: -2px;
@@ -26,6 +34,10 @@ $light_gray: #e7e7e7;
 }
 
 * {
+  *:focus {
+    outline: 0;
+  }
+
   @include keyboard_only_focus {
     @include outline();
   }
@@ -53,11 +65,24 @@ a {
 }
 
 .grid {
-  display: flex;
+  display: grid;
   position: relative;
   min-height: 0;
-  max-height: 100vh;
-  overflow: hidden;
+  grid-template-columns: 1fr;
+  grid-column-gap: $margin_medium;
+  grid-row-gap: $margin_medium;
+  padding: $margin_medium;
+  max-width: 2600px;
+  margin: 0 auto;
+
+  @media #{$medium} {
+    grid-template-columns: 320px 1fr;
+  }
+
+  @media #{$big} {
+    overflow: hidden;
+    grid-template-columns: 320px 1fr 320px;
+  }
 }
 
 h1, h2 {
@@ -79,9 +104,21 @@ input[type="text"], input[type="number"], select {
   padding: $margin_mini;
 }
 
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  cursor: pointer;
+  background-image: url('data:image/svg+xml;utf8,<svg width="12" height="6" viewBox="0 0 12 6" xmlns="http://www.w3.org/2000/svg"><path d="M -6 -6 L 0 0 L -12 0 L -6 -6 Z" style="" transform="matrix(-1, 0, 0, -1, 0, 0)" fill="%23000000"/></svg>');
+  background-repeat: no-repeat;
+  background-position: top 50% right $margin_small;
+  padding-right: $margin_big;
+}
+
 .button {
   border-radius: 0;
   -webkit-appearance: none;
+  appearance: none;
   text-decoration: none;
   border: 1px solid $black;
   background: $white;
@@ -121,6 +158,7 @@ input {
 
   display: inline-flex;
   white-space: nowrap;
+  position: relative;
 
   input {
     background: transparent;
@@ -175,8 +213,12 @@ input {
     }
   }
 
-  input:focus + label {
-    @include outline();
+  input {
+    @include keyboard_only_focus {
+      & + label {
+        @include outline();
+      }
+    }
   }
 }
 
@@ -188,18 +230,21 @@ input {
   }
 }
 
-.column-left, .column-main, .column-right {
-  margin: $margin_medium;
-}
-
-.column-left, .column-right {
-  flex: 0 0 auto;
-  width: 320px;
-}
 
 .column-main {
-  flex: 1 1 auto;
   display: flex;
+  min-height: 0;
+  grid-row: 1 / 2;
+
+  @media #{$medium} {
+    grid-row: 1 / 3;
+    grid-column: 2 / 3;
+    height: calc(100vh - #{2 * $margin_medium});
+  }
+
+  @media #{$big} {
+    grid-row: 1 / 2;
+  }
 }
 
 .column-right {
@@ -207,6 +252,13 @@ input {
   flex-direction: column;
   justify-content: space-between;
   overflow: auto;
+}
+
+.column-right, .column-left {
+  @media #{$big} {
+    max-height: calc(100vh - #{2 * $margin_medium});
+    overflow: auto;
+  }
 }
 
 .maze-settings, footer, .maze-stats, .maze {
@@ -221,6 +273,7 @@ footer {
   font-size: $font_size_s;
 }
 
+@import './range.scss';
 @import './maze.scss';
 @import './maze_settings';
 @import './maze_stats';

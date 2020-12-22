@@ -83,8 +83,6 @@
     }
 
     svg {
-      width: 100%;
-      height: $height;
       display: block;
 
       * {
@@ -104,6 +102,12 @@
           }
         }
       }
+    }
+
+    label {
+      text-align: center;
+      font-size: 1.5rem;
+      line-height: 1.5rem;
     }
 
     &:hover {
@@ -132,6 +136,7 @@
 
     > * {
       display: flex;
+      flex: 1 1 auto;
 
       &:not(:last-child) {
         margin-right: $margin_medium;
@@ -145,7 +150,7 @@
     }
   }
 
-  .maze-settings-colors-hint {
+  .maze-settings-hint {
     font-size: $font_size_s;
   }
 }

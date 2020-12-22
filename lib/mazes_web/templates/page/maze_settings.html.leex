@@ -81,16 +81,16 @@
                    value="<%= slug %>"
                    name="mask" />
 
-            <label for="<%= slug %>" title="<%= label %>" aria-label="<%= label %>">
-              <%= emoji %>
-              <span class="maze-settings-mask-preview">
-                <img alt="" aria-hidden="true" src="<%= path %>" width="<%= width %>px"/>
-              </span>
+            <label for="<%= slug %>" title="<%= label %>" aria-label="<%= label %>"><%= emoji %><span class="maze-settings-mask-preview"><img alt="" aria-hidden="true" src="<%= path %>" width="<%= width %>px"/></span>
             </label>
           </div>
           <% end) %>
         </div>
         <% end %>
+      </div>
+
+      <div class="maze-settings-form-group maze-settings-hint">
+        Generating a maze with a lot of cells might slow down this page significantly.
       </div>
 
       <div class="maze-settings-form-group">
@@ -154,7 +154,7 @@
         </div>
       </div>
 
-      <div class="maze-settings-form-group maze-settings-colors-hint">
+      <div class="maze-settings-form-group maze-settings-hint">
         The darker the color, the further away from the entrance of the maze (or the center when there's no entrance).
       </div>
 
