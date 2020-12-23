@@ -3,14 +3,14 @@
   <%
     width = @maze.width
     height = @maze.height
-    max_width = max_svg_width() - 2 * padding()
-    max_height = max_svg_width() - 2 * padding()
+    max_width = max_svg_width() - 2 * svg_padding()
+    max_height = max_svg_width() - 2 * svg_padding()
     r1 = trunc(max_width / (0.5 + width * 1.5))
     r2 = trunc(max_height / (1 + height * 2))
     r = Enum.min([r1, r2])
     h = 2 * r * :math.sin(:math.pi / 3)
-    svg_width = 2 * padding() + r * (0.5 + width * 1.5)
-    svg_height = 2 * padding() + h / 2 * (1 + height * 2)
+    svg_width = 2 * svg_padding() + r * (0.5 + width * 1.5)
+    svg_height = 2 * svg_padding() + h / 2 * (1 + height * 2)
     alpha = :math.pi() / 3
   %>
 
@@ -19,12 +19,12 @@
     <%= Enum.map((1..width), fn column -> %>
     <%
       vertex = {column, row}
-      cx = r + (1.5 * r * (column - 1)) + padding()
+      cx = r + (1.5 * r * (column - 1)) + svg_padding()
 
       cy = if Integer.mod(column, 2) == 1 do
-        h / 2 * (1 + (row - 1) * 2) + padding()
+        h / 2 * (1 + (row - 1) * 2) + svg_padding()
       else
-        h / 2 * (2 + (row - 1) * 2) + padding()
+        h / 2 * (2 + (row - 1) * 2) + svg_padding()
       end
 
       hex_center = {cx, cy}
@@ -44,12 +44,12 @@
     <%= Enum.map((1..width), fn column -> %>
     <%
       vertex = {column, row}
-      cx = r + (1.5 * r * (column - 1)) + padding()
+      cx = r + (1.5 * r * (column - 1)) + svg_padding()
 
       cy = if Integer.mod(column, 2) == 1 do
-        h / 2 * (1 + (row - 1) * 2) + padding()
+        h / 2 * (1 + (row - 1) * 2) + svg_padding()
       else
-        h / 2 * (2 + (row - 1) * 2) + padding()
+        h / 2 * (2 + (row - 1) * 2) + svg_padding()
       end
 
       hex_center = {cx, cy}

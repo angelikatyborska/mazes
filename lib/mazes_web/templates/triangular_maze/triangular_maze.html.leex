@@ -3,14 +3,14 @@
   <%
     width = @maze.width
     height = @maze.height
-    max_width = max_svg_width() - 2 * padding()
-    max_height = max_svg_width() - 2 * padding()
+    max_width = max_svg_width() - 2 * svg_padding()
+    max_height = max_svg_width() - 2 * svg_padding()
     a1 = trunc(max_width / (1 + width / 2))
     a2 = 2 * trunc(max_height / height) / :math.sqrt(3)
     a = Enum.min([a1, a2])
     h = a * :math.sqrt(3) / 2
-    svg_width = 2 * padding() + a * (1 + width / 2)
-    svg_height = 2 * padding() + h * height
+    svg_width = 2 * svg_padding() + a * (1 + width / 2)
+    svg_height = 2 * svg_padding() + h * height
   %>
 
   <svg width="100%" height="100%" viewbox="0 0 <%= svg_width %> <%= svg_height %>">
@@ -18,8 +18,8 @@
     <%= Enum.map((1..width), fn column -> %>
 
     <%
-      x_offset = if Integer.mod(row, 2) == 1, do: padding(), else: padding() + a / 2
-      y_offset = padding()
+      x_offset = if Integer.mod(row, 2) == 1, do: svg_padding(), else: svg_padding() + a / 2
+      y_offset = svg_padding()
       vertex = {column, row}
     %>
 
@@ -48,8 +48,8 @@
     <%= Enum.map((1..width), fn column -> %>
 
     <%
-      x_offset = if Integer.mod(row, 2) == 1, do: padding(), else: padding() + a / 2
-      y_offset = padding()
+      x_offset = if Integer.mod(row, 2) == 1, do: svg_padding(), else: svg_padding() + a / 2
+      y_offset = svg_padding()
       vertex = {column, row}
     %>
 

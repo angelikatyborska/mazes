@@ -1,53 +1,7 @@
 defmodule MazesWeb.PageView do
   use MazesWeb, :view
 
-  alias Mazes.{Settings, MazeColors, Maze}
-
-  # doesn't matter that much because the svg is responsive
-  # but affects how stroke looks like
-  def max_svg_width, do: 1000
-
-  def padding, do: 16
-
-  def square_size(maze),
-    do: Integer.floor_div(max_svg_width(), Enum.max([maze.width, maze.height]))
-
-  def vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation) do
-    cond do
-      vertex == maze.from ->
-        "lightgray"
-
-      vertex == maze.to ->
-        "gray"
-
-      show_solution && vertex in solution ->
-        MazeColors.solution_color(hue, saturation)
-
-      show_colors && colors ->
-        MazeColors.color(colors.distances[vertex], colors.max_distance, hue, saturation)
-
-      true ->
-        "white"
-    end
-  end
-
-  def vertex_fill(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation) do
-    fill =
-      vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation)
-
-    "style=\"fill: #{fill}\""
-  end
-
-  def line_style(maze) do
-    stroke_width =
-      case Enum.max(Enum.filter([maze[:width], maze[:height], maze[:radius]], & &1)) do
-        n when n <= 16 -> 3
-        n when n <= 32 -> 2
-        _ -> 1
-      end
-
-    "stroke: black; stroke-width: #{stroke_width}; stroke-linecap: round;"
-  end
+  alias Mazes.Settings
 
   def opts_for_shape_select() do
     labels = %{
@@ -100,70 +54,5 @@ defmodule MazesWeb.PageView do
     else
       "disabled"
     end
-  end
-
-  def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do
-    cond do
-      alpha > 2 * :math.pi() ->
-        move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha - 2 * :math.pi())
-
-      alpha < 0 ->
-        move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha + 2 * :math.pi())
-
-      true ->
-        ratio = alpha / :math.pi()
-
-        {theta, x_delta_sign, y_delta_sign} =
-          case ratio do
-            ratio when ratio >= 0.0 and ratio < 0.5 ->
-              {alpha, 1, -1}
-
-            ratio when ratio >= 0.5 and ratio < 1.0 ->
-              {:math.pi() - alpha, 1, 1}
-
-            ratio when ratio >= 1.0 and ratio < 1.5 ->
-              {alpha - :math.pi(), -1, 1}
-
-            ratio when ratio >= 1.0 and ratio <= 2 ->
-              {:math.pi() * 2 - alpha, -1, -1}
-          end
-
-        x = x_delta_sign * radius * :math.sin(theta) + cx
-        y = y_delta_sign * radius * :math.cos(theta) + cy
-        {x, y}
-    end
-  end
-
-  def circular_maze_radius(maze) do
-    trunc(max_svg_width() / maze.radius) * maze.radius
-  end
-
-  def circular_maze_center(maze) do
-    center_x = padding() + circular_maze_radius(maze)
-    center_y = padding() + circular_maze_radius(maze)
-    {center_x, center_y}
-  end
-
-  def circular_maze_vertex_points(maze, column_count, ring, current_column) do
-    center = circular_maze_center(maze)
-    radius_delta = trunc(circular_maze_radius(maze) / maze.radius)
-
-    angle_steps = column_count
-    angle_delta = 2 * :math.pi() / angle_steps
-
-    start_angle = (current_column - 1) * angle_delta
-    end_angle = current_column * angle_delta
-
-    outer_arc_radius = ring * radius_delta
-    inner_arc_radius = (ring - 1) * radius_delta
-
-    %{
-      outer_arc_radius: outer_arc_radius,
-      outer_arc_start: move_coordinate_by_radius_and_angle(center, outer_arc_radius, start_angle),
-      outer_arc_end: move_coordinate_by_radius_and_angle(center, outer_arc_radius, end_angle),
-      inner_arc_radius: inner_arc_radius,
-      inner_arc_start: move_coordinate_by_radius_and_angle(center, inner_arc_radius, start_angle),
-      inner_arc_end: move_coordinate_by_radius_and_angle(center, inner_arc_radius, end_angle)
-    }
   end
 end

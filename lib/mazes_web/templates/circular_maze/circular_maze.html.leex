@@ -1,13 +1,13 @@
 <div class="maze" id="maze">
   <%
-    {center_x, center_y} = circular_maze_center(@maze)
+    {center_x, center_y} = maze_center(@maze)
   %>
 
-  <svg width="100%" height="100%" viewbox="0 0 <%= 2 * (padding() + circular_maze_radius(@maze)) %> <%= 2 * (padding() + circular_maze_radius(@maze)) %>">
+  <svg width="100%" height="100%" viewbox="0 0 <%= 2 * (svg_padding() + maze_radius(@maze)) %> <%= 2 * (svg_padding() + maze_radius(@maze)) %>">
 
     <%= Enum.map(Mazes.CircularMaze.rings(@maze), fn %{ring: ring, column_count: column_count, vertices: vertices} -> %>
     <%= if ring == 1 do %>
-    <circle cx="<%= center_x %>" cy="<%= center_y %>" r="<%= circular_maze_radius(@maze) / @maze.radius %>"
+    <circle cx="<%= center_x %>" cy="<%= center_y %>" r="<%= maze_radius(@maze) / @maze.radius %>"
             <%= raw vertex_fill(@maze, {1, 1}, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
     />
     <% else %>
@@ -20,7 +20,7 @@
         inner_arc_radius: inner_arc_radius,
         inner_arc_start: {inner_arc_start_x, inner_arc_start_y},
         inner_arc_end: {inner_arc_end_x, inner_arc_end_y},
-      } = circular_maze_vertex_points(@maze, column_count, ring, current_column)
+      } = maze_vertex_points(@maze, column_count, ring, current_column)
     %>
 
     <path d="M <%= outer_arc_start_x %> <%= outer_arc_start_y %>
@@ -48,7 +48,7 @@
         inner_arc_radius: inner_arc_radius,
         inner_arc_start: {inner_arc_start_x, inner_arc_start_y},
         inner_arc_end: {inner_arc_end_x, inner_arc_end_y},
-      } = circular_maze_vertex_points(@maze, column_count, ring, current_column)
+      } = maze_vertex_points(@maze, column_count, ring, current_column)
     %>
 
     <%= if Mazes.Maze.wall?(@maze, vertex, Mazes.CircularMaze.inner(@maze, vertex)) do %>

@@ -1,10 +1,10 @@
 <%= case @maze.module do %>
 <% m when m in [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask] -> %>
-<%= render("rectangular_maze.html", assigns) %>
+<%= MazesWeb.RectangularMazeView.render("rectangular_maze.html", assigns) %>
 <% m when m in [Mazes.CircularMaze] -> %>
-<%= render("circular_maze.html", assigns) %>
+<%= MazesWeb.CircularMazeView.render("circular_maze.html", assigns) %>
 <% m when m in [Mazes.HexagonalMaze] -> %>
-<%= render("hexagonal_maze.html", assigns) %>
+<%= MazesWeb.HexagonalMazeView.render("hexagonal_maze.html", assigns) %>
 <% m when m in [Mazes.TriangularMaze] -> %>
-<%= render("triangular_maze.html", assigns) %>
+<%= MazesWeb.TriangularMazeView.render("triangular_maze.html", assigns) %>
 <% end %>
