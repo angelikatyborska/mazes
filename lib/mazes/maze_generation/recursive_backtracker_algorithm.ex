@@ -8,7 +8,8 @@ defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithm do
       Mazes.RectangularMaze,
       Mazes.RectangularMazeWithMask,
       Mazes.CircularMaze,
-      Mazes.HexagonalMaze
+      Mazes.HexagonalMaze,
+      Mazes.TriangularMaze
     ]
   end
 

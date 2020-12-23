@@ -42,7 +42,7 @@ defmodule MazesWeb.PageViewTest do
                "style=\"fill: hsl(123, 60%, 96%)\""
 
       assert PageView.vertex_fill(maze, {5, 4}, [], false, colors, true, 123, 70) ==
-               "style=\"fill: hsl(123, 70%, 55%)\""
+               "style=\"fill: hsl(123, 70%, 60%)\""
     end
 
     test "when part of solution" do
@@ -70,7 +70,7 @@ defmodule MazesWeb.PageViewTest do
                "style=\"fill: hsl(123, 40%, 96%)\""
 
       assert PageView.vertex_fill(maze, {5, 4}, solution, false, colors, true, 123, 45) ==
-               "style=\"fill: hsl(123, 45%, 55%)\""
+               "style=\"fill: hsl(123, 45%, 60%)\""
 
       assert PageView.vertex_fill(maze, {5, 5}, solution, false, colors, true, 123, 40) ==
                "style=\"fill: gray\""
@@ -82,7 +82,7 @@ defmodule MazesWeb.PageViewTest do
                "style=\"fill: hsl(303, 40%, 50%)\""
 
       assert PageView.vertex_fill(maze, {5, 4}, solution, true, colors, true, 123, 40) ==
-               "style=\"fill: hsl(123, 40%, 55%)\""
+               "style=\"fill: hsl(123, 40%, 60%)\""
 
       assert PageView.vertex_fill(maze, {5, 5}, solution, true, colors, true, 123, 40) ==
                "style=\"fill: gray\""

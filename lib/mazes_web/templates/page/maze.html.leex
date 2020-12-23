@@ -5,4 +5,6 @@
 <%= render("circular_maze.html", assigns) %>
 <% m when m in [Mazes.HexagonalMaze] -> %>
 <%= render("hexagonal_maze.html", assigns) %>
+<% m when m in [Mazes.TriangularMaze] -> %>
+<%= render("triangular_maze.html", assigns) %>
 <% end %>
