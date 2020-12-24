@@ -97,4 +97,12 @@ defmodule MazesWeb.MazeHelper do
         {x, y}
     end
   end
+
+  def format_number(x) when is_integer(x) do
+    "#{x}"
+  end
+
+  def format_number(x) when is_float(x) do
+    to_string(:io_lib.format("~.4f", [x]))
+  end
 end

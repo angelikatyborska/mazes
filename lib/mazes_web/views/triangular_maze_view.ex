@@ -44,15 +44,19 @@ defmodule MazesWeb.TriangularMazeView do
 
     d =
       if TriangularMaze.base_down?(vertex) do
-        "M #{x_offset + a * (trunc((x - 1) / 2) + 0.5)} #{y_offset + h * (y - 1)}" <>
-          " l #{a / 2} #{h}" <>
-          " l #{-a} #{0}" <>
-          " l #{a / 2} #{-h}"
+        "M #{format_number(x_offset + a * (trunc((x - 1) / 2) + 0.5))} #{
+          format_number(y_offset + h * (y - 1))
+        }" <>
+          " l #{format_number(a / 2)} #{format_number(h)}" <>
+          " l #{format_number(-a)} #{0}" <>
+          " l #{format_number(a / 2)} #{format_number(-h)}"
       else
-        "M #{x_offset + a * (trunc(x / 2) - 0.5)} #{y_offset + h * (y - 1)}" <>
-          " l #{a} #{0}" <>
-          " l #{-a / 2} #{h}" <>
-          " l #{-a / 2} #{-h}"
+        "M #{format_number(x_offset + a * (trunc(x / 2) - 0.5))} #{
+          format_number(y_offset + h * (y - 1))
+        }" <>
+          " l #{format_number(a)} #{0}" <>
+          " l #{format_number(-a / 2)} #{format_number(h)}" <>
+          " l #{format_number(-a / 2)} #{format_number(-h)}"
       end
 
     content_tag(:path, "",
@@ -88,7 +92,7 @@ defmodule MazesWeb.TriangularMazeView do
     else
       {left_x, left_y} = base_up_triangle_left(maze, vertex)
 
-      d = "M #{left_x} #{left_y} l #{a} #{0}"
+      d = "M #{format_number(left_x)} #{format_number(left_y)} l #{format_number(a)} #{0}"
       content_tag(:path, "", d: d, fill: "transparent", style: line_style(maze))
     end
   end
@@ -100,7 +104,9 @@ defmodule MazesWeb.TriangularMazeView do
     if TriangularMaze.base_down?(vertex) do
       {top_x, top_y} = base_down_triangle_top(maze, vertex)
 
-      d = "M #{top_x - a / 2} #{top_y + h} l #{a} #{0}"
+      d =
+        "M #{format_number(top_x - a / 2)} #{format_number(top_y + h)} l #{format_number(a)} #{0}"
+
       content_tag(:path, "", d: d, fill: "transparent", style: line_style(maze))
     else
       nil
@@ -115,11 +121,15 @@ defmodule MazesWeb.TriangularMazeView do
       if TriangularMaze.base_down?(vertex) do
         {top_x, top_y} = base_down_triangle_top(maze, vertex)
 
-        "M #{top_x} #{top_y} l #{-a / 2} #{h}"
+        "M #{format_number(top_x)} #{format_number(top_y)} l #{format_number(-a / 2)} #{
+          format_number(h)
+        }"
       else
         {left_x, left_y} = base_up_triangle_left(maze, vertex)
 
-        "M #{left_x} #{left_y} l #{a / 2} #{h}"
+        "M #{format_number(left_x)} #{format_number(left_y)} l #{format_number(a / 2)} #{
+          format_number(h)
+        }"
       end
 
     content_tag(:path, "", d: d, fill: "transparent", style: line_style(maze))
@@ -133,11 +143,15 @@ defmodule MazesWeb.TriangularMazeView do
       if TriangularMaze.base_down?(vertex) do
         {top_x, top_y} = base_down_triangle_top(maze, vertex)
 
-        "M #{top_x} #{top_y} l #{a / 2} #{h}"
+        "M #{format_number(top_x)} #{format_number(top_y)} l #{format_number(a / 2)} #{
+          format_number(h)
+        }"
       else
         {left_x, left_y} = base_up_triangle_left(maze, vertex)
 
-        "M #{left_x + a} #{left_y} l #{-a / 2} #{h}"
+        "M #{format_number(left_x + a)} #{format_number(left_y)} l #{format_number(-a / 2)} #{
+          format_number(h)
+        }"
       end
 
     content_tag(:path, "", d: d, fill: "transparent", style: line_style(maze))

@@ -53,8 +53,12 @@ defmodule MazesWeb.HexagonalMazeView do
       end)
 
     {path_start_x, path_start_y} = List.last(hex_points)
-    path_lines = Enum.map(hex_points, fn {x, y} -> "L #{x} #{y}" end) |> Enum.join(" ")
-    d = "M #{path_start_x} #{path_start_y} #{path_lines}"
+
+    path_lines =
+      Enum.map(hex_points, fn {x, y} -> "L #{format_number(x)} #{format_number(y)}" end)
+      |> Enum.join(" ")
+
+    d = "M #{format_number(path_start_x)} #{format_number(path_start_y)} #{path_lines}"
 
     content_tag(:path, "",
       d: d,
@@ -91,7 +95,27 @@ defmodule MazesWeb.HexagonalMazeView do
     {path_end_x, path_end_y} =
       move_coordinate_by_radius_and_angle(hex_center, r, alpha() / 2 + (n + 1) * alpha())
 
-    d = "M #{path_start_x} #{path_start_y} L #{path_end_x} #{path_end_y}"
+    # sort points so that visually overlapping lines always have the same direction
+    # and will be de-duplicated in the template by calling Enum.uniq() on the rendered lines
+    [{path_start_x, path_start_y}, {path_end_x, path_end_y}] =
+      Enum.sort(
+        [
+          {path_start_x, path_start_y},
+          {path_end_x, path_end_y}
+        ],
+        fn {x, y}, {a, b} ->
+          if x == a do
+            y > b
+          else
+            x > a
+          end
+        end
+      )
+
+    d =
+      "M #{format_number(path_start_x)} #{format_number(path_start_y)} L #{
+        format_number(path_end_x)
+      } #{format_number(path_end_y)}"
 
     content_tag(:path, "",
       d: d,

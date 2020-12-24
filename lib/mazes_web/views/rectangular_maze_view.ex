@@ -25,8 +25,8 @@ defmodule MazesWeb.RectangularMazeView do
 
   def square(maze, {x, y} = vertex, settings, colors) do
     content_tag(:rect, "",
-      width: square_size(maze) + 1,
-      height: square_size(maze) + 1,
+      width: format_number(square_size(maze) + 1),
+      height: format_number(square_size(maze) + 1),
       style:
         "fill: #{
           vertex_color(
@@ -38,48 +38,48 @@ defmodule MazesWeb.RectangularMazeView do
             settings.saturation
           )
         }",
-      x: svg_padding() + square_size(maze) * (x - 1),
-      y: svg_padding() + square_size(maze) * (y - 1)
+      x: format_number(svg_padding() + square_size(maze) * (x - 1)),
+      y: format_number(svg_padding() + square_size(maze) * (y - 1))
     )
   end
 
   def north_wall(maze, {x, y} = _vertex) do
     content_tag(:line, "",
       style: line_style(maze),
-      x1: svg_padding() + square_size(maze) * (x - 1),
-      y1: svg_padding() + square_size(maze) * (y - 1),
-      x2: svg_padding() + square_size(maze) * x,
-      y2: svg_padding() + square_size(maze) * (y - 1)
+      x1: format_number(svg_padding() + square_size(maze) * (x - 1)),
+      y1: format_number(svg_padding() + square_size(maze) * (y - 1)),
+      x2: format_number(svg_padding() + square_size(maze) * x),
+      y2: format_number(svg_padding() + square_size(maze) * (y - 1))
     )
   end
 
   def south_wall(maze, {x, y} = _vertex) do
     content_tag(:line, "",
       style: line_style(maze),
-      x1: svg_padding() + square_size(maze) * (x - 1),
-      y1: svg_padding() + square_size(maze) * y,
-      x2: svg_padding() + square_size(maze) * x,
-      y2: svg_padding() + square_size(maze) * y
+      x1: format_number(svg_padding() + square_size(maze) * (x - 1)),
+      y1: format_number(svg_padding() + square_size(maze) * y),
+      x2: format_number(svg_padding() + square_size(maze) * x),
+      y2: format_number(svg_padding() + square_size(maze) * y)
     )
   end
 
   def east_wall(maze, {x, y} = _vertex) do
     content_tag(:line, "",
       style: line_style(maze),
-      x1: svg_padding() + square_size(maze) * x,
-      y1: svg_padding() + square_size(maze) * (y - 1),
-      x2: svg_padding() + square_size(maze) * x,
-      y2: svg_padding() + square_size(maze) * y
+      x1: format_number(svg_padding() + square_size(maze) * x),
+      y1: format_number(svg_padding() + square_size(maze) * (y - 1)),
+      x2: format_number(svg_padding() + square_size(maze) * x),
+      y2: format_number(svg_padding() + square_size(maze) * y)
     )
   end
 
   def west_wall(maze, {x, y} = _vertex) do
     content_tag(:line, "",
       style: line_style(maze),
-      x1: svg_padding() + square_size(maze) * (x - 1),
-      y1: svg_padding() + square_size(maze) * (y - 1),
-      x2: svg_padding() + square_size(maze) * (x - 1),
-      y2: svg_padding() + square_size(maze) * y
+      x1: format_number(svg_padding() + square_size(maze) * (x - 1)),
+      y1: format_number(svg_padding() + square_size(maze) * (y - 1)),
+      x2: format_number(svg_padding() + square_size(maze) * (x - 1)),
+      y2: format_number(svg_padding() + square_size(maze) * y)
     )
   end
 end

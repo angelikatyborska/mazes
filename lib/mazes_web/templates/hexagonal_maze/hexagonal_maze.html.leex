@@ -4,13 +4,19 @@
     <%= hex(@maze, vertex, @settings, @colors)  %>
     <% end) %>
 
-    <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
-    <%= Enum.map(%{0 => :northeast, 1 => :southeast, 2 => :south, 3 => :southwest, 4 => :northwest, 5 => :north}, fn {n, direction} -> %>
-    <%= if Maze.wall?(@maze, vertex, apply(@maze.module, direction, [vertex])) do %>
-    <%= wall(@maze, vertex, n) %>
-    <% end %>
-    <% end) %>
-    <% end) %>
+    <%= walls = Enum.reduce(Maze.vertices(@maze), [], fn vertex, acc ->
+      walls =
+        Enum.map(%{0 => :northeast, 1 => :southeast, 2 => :south, 3 => :southwest, 4 => :northwest, 5 => :north}, fn {n, direction} ->
+          if Maze.wall?(@maze, vertex, apply(@maze.module, direction, [vertex])) do
+            wall(@maze, vertex, n)
+          end
+        end)
+
+      Enum.filter(walls, & &1) ++ acc
+    end)
+  %>
+
+    <%= Enum.uniq(walls) %>
 
     <%= if @settings.show_solution && @solution do %>
     <%= solution(@maze, @solution, @settings, &hex_center/2) %>
