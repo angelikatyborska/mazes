@@ -4,27 +4,27 @@ defmodule MazesWeb.MazeHelperTest do
   alias MazesWeb.MazeHelper
   alias Mazes.RectangularMaze
 
-  describe "vertex_fill" do
+  describe "vertex_color" do
     test "white vertex by default" do
       maze = RectangularMaze.new(height: 5, width: 5)
       maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
 
-      assert MazeHelper.vertex_fill(maze, {1, 2}, [], false, %{}, false, 123, 50) ==
-               "style=\"fill: white\""
+      assert MazeHelper.vertex_color(maze, {1, 2}, %{}, false, 123, 50) ==
+               "white"
 
-      assert MazeHelper.vertex_fill(maze, {5, 4}, [], false, %{}, false, 123, 50) ==
-               "style=\"fill: white\""
+      assert MazeHelper.vertex_color(maze, {5, 4}, %{}, false, 123, 50) ==
+               "white"
     end
 
     test "from and to" do
       maze = RectangularMaze.new(height: 5, width: 5)
       maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
 
-      assert MazeHelper.vertex_fill(maze, {1, 1}, [], false, %{}, false, 123, 50) ==
-               "style=\"fill: lightgray\""
+      assert MazeHelper.vertex_color(maze, {1, 1}, %{}, false, 123, 50) ==
+               "lightgray"
 
-      assert MazeHelper.vertex_fill(maze, {5, 5}, [], false, %{}, false, 123, 50) ==
-               "style=\"fill: gray\""
+      assert MazeHelper.vertex_color(maze, {5, 5}, %{}, false, 123, 50) ==
+               "gray"
     end
 
     test "with colors" do
@@ -32,60 +32,17 @@ defmodule MazesWeb.MazeHelperTest do
       maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
       colors = %{distances: %{{1, 2} => 1, {5, 4} => 10}, max_distance: 20}
 
-      assert MazeHelper.vertex_fill(maze, {1, 2}, [], false, colors, false, 123, 60) ==
-               "style=\"fill: white\""
+      assert MazeHelper.vertex_color(maze, {1, 2}, colors, false, 123, 60) ==
+               "white"
 
-      assert MazeHelper.vertex_fill(maze, {5, 4}, [], false, colors, false, 123, 60) ==
-               "style=\"fill: white\""
+      assert MazeHelper.vertex_color(maze, {5, 4}, colors, false, 123, 60) ==
+               "white"
 
-      assert MazeHelper.vertex_fill(maze, {1, 2}, [], false, colors, true, 123, 60) ==
-               "style=\"fill: hsl(123, 60%, 96%)\""
+      assert MazeHelper.vertex_color(maze, {1, 2}, colors, true, 123, 60) ==
+               "hsl(123, 60%, 96%)"
 
-      assert MazeHelper.vertex_fill(maze, {5, 4}, [], false, colors, true, 123, 70) ==
-               "style=\"fill: hsl(123, 70%, 60%)\""
-    end
-
-    test "when part of solution" do
-      maze = RectangularMaze.new(height: 5, width: 5)
-      maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
-      colors = %{distances: %{{1, 2} => 1, {5, 4} => 10}, max_distance: 20}
-      solution = [{1, 1}, {1, 2}, {5, 5}]
-
-      assert MazeHelper.vertex_fill(maze, {1, 1}, solution, false, colors, false, 123, 40) ==
-               "style=\"fill: lightgray\""
-
-      assert MazeHelper.vertex_fill(maze, {1, 2}, solution, false, colors, false, 123, 40) ==
-               "style=\"fill: white\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 4}, solution, false, colors, false, 123, 40) ==
-               "style=\"fill: white\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 5}, solution, false, colors, false, 123, 40) ==
-               "style=\"fill: gray\""
-
-      assert MazeHelper.vertex_fill(maze, {1, 1}, solution, false, colors, true, 123, 40) ==
-               "style=\"fill: lightgray\""
-
-      assert MazeHelper.vertex_fill(maze, {1, 2}, solution, false, colors, true, 123, 40) ==
-               "style=\"fill: hsl(123, 40%, 96%)\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 4}, solution, false, colors, true, 123, 45) ==
-               "style=\"fill: hsl(123, 45%, 60%)\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 5}, solution, false, colors, true, 123, 40) ==
-               "style=\"fill: gray\""
-
-      assert MazeHelper.vertex_fill(maze, {1, 1}, solution, true, colors, true, 123, 40) ==
-               "style=\"fill: lightgray\""
-
-      assert MazeHelper.vertex_fill(maze, {1, 2}, solution, true, colors, true, 123, 40) ==
-               "style=\"fill: hsl(303, 40%, 50%)\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 4}, solution, true, colors, true, 123, 40) ==
-               "style=\"fill: hsl(123, 40%, 60%)\""
-
-      assert MazeHelper.vertex_fill(maze, {5, 5}, solution, true, colors, true, 123, 40) ==
-               "style=\"fill: gray\""
+      assert MazeHelper.vertex_color(maze, {5, 4}, colors, true, 123, 70) ==
+               "hsl(123, 70%, 60%)"
     end
   end
 

@@ -7,16 +7,37 @@ defmodule MazesWeb.MazeHelper do
 
   def svg_padding, do: 16
 
-  def vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation) do
+  def solution(maze, solution, settings, center_fun) do
+    [h | t] = solution
+
+    {x, y} = center_fun.(maze, h)
+
+    d =
+      t
+      |> Enum.map(fn vertex ->
+        {x, y} = center_fun.(maze, vertex)
+        "L #{x} #{y}"
+      end)
+      |> Enum.join(" ")
+
+    Phoenix.HTML.Tag.content_tag(:path, "",
+      d: "M #{x} #{y} #{d}",
+      style: solution_line_style(maze, settings.hue, settings.saturation),
+      fill: "transparent"
+    )
+  end
+
+  def solution_color(hue, saturation) do
+    MazeColors.solution_color(hue, saturation)
+  end
+
+  def vertex_color(maze, vertex, colors, show_colors, hue, saturation) do
     cond do
       vertex == maze.from ->
         "lightgray"
 
       vertex == maze.to ->
         "gray"
-
-      show_solution && vertex in solution ->
-        MazeColors.solution_color(hue, saturation)
 
       show_colors && colors ->
         MazeColors.color(colors.distances[vertex], colors.max_distance, hue, saturation)
@@ -26,14 +47,15 @@ defmodule MazesWeb.MazeHelper do
     end
   end
 
-  def vertex_fill(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation) do
-    fill =
-      vertex_color(maze, vertex, solution, show_solution, colors, show_colors, hue, saturation)
-
-    "style=\"fill: #{fill}\""
+  def solution_line_style(maze, hue, saturation) do
+    "stroke: #{solution_color(hue, saturation)}; #{do_line_style(maze)}"
   end
 
   def line_style(maze) do
+    "stroke: black; #{do_line_style(maze)}"
+  end
+
+  def do_line_style(maze) do
     stroke_width =
       case Enum.max(Enum.filter([maze[:width], maze[:height], maze[:radius]], & &1)) do
         n when n <= 16 -> 3
@@ -41,7 +63,7 @@ defmodule MazesWeb.MazeHelper do
         _ -> 1
       end
 
-    "stroke: black; stroke-width: #{stroke_width}; stroke-linecap: round;"
+    "stroke-width: #{stroke_width}; stroke-linecap: round;"
   end
 
   def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do

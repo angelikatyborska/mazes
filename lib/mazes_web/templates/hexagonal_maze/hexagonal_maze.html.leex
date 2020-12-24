@@ -1,87 +1,19 @@
 <div class="maze" id="maze">
-
-  <%
-    width = @maze.width
-    height = @maze.height
-    max_width = max_svg_width() - 2 * svg_padding()
-    max_height = max_svg_width() - 2 * svg_padding()
-    r1 = trunc(max_width / (0.5 + width * 1.5))
-    r2 = trunc(max_height / (1 + height * 2))
-    r = Enum.min([r1, r2])
-    h = 2 * r * :math.sin(:math.pi / 3)
-    svg_width = 2 * svg_padding() + r * (0.5 + width * 1.5)
-    svg_height = 2 * svg_padding() + h / 2 * (1 + height * 2)
-    alpha = :math.pi() / 3
-  %>
-
-  <svg width="100%" height="100%" viewbox="0 0 <%= svg_width %> <%= svg_height %>">
-    <%= Enum.map((1..height), fn row -> %>
-    <%= Enum.map((1..width), fn column -> %>
-    <%
-      vertex = {column, row}
-      cx = r + (1.5 * r * (column - 1)) + svg_padding()
-
-      cy = if Integer.mod(column, 2) == 1 do
-        h / 2 * (1 + (row - 1) * 2) + svg_padding()
-      else
-        h / 2 * (2 + (row - 1) * 2) + svg_padding()
-      end
-
-      hex_center = {cx, cy}
-      hex_points = Enum.map(0..5, fn n -> move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + n * alpha) end)
-    %>
-
-    <% {path_start_x, path_start_y} = List.last(hex_points) %>
-    <% path_lines = Enum.map(hex_points, fn {x, y} -> "L #{x} #{y}" end) |> Enum.join(" ") %>
-    <path d="M <%= path_start_x %> <%= path_start_y %> <%= path_lines %>"
-          stroke="<%= vertex_color(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>"
-          <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
-    />
-    <% end) %>
+  <svg width="100%" height="100%" viewbox="0 0 <%= svg_width(@maze) %> <%= svg_height(@maze) %>">
+    <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
+    <%= hex(@maze, vertex, @settings, @colors)  %>
     <% end) %>
 
-    <%= Enum.map((1..height), fn row -> %>
-    <%= Enum.map((1..width), fn column -> %>
-    <%
-      vertex = {column, row}
-      cx = r + (1.5 * r * (column - 1)) + svg_padding()
-
-      cy = if Integer.mod(column, 2) == 1 do
-        h / 2 * (1 + (row - 1) * 2) + svg_padding()
-      else
-        h / 2 * (2 + (row - 1) * 2) + svg_padding()
-      end
-
-      hex_center = {cx, cy}
-    %>
-
-    <%= if row == 1 do %>
-    <% {path_start_x, path_start_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2)) %>
-    <% {path_end_x, path_end_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) * -1) %>
-    <path d="M <%= path_start_x %> <%= path_start_y %> L <%= path_end_x %> <%= path_end_y %>" fill="transparent" style="<%= line_style(@maze) %>" />
-    <% end %>
-
-    <%= if (row == 1 && Integer.mod(column, 2) == 1) || column == width do %>
-    <% {path_start_x, path_start_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + 0 * alpha) %>
-    <% {path_end_x, path_end_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + 1 * alpha) %>
-    <path d="M <%= path_start_x %> <%= path_start_y %> L <%= path_end_x %> <%= path_end_y %>" fill="transparent" style="<%= line_style(@maze) %>" />
-    <% end %>
-
-    <%= if column == 1 || (row == 1 && Integer.mod(column, 2) == 1) do %>
-    <% {path_start_x, path_start_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + 4 * alpha) %>
-    <% {path_end_x, path_end_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + 5 * alpha) %>
-    <path d="M <%= path_start_x %> <%= path_start_y %> L <%= path_end_x %> <%= path_end_y %>" fill="transparent" style="<%= line_style(@maze) %>" />
-    <% end %>
-
-    <%= Enum.map(%{1 => :southeast, 2 => :south, 3 => :southwest}, fn {n, direction} -> %>
+    <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
+    <%= Enum.map(%{0 => :northeast, 1 => :southeast, 2 => :south, 3 => :southwest, 4 => :northwest, 5 => :north}, fn {n, direction} -> %>
     <%= if Maze.wall?(@maze, vertex, apply(@maze.module, direction, [vertex])) do %>
-    <% {path_start_x, path_start_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + (n) * alpha) %>
-    <% {path_end_x, path_end_y} = move_coordinate_by_radius_and_angle(hex_center, r, (alpha / 2) + (n + 1) * alpha) %>
-    <path d="M <%= path_start_x %> <%= path_start_y %> L <%= path_end_x %> <%= path_end_y %>" fill="transparent" style="<%= line_style(@maze) %>" />
+    <%= wall(@maze, vertex, n) %>
     <% end %>
     <% end) %>
+    <% end) %>
 
-    <% end) %>
-    <% end) %>
+    <%= if @settings.show_solution && @solution do %>
+    <%= solution(@maze, @solution, @settings, &hex_center/2) %>
+    <% end %>
   </svg>
 </div>

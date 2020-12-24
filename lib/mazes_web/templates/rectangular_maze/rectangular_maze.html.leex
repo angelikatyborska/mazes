@@ -1,50 +1,29 @@
 <div class="maze" id="maze">
-  <svg width="100%" height="100%" viewbox="0 0 <%= 2 * svg_padding() + square_size(@maze) * @maze.width %> <%= 2 * svg_padding() + square_size(@maze) * @maze.height %>">
-  <%= Enum.map(Maze.vertices(@maze), fn {x, y} = vertex -> %>
-  <rect width="<%= square_size(@maze) + 1 %>"
-        height="<%= square_size(@maze) + 1 %>"
-        <%= raw vertex_fill(@maze, vertex, @solution, @settings.show_solution, @colors, @settings.show_colors, @settings.hue, @settings.saturation) %>
-        x="<%= svg_padding() + square_size(@maze) * (x - 1) %>"
-        y="<%= svg_padding() + square_size(@maze) * (y - 1) %>"
-  />
+  <svg width="100%" height="100%" viewbox="0 0 <%= svg_width(@maze) %> <%= svg_height(@maze) %>">
+  <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
+  <%= square(@maze, vertex, @settings, @colors) %>
   <% end )%>
 
-  <%= Enum.map(Maze.vertices(@maze), fn {x, y} = vertex -> %>
-    <%= if Maze.wall?(@maze, vertex, @maze.module.north(vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= svg_padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= svg_padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= svg_padding() + square_size(@maze) * (x) %>"
-          y2="<%= svg_padding() + square_size(@maze) * (y - 1) %>"
-    />
-    <% end %>
+  <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
+  <%= if Maze.wall?(@maze, vertex, @maze.module.north(vertex)) do %>
+  <%= north_wall(@maze, vertex) %>
+  <% end %>
 
-    <%= if Maze.wall?(@maze, vertex, @maze.module.west(vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= svg_padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= svg_padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= svg_padding() + square_size(@maze) * (x - 1) %>"
-          y2="<%= svg_padding() + square_size(@maze) * (y) %>"
-    />
-    <% end %>
+  <%= if Maze.wall?(@maze, vertex, @maze.module.west(vertex)) do %>
+  <%= west_wall(@maze, vertex) %>
+  <% end %>
 
-    <%= if x == @maze.width || !(@maze.module.east(vertex) in Maze.neighboring_vertices(@maze, vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= svg_padding() + square_size(@maze) * x %>"
-          y1="<%= svg_padding() + square_size(@maze) * (y - 1) %>"
-          x2="<%= svg_padding() + square_size(@maze) * x %>"
-          y2="<%= svg_padding() + square_size(@maze) * (y) %>"
-    />
-    <% end %>
+  <%= if Maze.wall?(@maze, vertex, @maze.module.east(vertex)) do %>
+  <%= east_wall(@maze, vertex) %>
+  <% end %>
 
-    <%= if y == @maze.height || !(@maze.module.south(vertex) in Maze.neighboring_vertices(@maze, vertex)) do %>
-    <line style="<%= line_style(@maze) %>"
-          x1="<%= svg_padding() + square_size(@maze) * (x - 1) %>"
-          y1="<%= svg_padding() + square_size(@maze) * y %>"
-          x2="<%= svg_padding() + square_size(@maze) * (x) %>"
-          y2="<%= svg_padding() + square_size(@maze) * y %>"
-    />
-    <% end %>
+  <%= if Maze.wall?(@maze, vertex, @maze.module.south(vertex)) do %>
+  <%= south_wall(@maze, vertex) %>
+  <% end %>
   <% end )%>
+
+  <%= if @settings.show_solution && @solution do %>
+  <%= solution(@maze, @solution, @settings, &square_center/2) %>
+  <% end %>
   </svg>
 </div>

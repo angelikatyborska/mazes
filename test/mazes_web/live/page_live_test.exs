@@ -1,8 +1,6 @@
 defmodule MazesWeb.PageLiveTest do
   use MazesWeb.ConnCase
 
-  import Phoenix.LiveViewTest
-
   test "disconnected render", %{conn: conn} do
     conn = get(conn, "/")
 

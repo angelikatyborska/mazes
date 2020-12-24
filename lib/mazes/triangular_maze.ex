@@ -69,7 +69,7 @@ defmodule Mazes.TriangularMaze do
   # Not part of the behavior, functions needed for drawing the grid
 
   def north({x, y}) do
-    if Integer.mod(x + y, 2) == 0 do
+    if base_down?({x, y}) do
       nil
     else
       {x, y - 1}
@@ -77,7 +77,7 @@ defmodule Mazes.TriangularMaze do
   end
 
   def south({x, y}) do
-    if Integer.mod(x + y, 2) == 0 do
+    if base_down?({x, y}) do
       {x, y + 1}
     else
       nil
@@ -86,4 +86,8 @@ defmodule Mazes.TriangularMaze do
 
   def east({x, y}), do: {x + 1, y}
   def west({x, y}), do: {x - 1, y}
+
+  def base_down?({x, y}) do
+    Integer.mod(x + y, 2) == 0
+  end
 end
