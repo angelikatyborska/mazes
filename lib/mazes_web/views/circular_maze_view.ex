@@ -22,6 +22,8 @@ defmodule MazesWeb.CircularMazeView do
     {center_x, center_y}
   end
 
+  def vertex_center(maze, {_, 1}), do: maze_center(maze)
+
   def vertex_center(maze, {current_column, ring} = _vertex) do
     column_count =
       Enum.find(CircularMaze.rings(maze), fn %{ring: r} -> r == ring end).column_count
