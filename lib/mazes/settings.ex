@@ -134,7 +134,7 @@ defmodule Mazes.Settings do
       RectangularMaze => [:width, :height],
       RectangularMazeWithMask => [:mask],
       CircularMaze => [:radius],
-      HexagonalMaze => [:width, :height],
+      HexagonalMaze => [:radius],
       TriangularMaze => [:width, :height]
     }
   end

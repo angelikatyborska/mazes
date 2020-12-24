@@ -8,12 +8,14 @@ defmodule MazesWeb.HexagonalMazeView do
     max_width = max_svg_width() - 2 * svg_padding()
     max_height = max_svg_width() - 2 * svg_padding()
     r1 = trunc(max_width / (0.5 + maze.width * 1.5))
-    r2 = trunc(max_height / (1 + maze.height * 2))
+    h = trunc(max_height / maze.width)
+    r2 = h / (2 * :math.sin(:math.pi() / 3))
+
     Enum.min([r1, r2])
   end
 
   def hex_height(maze) do
-    2 * hex_radius(maze) * :math.sin(:math.pi() / 3)
+    2 * hex_radius(maze) * :math.sin(alpha())
   end
 
   def alpha() do
@@ -25,7 +27,7 @@ defmodule MazesWeb.HexagonalMazeView do
   end
 
   def svg_height(maze) do
-    2 * svg_padding() + hex_height(maze) / 2 * (1 + maze.height * 2)
+    2 * svg_padding() + hex_height(maze) * maze.width
   end
 
   def hex_center(maze, {x, y}) do
@@ -40,7 +42,7 @@ defmodule MazesWeb.HexagonalMazeView do
         h / 2 * (2 + (y - 1) * 2) + svg_padding()
       end
 
-    {cx, cy}
+    {cx, cy - Integer.mod(Integer.floor_div(maze.width - 1, 2), 2) * 0.5 * h}
   end
 
   def hex(maze, vertex, settings, colors) do

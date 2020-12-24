@@ -12,8 +12,9 @@ defmodule Mazes.HexagonalMaze do
 
   @impl true
   def new(opts) do
-    width = Keyword.get(opts, :width)
-    height = Keyword.get(opts, :height)
+    radius = Keyword.get(opts, :radius)
+    width = radius * 2 - 1
+    height = radius * 2 - 1
     all_vertices_adjacent? = Keyword.get(opts, :all_vertices_adjacent?, false)
 
     vertices =
@@ -21,6 +22,12 @@ defmodule Mazes.HexagonalMaze do
         Enum.reduce(1..height, acc, fn y, acc2 ->
           [{x, y} | acc2]
         end)
+      end)
+
+    vertices =
+      vertices
+      |> Enum.filter(fn {x, y} ->
+        distance({x, y}, {radius, radius}) < radius
       end)
 
     adjacency_matrix =
@@ -64,6 +71,19 @@ defmodule Mazes.HexagonalMaze do
       from: nil,
       to: nil
     }
+  end
+
+  def distance({x1, y1}, {x2, y2}) do
+    # https://www.redblobgames.com/grids/hexagons/#conversions
+    cx1 = x1
+    cz1 = y1 - (x1 + Integer.mod(x1, 2)) / 2
+    cy1 = -cx1 - cz1
+
+    cx2 = x2
+    cz2 = y2 - (x2 + Integer.mod(x2, 2)) / 2
+    cy2 = -cx2 - cz2
+
+    (abs(cx1 - cx2) + abs(cy1 - cy2) + abs(cz1 - cz2)) / 2
   end
 
   @impl true

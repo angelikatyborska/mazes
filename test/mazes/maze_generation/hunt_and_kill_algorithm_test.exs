@@ -15,8 +15,23 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithmTest do
 
   test "produces a maze that can be solved for all maze types it supports" do
     Enum.each(HuntAndKillAlgorithm.supported_maze_types(), fn module ->
-      maze = HuntAndKillAlgorithm.generate([width: 10, height: 10, radius: 10], module)
-      assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+      case module do
+        m when m in [Mazes.RectangularMaze, Mazes.RectangularMazeWithMask] ->
+          maze = HuntAndKillAlgorithm.generate([width: 10, height: 10], module)
+          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+
+        Mazes.TriangularMaze ->
+          maze = HuntAndKillAlgorithm.generate([width: 10, height: 10], module)
+          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+
+        Mazes.CircularMaze ->
+          maze = HuntAndKillAlgorithm.generate([radius: 10], module)
+          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+
+        Mazes.HexagonalMaze ->
+          maze = HuntAndKillAlgorithm.generate([radius: 10], module)
+          assert MazeDistances.shortest_path(maze, {10, 1}, {10, 10})
+      end
     end)
   end
 end

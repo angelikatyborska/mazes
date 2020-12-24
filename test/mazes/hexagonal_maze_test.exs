@@ -4,94 +4,122 @@ defmodule Mazes.HexagonalMazeTest do
 
   describe "new" do
     test "sets a correct adjacency matrix" do
-      result = HexagonalMaze.new(width: 4, height: 3)
-      assert result.width == 4
-      assert result.height == 3
+      result = HexagonalMaze.new(radius: 3)
+      assert result.width == 5
+      assert result.height == 5
 
       assert result.adjacency_matrix == %{
-               {1, 1} => %{
-                 {2, 1} => false,
-                 {1, 2} => false
-               },
-               {2, 1} => %{
-                 {1, 1} => false,
-                 {3, 1} => false,
-                 {1, 2} => false,
-                 {2, 2} => false,
-                 {3, 2} => false
-               },
-               {3, 1} => %{
-                 {2, 1} => false,
-                 {4, 1} => false,
-                 {3, 2} => false
-               },
-               {4, 1} => %{
-                 {3, 1} => false,
-                 {3, 2} => false,
-                 {4, 2} => false
-               },
-               {1, 2} => %{
-                 {1, 1} => false,
-                 {2, 1} => false,
-                 {2, 2} => false,
-                 {1, 3} => false
-               },
-               {2, 2} => %{
-                 {2, 1} => false,
-                 {1, 2} => false,
-                 {3, 2} => false,
-                 {1, 3} => false,
-                 {2, 3} => false,
-                 {3, 3} => false
-               },
-               {3, 2} => %{
-                 {2, 1} => false,
-                 {3, 1} => false,
-                 {4, 1} => false,
-                 {2, 2} => false,
-                 {4, 2} => false,
-                 {3, 3} => false
-               },
-               {4, 2} => %{
-                 {4, 1} => false,
-                 {3, 2} => false,
-                 {3, 3} => false,
-                 {4, 3} => false
-               },
+               {1, 2} => %{{1, 3} => false, {2, 1} => false, {2, 2} => false},
                {1, 3} => %{
                  {1, 2} => false,
+                 {1, 4} => false,
                  {2, 2} => false,
                  {2, 3} => false
                },
-               {2, 3} => %{
+               {1, 4} => %{{1, 3} => false, {2, 3} => false, {2, 4} => false},
+               {2, 1} => %{
+                 {1, 2} => false,
                  {2, 2} => false,
+                 {3, 1} => false,
+                 {3, 2} => false
+               },
+               {2, 2} => %{
+                 {1, 2} => false,
                  {1, 3} => false,
+                 {2, 1} => false,
+                 {2, 3} => false,
+                 {3, 2} => false,
                  {3, 3} => false
+               },
+               {2, 3} => %{
+                 {1, 3} => false,
+                 {1, 4} => false,
+                 {2, 2} => false,
+                 {2, 4} => false,
+                 {3, 3} => false,
+                 {3, 4} => false
+               },
+               {2, 4} => %{
+                 {1, 4} => false,
+                 {2, 3} => false,
+                 {3, 4} => false,
+                 {3, 5} => false
+               },
+               {3, 1} => %{{2, 1} => false, {3, 2} => false, {4, 1} => false},
+               {3, 2} => %{
+                 {2, 1} => false,
+                 {2, 2} => false,
+                 {3, 1} => false,
+                 {3, 3} => false,
+                 {4, 1} => false,
+                 {4, 2} => false
                },
                {3, 3} => %{
                  {2, 2} => false,
-                 {3, 2} => false,
-                 {4, 2} => false,
                  {2, 3} => false,
+                 {3, 2} => false,
+                 {3, 4} => false,
+                 {4, 2} => false,
                  {4, 3} => false
                },
-               {4, 3} => %{
+               {3, 4} => %{
+                 {2, 3} => false,
+                 {2, 4} => false,
+                 {3, 3} => false,
+                 {3, 5} => false,
+                 {4, 3} => false,
+                 {4, 4} => false
+               },
+               {3, 5} => %{{2, 4} => false, {3, 4} => false, {4, 4} => false},
+               {4, 1} => %{
+                 {3, 1} => false,
+                 {3, 2} => false,
                  {4, 2} => false,
-                 {3, 3} => false
-               }
+                 {5, 2} => false
+               },
+               {4, 2} => %{
+                 {3, 2} => false,
+                 {3, 3} => false,
+                 {4, 1} => false,
+                 {4, 3} => false,
+                 {5, 2} => false,
+                 {5, 3} => false
+               },
+               {4, 3} => %{
+                 {3, 3} => false,
+                 {3, 4} => false,
+                 {4, 2} => false,
+                 {4, 4} => false,
+                 {5, 3} => false,
+                 {5, 4} => false
+               },
+               {4, 4} => %{
+                 {3, 4} => false,
+                 {3, 5} => false,
+                 {4, 3} => false,
+                 {5, 4} => false
+               },
+               {5, 2} => %{{4, 1} => false, {4, 2} => false, {5, 3} => false},
+               {5, 3} => %{
+                 {4, 2} => false,
+                 {4, 3} => false,
+                 {5, 2} => false,
+                 {5, 4} => false
+               },
+               {5, 4} => %{{4, 3} => false, {4, 4} => false, {5, 3} => false}
              }
     end
   end
 
   describe "center" do
     test "odd size" do
-      maze = HexagonalMaze.new(width: 5, height: 5)
-      assert HexagonalMaze.center(maze) == {3, 3}
+      maze = HexagonalMaze.new(radius: 5)
+      assert HexagonalMaze.center(maze) == {5, 5}
     end
 
     test "even size" do
-      maze = HexagonalMaze.new(width: 4, height: 4)
-      assert HexagonalMaze.center(maze) == {2, 2}
+      maze = HexagonalMaze.new(radius: 4)
+      assert HexagonalMaze.center(maze) == {4, 4}
     end
   end
 
