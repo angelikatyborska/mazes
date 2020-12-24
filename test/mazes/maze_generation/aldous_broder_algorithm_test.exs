@@ -22,8 +22,8 @@ defmodule Mazes.MazeGeneration.AldousBroderAlgorithmTest do
           assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
 
         Mazes.TriangularMaze ->
-          maze = AldousBroderAlgorithm.generate([width: 10, height: 10], module)
-          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+          maze = AldousBroderAlgorithm.generate([side_length: 10], module)
+          assert MazeDistances.shortest_path(maze, {6, 9}, {15, 8})
 
         Mazes.CircularMaze ->
           maze = AldousBroderAlgorithm.generate([radius: 10], module)

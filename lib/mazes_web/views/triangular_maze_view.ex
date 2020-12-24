@@ -7,7 +7,7 @@ defmodule MazesWeb.TriangularMazeView do
   def triangle_base(maze) do
     max_width = max_svg_width() - 2 * svg_padding()
     max_height = max_svg_width() - 2 * svg_padding()
-    a1 = trunc(max_width / (1 + maze.width / 2))
+    a1 = trunc(max_width / maze.height)
     a2 = 2 * trunc(max_height / maze.height) / :math.sqrt(3)
     Enum.min([a1, a2])
   end
@@ -17,7 +17,7 @@ defmodule MazesWeb.TriangularMazeView do
   end
 
   def svg_width(maze) do
-    2 * svg_padding() + triangle_base(maze) * (1 + maze.width / 2)
+    2 * svg_padding() + triangle_base(maze) * maze.height
   end
 
   def svg_height(maze) do
@@ -25,21 +25,26 @@ defmodule MazesWeb.TriangularMazeView do
   end
 
   def triangle_center(maze, {x, y} = _vertex) do
-    if TriangularMaze.base_down?({x, y}) do
-      x = svg_padding() + triangle_base(maze) * x / 2
-      y = svg_padding() + triangle_height(maze) * (y - 1 / 3)
-      {x, y}
-    else
-      x = svg_padding() + triangle_base(maze) * x / 2
-      y = svg_padding() + triangle_height(maze) * (y - 2 / 3)
-      {x, y}
-    end
+    {x, y} =
+      if TriangularMaze.base_down?({x, y}) do
+        x = svg_padding() + triangle_base(maze) * x / 2
+        y = svg_padding() + triangle_height(maze) * (y - 1 / 3)
+        {x, y}
+      else
+        x = svg_padding() + triangle_base(maze) * x / 2
+        y = svg_padding() + triangle_height(maze) * (y - 2 / 3)
+        {x, y}
+      end
+
+    x_offset = if Integer.mod(maze.height, 2) == 1, do: 0, else: -triangle_base(maze) / 2
+    {x + x_offset, y}
   end
 
   def triangle(maze, {x, y} = vertex, settings, colors) do
     a = triangle_base(maze)
     h = triangle_height(maze)
     x_offset = if Integer.mod(y, 2) == 1, do: svg_padding(), else: svg_padding() + a / 2
+    x_offset = if Integer.mod(maze.height, 2) == 1, do: x_offset, else: x_offset - a / 2
     y_offset = svg_padding()
 
     d =
@@ -161,6 +166,7 @@ defmodule MazesWeb.TriangularMazeView do
     a = triangle_base(maze)
     h = triangle_height(maze)
     x_offset = if Integer.mod(y, 2) == 1, do: svg_padding(), else: svg_padding() + a / 2
+    x_offset = if Integer.mod(maze.height, 2) == 1, do: x_offset, else: x_offset - a / 2
     y_offset = svg_padding()
     top_x = x_offset + a * (trunc((x - 1) / 2) + 0.5)
     top_y = y_offset + h * (y - 1)
@@ -171,6 +177,7 @@ defmodule MazesWeb.TriangularMazeView do
     a = triangle_base(maze)
     h = triangle_height(maze)
     x_offset = if Integer.mod(y, 2) == 1, do: svg_padding(), else: svg_padding() + a / 2
+    x_offset = if Integer.mod(maze.height, 2) == 1, do: x_offset, else: x_offset - a / 2
     y_offset = svg_padding()
     left_x = x_offset + a * (trunc(x / 2) - 0.5)
     left_y = y_offset + h * (y - 1)

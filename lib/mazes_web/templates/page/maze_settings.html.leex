@@ -70,6 +70,19 @@
                id="radius" />
         <% end %>
 
+        <%= if :side_length in Settings.maze_options_per_shape()[@settings.shape] do %>
+        <label class="maze-settings-label" for="side_length">
+          Side length
+        </label>
+        <input type="number"
+               min="<%= Settings.min_side_length() %>"
+               max="<%= Settings.max_side_length() %>"
+               step="1"
+               name="side_length"
+               value="<%= @settings.side_length %>"
+               id="radius" />
+        <% end %>
+
         <%= if :mask in Settings.maze_options_per_shape()[@settings.shape] do %>
         <div class="maze-settings-label">Mask</div>
         <div class="maze-settings-icon-radios">

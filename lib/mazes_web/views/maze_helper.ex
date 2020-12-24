@@ -55,14 +55,8 @@ defmodule MazesWeb.MazeHelper do
     "stroke: black; #{do_line_style(maze)}"
   end
 
-  def do_line_style(maze) do
-    stroke_width =
-      case Enum.max(Enum.filter([maze[:width], maze[:height], maze[:radius]], & &1)) do
-        n when n <= 16 -> 3
-        n when n <= 32 -> 2
-        _ -> 1
-      end
-
+  def do_line_style(_maze) do
+    stroke_width = 2
     "stroke-width: #{stroke_width}; stroke-linecap: round;"
   end
 

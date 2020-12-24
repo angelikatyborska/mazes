@@ -21,8 +21,8 @@ defmodule Mazes.MazeGeneration.HuntAndKillAlgorithmTest do
           assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
 
         Mazes.TriangularMaze ->
-          maze = HuntAndKillAlgorithm.generate([width: 10, height: 10], module)
-          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+          maze = HuntAndKillAlgorithm.generate([side_length: 10], module)
+          assert MazeDistances.shortest_path(maze, {6, 9}, {15, 8})
 
         Mazes.CircularMaze ->
           maze = HuntAndKillAlgorithm.generate([radius: 10], module)

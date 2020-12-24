@@ -21,8 +21,8 @@ defmodule Mazes.MazeGeneration.RecursiveBacktrackerAlgorithmTest do
           assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
 
         Mazes.TriangularMaze ->
-          maze = RecursiveBacktrackerAlgorithm.generate([width: 10, height: 10], module)
-          assert MazeDistances.shortest_path(maze, {1, 1}, {10, 10})
+          maze = RecursiveBacktrackerAlgorithm.generate([side_length: 10], module)
+          assert MazeDistances.shortest_path(maze, {6, 9}, {15, 8})
 
         Mazes.CircularMaze ->
           maze = RecursiveBacktrackerAlgorithm.generate([radius: 10], module)

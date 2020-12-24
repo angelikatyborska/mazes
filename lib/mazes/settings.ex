@@ -6,6 +6,7 @@ defmodule Mazes.Settings do
     :width,
     :height,
     :radius,
+    :side_length,
     :show_solution,
     :show_colors,
     :hue,
@@ -29,6 +30,7 @@ defmodule Mazes.Settings do
   def default_width, do: 32
   def default_height, do: default_width()
   def default_radius, do: 8
+  def default_side_length, do: 16
   def default_hue, do: 200
   def default_saturation, do: 60
   def min_width, do: 2
@@ -37,6 +39,8 @@ defmodule Mazes.Settings do
   def max_height, do: max_width()
   def min_radius, do: 2
   def max_radius, do: 32
+  def min_side_length, do: 2
+  def max_side_length, do: 32
   def min_hue, do: 0
   def max_hue, do: 359
   def min_saturation, do: 0
@@ -50,6 +54,7 @@ defmodule Mazes.Settings do
       width: default_width(),
       height: default_height(),
       radius: default_radius(),
+      side_length: default_side_length(),
       show_solution: false,
       show_colors: false,
       hue: default_hue(),
@@ -135,7 +140,7 @@ defmodule Mazes.Settings do
       RectangularMazeWithMask => [:mask],
       CircularMaze => [:radius],
       HexagonalMaze => [:radius],
-      TriangularMaze => [:width, :height]
+      TriangularMaze => [:side_length]
     }
   end
 
@@ -187,6 +192,7 @@ defmodule Mazes.Settings do
     width = form_data["width"]
     height = form_data["height"]
     radius = form_data["radius"]
+    side_length = form_data["side_length"]
     mask = form_data["mask"]
     show_colors = form_data["show_colors"]
     show_solution = form_data["show_solution"]
@@ -194,6 +200,10 @@ defmodule Mazes.Settings do
     width = change_int(width, min_width(), max_width()) || settings.width
     height = change_int(height, min_height(), max_height()) || settings.height
     radius = change_int(radius, min_radius(), max_radius()) || settings.radius
+
+    side_length =
+      change_int(side_length, min_side_length(), max_side_length()) || settings.side_length
+
     hue = change_int(hue, min_hue(), max_hue()) || settings.hue
     saturation = change_int(saturation, min_saturation(), max_saturation()) || settings.saturation
 
@@ -236,6 +246,7 @@ defmodule Mazes.Settings do
       | width: width,
         height: height,
         radius: radius,
+        side_length: side_length,
         hue: hue,
         saturation: saturation,
         shape: shape,

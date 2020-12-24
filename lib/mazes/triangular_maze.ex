@@ -13,8 +13,9 @@ defmodule Mazes.TriangularMaze do
 
   @impl true
   def new(opts) do
-    width = Keyword.get(opts, :width)
-    height = Keyword.get(opts, :height)
+    side = Keyword.get(opts, :side_length)
+    width = if Integer.mod(side, 2) == 0, do: side * 2 + 1, else: side * 2 - 1
+    height = side
     all_vertices_adjacent? = Keyword.get(opts, :all_vertices_adjacent?, false)
 
     vertices =
@@ -22,6 +23,20 @@ defmodule Mazes.TriangularMaze do
         Enum.reduce(1..height, acc, fn y, acc2 ->
           [{x, y} | acc2]
         end)
+      end)
+
+    vertices =
+      vertices
+      |> Enum.filter(fn {x, y} ->
+        if Integer.mod(side, 2) == 0 do
+          if x > side do
+            x < 2 * side + 1 - abs(side - y)
+          else
+            x > 1 + side - y
+          end
+        else
+          abs(x - side) < y
+        end
       end)
 
     adjacency_matrix =
