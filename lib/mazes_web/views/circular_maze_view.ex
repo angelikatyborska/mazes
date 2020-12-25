@@ -9,7 +9,8 @@ defmodule MazesWeb.CircularMazeView do
   end
 
   def maze_radius(maze) do
-    trunc(max_svg_width() / maze.radius) * maze.radius
+    max_width = max_svg_width() - 2 * svg_padding()
+    trunc(max_width / (2 * maze.radius)) * maze.radius
   end
 
   def ring_width(maze) do
@@ -96,7 +97,6 @@ defmodule MazesWeb.CircularMazeView do
           settings.hue,
           settings.saturation
         ),
-      stroke_width: "4",
       style:
         "fill: #{
           vertex_color(
