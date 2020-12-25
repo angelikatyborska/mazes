@@ -33,7 +33,11 @@
     <% end) %>
 
     <%= if @settings.show_solution && @solution do %>
-    <%= solution(@maze, @solution, @settings, &vertex_center/2) %>
+    <%= solution(@maze, @solution, &vertex_center/2) %>
+    <% end %>
+
+    <%= if @maze.from && @maze.to do %>
+    <%= from_to(@maze, &vertex_center/2) %>
     <% end %>
   </svg>
 </div>

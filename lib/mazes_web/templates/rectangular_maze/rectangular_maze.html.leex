@@ -1,24 +1,28 @@
 <div class="maze" id="maze">
   <svg width="100%" height="100%" viewbox="0 0 <%= svg_width(@maze) %> <%= svg_height(@maze) %>">
-  <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
-  <%= square(@maze, vertex, @settings, @colors) %>
-  <% end )%>
+    <%= Enum.map(Maze.vertices(@maze), fn vertex -> %>
+    <%= square(@maze, vertex, @settings, @colors) %>
+    <% end )%>
 
-  <% walls =
-    Enum.reduce(Maze.vertices(@maze), [], fn vertex, acc ->
-      north_wall = Maze.wall?(@maze, vertex, @maze.module.north(vertex)) && north_wall(@maze, vertex)
-      south_wall = Maze.wall?(@maze, vertex, @maze.module.south(vertex)) && south_wall(@maze, vertex)
-      west_wall = Maze.wall?(@maze, vertex, @maze.module.west(vertex)) && west_wall(@maze, vertex)
-      east_wall = Maze.wall?(@maze, vertex, @maze.module.east(vertex)) && east_wall(@maze, vertex)
-      walls = [north_wall, south_wall, west_wall, east_wall] |> Enum.filter(& &1)
-      walls ++ acc
-    end)
-  %>
+    <% walls =
+      Enum.reduce(Maze.vertices(@maze), [], fn vertex, acc ->
+        north_wall = Maze.wall?(@maze, vertex, @maze.module.north(vertex)) && north_wall(@maze, vertex)
+        south_wall = Maze.wall?(@maze, vertex, @maze.module.south(vertex)) && south_wall(@maze, vertex)
+        west_wall = Maze.wall?(@maze, vertex, @maze.module.west(vertex)) && west_wall(@maze, vertex)
+        east_wall = Maze.wall?(@maze, vertex, @maze.module.east(vertex)) && east_wall(@maze, vertex)
+        walls = [north_wall, south_wall, west_wall, east_wall] |> Enum.filter(& &1)
+        walls ++ acc
+      end)
+    %>
 
-  <%= Enum.uniq(walls) %>
+    <%= Enum.uniq(walls) %>
 
-  <%= if @settings.show_solution && @solution do %>
-  <%= solution(@maze, @solution, @settings, &square_center/2) %>
-  <% end %>
+    <%= if @settings.show_solution && @solution do %>
+    <%= solution(@maze, @solution, &square_center/2) %>
+    <% end %>
+
+    <%= if @maze.from && @maze.to do %>
+    <%= from_to(@maze, &square_center/2) %>
+    <% end %>
   </svg>
 </div>

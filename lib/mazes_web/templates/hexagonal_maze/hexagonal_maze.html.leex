@@ -19,7 +19,11 @@
     <%= Enum.uniq(walls) %>
 
     <%= if @settings.show_solution && @solution do %>
-    <%= solution(@maze, @solution, @settings, &hex_center/2) %>
+    <%= solution(@maze, @solution, &hex_center/2) %>
+    <% end %>
+
+    <%= if @maze.from && @maze.to do %>
+    <%= from_to(@maze, &hex_center/2) %>
     <% end %>
   </svg>
 </div>

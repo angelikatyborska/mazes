@@ -21,10 +21,10 @@ defmodule MazesWeb.MazeHelperTest do
       maze = Map.merge(maze, %{from: {1, 1}, to: {5, 5}})
 
       assert MazeHelper.vertex_color(maze, {1, 1}, %{}, false, 123, 50) ==
-               "lightgray"
+               "white"
 
       assert MazeHelper.vertex_color(maze, {5, 5}, %{}, false, 123, 50) ==
-               "gray"
+               "white"
     end
 
     test "with colors" do

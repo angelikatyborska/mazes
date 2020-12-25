@@ -1,4 +1,4 @@
-<div class="grid" style="--accent-color: <%= Mazes.MazeColors.solution_color(assigns[:settings].hue) %>">
+<div class="grid" style="--accent-color: <%= Mazes.MazeColors.color(assigns[:settings].hue) %>">
   <div class="column-left">
     <%= render PageView, "maze_settings.html", assigns %>
   </div>

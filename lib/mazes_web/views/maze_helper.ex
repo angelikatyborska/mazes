@@ -7,7 +7,7 @@ defmodule MazesWeb.MazeHelper do
 
   def svg_padding, do: 16
 
-  def solution(maze, solution, settings, center_fun) do
+  def solution(maze, solution, center_fun) do
     [h | t] = solution
 
     {x, y} = center_fun.(maze, h)
@@ -20,25 +20,58 @@ defmodule MazesWeb.MazeHelper do
       end)
       |> Enum.join(" ")
 
-    Phoenix.HTML.Tag.content_tag(:path, "",
-      d: "M #{x} #{y} #{d}",
-      style: solution_line_style(maze, settings.hue, settings.saturation),
-      fill: "transparent"
-    )
+    [
+      Phoenix.HTML.Tag.content_tag(:path, "",
+        d: "M #{x} #{y} #{d}",
+        style: "stroke: white; opacity: 0.3; stroke-width: 6; stroke-linecap: round",
+        fill: "transparent"
+      ),
+      Phoenix.HTML.Tag.content_tag(:path, "",
+        d: "M #{x} #{y} #{d}",
+        style: "stroke: black; stroke-width: 2; stroke-dasharray: 8 8; stroke-linecap: round",
+        fill: "transparent"
+      )
+    ]
   end
 
-  def solution_color(hue, saturation) do
-    MazeColors.solution_color(hue, saturation)
+  def from_to(maze, center_fun) do
+    {from_cx, from_cy} = center_fun.(maze, maze.from)
+    {to_cx, to_cy} = center_fun.(maze, maze.to)
+
+    [
+      Phoenix.HTML.Tag.content_tag(:circle, "",
+        cx: from_cx,
+        cy: from_cy,
+        r: 6,
+        style: "opacity: 0.3;",
+        fill: "white"
+      ),
+      Phoenix.HTML.Tag.content_tag(:circle, "",
+        cx: from_cx,
+        cy: from_cy,
+        r: 3,
+        style: "",
+        fill: "black"
+      ),
+      Phoenix.HTML.Tag.content_tag(:circle, "",
+        cx: to_cx,
+        cy: to_cy,
+        r: 6,
+        style: "opacity: 0.3;",
+        fill: "white"
+      ),
+      Phoenix.HTML.Tag.content_tag(:circle, "",
+        cx: to_cx,
+        cy: to_cy,
+        r: 3,
+        style: "",
+        fill: "black"
+      )
+    ]
   end
 
-  def vertex_color(maze, vertex, colors, show_colors, hue, saturation) do
+  def vertex_color(_maze, vertex, colors, show_colors, hue, saturation) do
     cond do
-      vertex == maze.from ->
-        "lightgray"
-
-      vertex == maze.to ->
-        "gray"
-
       show_colors && colors ->
         MazeColors.color(colors.distances[vertex], colors.max_distance, hue, saturation)
 
@@ -47,17 +80,12 @@ defmodule MazesWeb.MazeHelper do
     end
   end
 
-  def solution_line_style(maze, hue, saturation) do
-    "stroke: #{solution_color(hue, saturation)}; #{do_line_style(maze)}"
-  end
-
   def line_style(maze) do
     "stroke: black; #{do_line_style(maze)}"
   end
 
   def do_line_style(_maze) do
-    stroke_width = 2
-    "stroke-width: #{stroke_width}; stroke-linecap: round;"
+    "stroke-width: 2; stroke-linecap: round;"
   end
 
   def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do
