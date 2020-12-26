@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   function save(e) {
+    e.preventDefault()
     const svg = document.querySelector('#maze svg').cloneNode(true)
 
     svg.setAttribute('version', '1.1')
@@ -7,9 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const content = svg.outerHTML;
     const blob = new Blob([content], {type: "image/svg+xml"});
-    const a = e.target
+
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.setAttribute('download', e.target.getAttribute('download'));
     a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
   }
 
   const link = document.querySelector('#download-maze')

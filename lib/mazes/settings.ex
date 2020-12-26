@@ -27,20 +27,20 @@ defmodule Mazes.Settings do
   def default_mask, do: hd(mask_files()).path
   def default_algorithm, do: HuntAndKillAlgorithm
   def default_entrance_exit_strategy, do: :set_longest_path_from_and_to
-  def default_width, do: 32
+  def default_width, do: 20
   def default_height, do: default_width()
-  def default_radius, do: 8
-  def default_side_length, do: 16
+  def default_radius, do: 10
+  def default_side_length, do: 15
   def default_hue, do: 200
   def default_saturation, do: 60
   def min_width, do: 2
-  def max_width, do: 64
+  def max_width, do: 50
   def min_height, do: min_width()
   def max_height, do: max_width()
   def min_radius, do: 2
-  def max_radius, do: 32
+  def max_radius, do: 30
   def min_side_length, do: 2
-  def max_side_length, do: 32
+  def max_side_length, do: 30
   def min_hue, do: 0
   def max_hue, do: 359
   def min_saturation, do: 0
@@ -237,6 +237,7 @@ defmodule Mazes.Settings do
 
     mask =
       case Enum.find(mask_files(), &(&1.slug === mask)) do
+        nil when mask == "custom_mask" -> :custom_mask
         nil -> default_mask()
         %{path: path} -> path
       end

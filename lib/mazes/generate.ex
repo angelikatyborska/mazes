@@ -1,14 +1,19 @@
 defmodule Mazes.Generate do
   alias Mazes.{Settings, MazeEntranceAndExit, MazeDistances}
 
-  def from_settings(%Settings{} = settings, masks) do
+  def from_settings(%Settings{} = settings, masks, custom_mask) do
     opts = Settings.get_opts_for_generate(settings)
 
     opts =
-      if Keyword.get(opts, :mask) do
-        Keyword.put(opts, :file, masks[Keyword.get(opts, :mask)])
-      else
-        opts
+      cond do
+        Keyword.get(opts, :mask) == :custom_mask && custom_mask ->
+          Keyword.put(opts, :file, custom_mask)
+
+        Keyword.get(opts, :mask) ->
+          Keyword.put(opts, :file, masks[Keyword.get(opts, :mask)])
+
+        true ->
+          opts
       end
 
     maze =

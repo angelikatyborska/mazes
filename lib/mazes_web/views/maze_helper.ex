@@ -23,12 +23,16 @@ defmodule MazesWeb.MazeHelper do
     [
       Phoenix.HTML.Tag.content_tag(:path, "",
         d: "M #{x} #{y} #{d}",
-        style: "stroke: white; opacity: 0.3; stroke-width: 6; stroke-linecap: round",
+        style:
+          "stroke: white; opacity: 0.3; stroke-width: #{stroke_width(maze) * 3}; stroke-linecap: round",
         fill: "transparent"
       ),
       Phoenix.HTML.Tag.content_tag(:path, "",
         d: "M #{x} #{y} #{d}",
-        style: "stroke: black; stroke-width: 2; stroke-dasharray: 8 8; stroke-linecap: round",
+        style:
+          "stroke: black; stroke-width: #{stroke_width(maze)}; stroke-dasharray: #{
+            stroke_width(maze) * 4
+          } #{stroke_width(maze) * 4}; stroke-linecap: round",
         fill: "transparent"
       )
     ]
@@ -42,28 +46,28 @@ defmodule MazesWeb.MazeHelper do
       Phoenix.HTML.Tag.content_tag(:circle, "",
         cx: from_cx,
         cy: from_cy,
-        r: 6,
+        r: 2 * (stroke_width(maze) + 1),
         style: "opacity: 0.3;",
         fill: "white"
       ),
       Phoenix.HTML.Tag.content_tag(:circle, "",
         cx: from_cx,
         cy: from_cy,
-        r: 3,
+        r: stroke_width(maze) + 1,
         style: "",
         fill: "black"
       ),
       Phoenix.HTML.Tag.content_tag(:circle, "",
         cx: to_cx,
         cy: to_cy,
-        r: 6,
+        r: 2 * (stroke_width(maze) + 1),
         style: "opacity: 0.3;",
         fill: "white"
       ),
       Phoenix.HTML.Tag.content_tag(:circle, "",
         cx: to_cx,
         cy: to_cy,
-        r: 3,
+        r: stroke_width(maze) + 1,
         style: "",
         fill: "black"
       )
@@ -84,8 +88,15 @@ defmodule MazesWeb.MazeHelper do
     "stroke: black; #{do_line_style(maze)}"
   end
 
-  def do_line_style(_maze) do
-    "stroke-width: 2; stroke-linecap: round;"
+  def do_line_style(maze) do
+    "stroke-width: #{stroke_width(maze)}; stroke-linecap: round;"
+  end
+
+  defp stroke_width(maze) do
+    case Enum.max(Enum.filter([maze[:width], maze[:height], maze[:radius]], & &1)) do
+      n when n >= 100 -> 1
+      _ -> 2
+    end
   end
 
   def move_coordinate_by_radius_and_angle({cx, cy}, radius, alpha) do

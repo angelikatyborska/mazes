@@ -94,11 +94,34 @@
                    value="<%= slug %>"
                    name="mask" />
 
-            <label for="<%= slug %>" title="<%= label %>" aria-label="<%= label %>"><%= emoji %><span class="maze-settings-mask-preview"><img alt="" aria-hidden="true" src="<%= path %>" width="<%= width %>px"/></span>
+            <label for="<%= slug %>" title="<%= label %>" aria-label="<%= label %>"><%= emoji %>
+              <span class="maze-settings-mask-preview">
+                <img alt="" aria-hidden="true" src="<%= path %>" width="<%= width %>px"/>
+              </span>
             </label>
           </div>
           <% end) %>
+
+          <div class="maze-settings-icon-radio maze-settings-custom-mask">
+            <input type="radio"
+                   id="custom-mask"
+                    <%= if @settings.mask === :custom_mask, do: "checked" %>
+                   value="custom_mask"
+                   name="mask" />
+
+            <label for="custom-mask">
+              File upload
+            </label>
+          </div>
         </div>
+
+        <%= if @settings.mask === :custom_mask do %>
+        <div class="maze-settings-file-upload">
+          <p>You can upload a PNG file with a custom mask up to <strong>16KB</strong>.<p>
+          <p>A black pixel represents a maze cell, and any other color lack thereof. All black pixels have to form a single unbroken shape.</p>
+          <%= live_file_input @uploads.custom_mask %>
+        </div>
+        <% end %>
         <% end %>
       </div>
 

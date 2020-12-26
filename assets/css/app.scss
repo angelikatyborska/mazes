@@ -12,6 +12,7 @@ $margin_big: 32px;
 
 $white: white;
 $black: black;
+$red: rgb(200, 50, 50);
 $light_gray: #e7e7e7;
 
 $small_screen: 640px;
@@ -23,7 +24,7 @@ $medium: 'screen and (min-width: #{$medium_screen})';
 $big: 'screen and (min-width: #{$big_screen})';
 
 @mixin outline() {
-  outline: 2px solid var(--accent-color);
+  outline: 2px solid $red;
   outline-offset: -2px;
 }
 
@@ -271,6 +272,43 @@ input {
 footer {
   margin-top: $margin_medium;
   font-size: $font_size_s;
+}
+
+.alert-container {
+  position: fixed;
+  z-index: 100;
+  top: $margin_medium;
+  right: $margin_medium;
+
+  .alert {
+    border-radius: 0;
+    border-width: 2px;
+    margin: 0 0 $margin_medium $margin_medium;
+    max-width: 480px;
+    position: relative;
+    padding: $margin_medium $margin_big $margin_medium $margin_medium;
+    word-wrap: break-word;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .alert-close {
+    position: absolute;
+    top: $margin_small;
+    right: $margin_small;
+    border-radius: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    text-decoration: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: inherit;
+    background: transparent;
+    font-size: 1.5rem;
+  }
 }
 
 @import './range.scss';

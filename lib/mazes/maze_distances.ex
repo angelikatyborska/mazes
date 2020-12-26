@@ -29,12 +29,15 @@ defmodule Mazes.MazeDistances do
 
   @doc "Returns a map of vertices where the values are distances from the starting cell"
   def distances(maze, from) do
-    distances(maze, [from], 0, %{})
+    distances(maze, [from], 0, %{}, Enum.count(Maze.vertices(maze)))
   end
 
-  defp distances(_, [], _, distances), do: distances
+  defp distances(_, [], _, distances, _), do: distances
 
-  defp distances(maze, vertices, distance, distances) do
+  defp distances(_, _, distance, distances, max_distance) when distance > max_distance,
+    do: distances
+
+  defp distances(maze, vertices, distance, distances, max_distance) do
     distances =
       Enum.reduce(vertices, distances, fn cell, acc ->
         Map.put_new(acc, cell, distance)
@@ -46,6 +49,6 @@ defmodule Mazes.MazeDistances do
       |> Enum.uniq()
       |> Enum.filter(&(!distances[&1]))
 
-    distances(maze, adjacent_unvisited_vertices, distance + 1, distances)
+    distances(maze, adjacent_unvisited_vertices, distance + 1, distances, max_distance)
   end
 end

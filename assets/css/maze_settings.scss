@@ -45,7 +45,7 @@
       position: relative;
     }
 
-    input {
+    input:not([type="file"]) {
       background: transparent;
       opacity: 0;
       position: absolute;
@@ -74,6 +74,8 @@
       padding: $margin_small;
       cursor: pointer;
       border: 1px solid transparent;
+      display: flex;
+      align-items: center;
 
       svg {
         * {
@@ -91,11 +93,17 @@
     }
   }
 
+  .maze-settings-custom-mask, .maze-settings-mask {
+    label {
+      line-height: 1.5rem;
+    }
+  }
+
   .maze-settings-mask {
     position: relative;
 
     input {
-      @include keyboard_only_focus() {
+      &:focus {
         & + label {
           .maze-settings-mask-preview {
             display: block;
@@ -107,7 +115,6 @@
     label {
       text-align: center;
       font-size: 1.5rem;
-      line-height: 1.5rem;
     }
 
     &:hover {
@@ -151,6 +158,11 @@
   }
 
   .maze-settings-hint {
+    font-size: $font_size_s;
+  }
+
+  .maze-settings-file-upload {
+    margin: $margin_medium 0;
     font-size: $font_size_s;
   }
 }

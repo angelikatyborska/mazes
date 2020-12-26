@@ -1,6 +1,6 @@
 defmodule Mazes.RectangularMazeWithMask do
   @behaviour Mazes.Maze
-  alias Mazes.{Maze, RectangularMaze}
+  alias Mazes.{Maze, RectangularMaze, Mask}
 
   @doc "Returns a rectangular maze with given size, either with all walls or no walls"
   @impl true
@@ -8,7 +8,7 @@ defmodule Mazes.RectangularMazeWithMask do
     file = Keyword.get(opts, :file)
 
     if file do
-      new_from_file(file)
+      new_from_file(file, Keyword.delete(opts, :file))
     else
       width = Keyword.get(opts, :width, 10)
       height = Keyword.get(opts, :height, 10)
@@ -93,32 +93,16 @@ defmodule Mazes.RectangularMazeWithMask do
   def east(vertex), do: RectangularMaze.east(vertex)
   def west(vertex), do: RectangularMaze.west(vertex)
 
-  defp new_from_file(filename) when is_binary(filename) do
+  defp new_from_file(filename, opts) when is_binary(filename) do
     {:ok, file} = Imagineer.load(filename)
-    new_from_file(file)
+    new_from_file(file, opts)
   end
 
-  defp new_from_file(%Imagineer.Image.PNG{pixels: pixels}) do
-    threshold = 100
+  defp new_from_file(%Imagineer.Image.PNG{pixels: pixels}, opts) do
     height = length(pixels)
     width = length(hd(pixels))
-
-    mask_vertices =
-      pixels
-      |> Enum.with_index()
-      |> Enum.reduce([], fn {pixels, row}, acc ->
-        pixels
-        |> Enum.with_index()
-        |> Enum.reduce(acc, fn {pixel, column}, acc2 ->
-          # pixel can be {r, g, b} or {r, g, b, a}
-          if Enum.all?(Tuple.to_list(pixel), &(&1 > threshold)) do
-            [{column + 1, row + 1} | acc2]
-          else
-            acc2
-          end
-        end)
-      end)
-
-    new(width: width, height: height, mask_vertices: mask_vertices)
+    mask_vertices = Mask.masked_vertices(pixels)
+    opts = Keyword.merge(opts, height: height, width: width, mask_vertices: mask_vertices)
+    new(opts)
   end
 end
