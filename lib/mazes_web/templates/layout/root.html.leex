@@ -4,6 +4,11 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" sizes="32x32" href="<%= Routes.static_path(@conn, "/images/favicon-32.png") %>"/>
+    <link rel="shortcut icon" sizes="64x64" href="<%= Routes.static_path(@conn, "/images/favicon-64.png") %>"/>
+    <link rel="shortcut icon" sizes="96x96" href="<%= Routes.static_path(@conn, "/images/favicon-96.png") %>"/>
+    <link rel="shortcut icon" href="<%= Routes.static_path(@conn, "/images/favicon.png") %>"/>
+
     <%= csrf_meta_tag() %>
     <%= live_title_tag assigns[:page_title] || "Mazes" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
