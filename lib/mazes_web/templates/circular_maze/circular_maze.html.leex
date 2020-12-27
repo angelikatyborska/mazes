@@ -32,7 +32,7 @@
     <% end %>
     <% end) %>
 
-    <%= if @settings.show_solution && @solution do %>
+    <%= if show_solution?(@settings, @solution) do %>
     <%= solution(@maze, @solution, &vertex_center/2) %>
     <% end %>
 

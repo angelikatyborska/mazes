@@ -7,6 +7,10 @@ defmodule MazesWeb.MazeHelper do
 
   def svg_padding, do: 16
 
+  def show_solution?(settings, solution) do
+    settings.show_solution && is_list(solution) && Enum.count(solution) > 1
+  end
+
   def solution(maze, solution, center_fun) do
     [h | t] = solution
 

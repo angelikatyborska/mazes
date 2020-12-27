@@ -18,7 +18,7 @@
 
     <%= Enum.uniq(walls) %>
 
-    <%= if @settings.show_solution && @solution do %>
+    <%= if show_solution?(@settings, @solution) do %>
     <%= solution(@maze, @solution, &hex_center/2) %>
     <% end %>
 
