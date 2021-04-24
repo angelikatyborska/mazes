@@ -29,7 +29,7 @@ $big: 'screen and (min-width: #{$big_screen})';
 }
 
 @mixin keyboard_only_focus() {
-  html[data-js-focus-visible] &:focus[data-focus-visible-added] {
+  [data-whatintent='keyboard'] &:focus {
     @content;
   }
 }
