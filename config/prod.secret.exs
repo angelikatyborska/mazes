@@ -20,3 +20,15 @@ config :mazes, MazesWeb.Endpoint,
   secret_key_base: secret_key_base
 
 config :mazes, MazesWeb.Endpoint, server: true
+
+sentry_dns =
+  System.get_env("MAZES_SENTRY_DNS") ||
+    raise """
+    environment variable MAZES_SENTRY_DNS is missing
+    """
+
+config :sentry,
+  dsn: sentry_dns,
+  environment_name: Mix.env(),
+  enable_source_code_context: true,
+  root_source_code_paths: [File.cwd!()]
