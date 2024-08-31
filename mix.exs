@@ -44,7 +44,6 @@ defmodule Mazes.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:imagineer, "~> 0.3.3"},
       {:sentry, "~> 10.2.0"},
-      {:hackney, "~> 1.8"},
       {:vnu, "~> 1.0", only: [:dev, :test], runtime: false}
     ]
   end
